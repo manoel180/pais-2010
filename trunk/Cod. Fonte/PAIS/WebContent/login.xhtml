@@ -1,21 +1,50 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml"
+<rich:page xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:rich="http://richfaces.org/rich">
-<f:view >
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:easy="http://easyfaces.com.br/easyfaces"
+	xmlns:a4j="http://richfaces.org/a4j" contentType="text/html"
+	width="689">
 
-<rich:page pageTitle="Bem vindo ao PAIS"/>
-<rich:layoutPanel  position="center" width="400" >
+	<f:view>
+		<a4j:page pageTitle="Bem Vindo ao PAIS" format="xhtml">
+			<f:facet name="head">
+				<!--...Head Content here-->
+				<title>Bem vindos ao PAIS</title>
+				<link href="css/estilo.css" rel="stylesheet" type="text/css" />
+			</f:facet>
+
+			<div id="login"><h:graphicImage height="300" width="400"
+				url="/imagens/Logo.png" />
+			<div align="center"><h:panelGrid layout="block"
+				style="height: 300; width: 400;">
+
+				<a4j:form>
+					<h:panelGrid bgcolor="white" summary="true" cellpadding="1"
+						cellspacing="0" columns="2" styleClass="caixa" width="400"
+						frame="border">
+						<h:outputFormat value="CPF:" styleClass="caixa" />
+						<easy:inputCpf useMask="true" valid="true" submitWithMask="true"
+							useValidate="true" styleClass="caixa"
+							style="COLOR: #bfbfbf;FONT-SIZE: medium; width : 150px; height : 35px;" />
+						<h:outputFormat value="SENHA:" styleClass="caixa" />
+						<h:inputSecret required="true" value="" styleClass="caixa"
+							style="COLOR: #bfbfbf; FONT-SIZE: medium; width : 150px; height : 35px;" />
+						<h:commandButton value="Entrar..."
+							style="FONT-SIZE: medium; caixa;height : 35px; width: 100%" />
+						<h:commandButton value="Esqueci a Senha"
+							style="FONT-SIZE: medium; caixa;height : 35px; width: 100%" />
+					</h:panelGrid>
+
+				</a4j:form>
 
 
-<h:graphicImage height="400" value="/imagens/Logomarca_Final_Cor_Azul_Globo_Bonecos1.png" width="600"/>
-ACESSO REMOTO VIA CPF: <h:inputText value="" />  <h:commandButton  value="Entrar..." />
-	
-</rich:layoutPanel>
+			</h:panelGrid></div>
+			<div style="text-align: right"><h:outputText
+				value="SISTEMA 100% WEB" style="FONT-SIZE: medium;" /></div>
+			</div>
+		</a4j:page>
 
-</f:view>
-</html>
+	</f:view>
+</rich:page>
