@@ -3,48 +3,117 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:easy="http://easyfaces.com.br/easyfaces"
-	xmlns:a4j="http://richfaces.org/a4j" contentType="text/html"
-	width="689">
+	xmlns:a4j="http://richfaces.org/a4j" contentType="text/html">
 
-	<f:view>
-		<a4j:page pageTitle="Bem Vindo ao PAIS" format="xhtml">
-			<f:facet name="head">
-				<!--...Head Content here-->
-				<title>Bem vindos ao PAIS</title>
-				<link href="css/estilo.css" rel="stylesheet" type="text/css" />
-			</f:facet>
+<f:view>
+	<h:head>
 
-			<div id="login"><h:graphicImage height="300" width="400"
-				url="/imagens/Logo.png" />
-			<div align="center"><h:panelGrid layout="block"
-				style="height: 300; width: 400;">
+	<style type="text/css">
+<!--
+body {
+	background-image: url(img/fundo.jpg);
+	background-repeat: repeat-x;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-color: #E7EFF2;
+}
+-->
+</style>
+	<link href="css/css.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+<!--
+.style2 {
+	color: #474341
+}
+-->
+</style>
 
-				<a4j:form>
-					<h:panelGrid bgcolor="white" summary="true" cellpadding="1"
-						cellspacing="0" columns="2" styleClass="caixa" width="400"
-						frame="border">
-						<h:outputFormat value="CPF:" styleClass="caixa" />
-						<easy:inputCpf useMask="true" valid="true" submitWithMask="true"
-							useValidate="true" styleClass="caixa"
-							style="COLOR: #bfbfbf;FONT-SIZE: medium; width : 150px; height : 35px;" />
-						<h:outputFormat value="SENHA:" styleClass="caixa" />
-						<h:inputSecret required="true" value="" styleClass="caixa"
-							style="COLOR: #bfbfbf; FONT-SIZE: medium; width : 150px; height : 35px;" />
-						<h:commandButton value="Entrar..."
-							style="FONT-SIZE: medium; caixa;height : 35px; width: 100%" />
-						<h:commandButton value="Esqueci a Senha"
-							style="FONT-SIZE: medium; caixa;height : 35px; width: 100%" />
-					</h:panelGrid>
+	</h:head>
 
-				</a4j:form>
+	< body>
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<table width="475" border="0" align="center" cellpadding="0"
+		cellspacing="0">
+		<tr>
+			<td align="center" valign="top" scope="col">
+			<table width="477" border="0" align="center" cellpadding="0"
+				cellspacing="0">
 
+				<tr>
+					<td align="center" scope="col"><img src="img/logo.png"
+						width="471" height="145" /></td>
+				</tr>
+				<tr>
+					<th scope="col">
+					
+					<table width="475" border="0" align="center" cellpadding="0"
+						cellspacing="0" background="img/barra_cpf_senha.png">
 
-			</h:panelGrid></div>
-			<div style="text-align: right"><h:outputText
-				value="SISTEMA 100% WEB" style="FONT-SIZE: medium;" /></div>
-			</div>
-		</a4j:page>
+						<tr>
+							<th scope="col">
+							<table width="475" border="0" align="center" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<td height="53" align="center" valign="middle" scope="col">
+									<h:form>
+									<table width="386" border="0" align="center" cellpadding="0"
+										cellspacing="0">
+										<tr>
+											<td width="386" align="left" valign="bottom" scope="col"><label><span
+												class="Texto_cpf_login"><strong>SEU CPF: <h:inputText
+												value="" name="cpf" type="text" class="formularios" id="cpf"
+												size="15" /> SENHA:</strong></span><h:inputSecret name="senha"
+												type="password" class="formularios" id="senha" size="13" />
+											<h:commandButton image="img/boot_entrar.png" title="ENTRAR..." /></label></td>
+										</tr>
+									</table>
+									</h:form>
+									</td>
+								</tr>
+							</table>
 
-	</f:view>
+							</th>
+						</tr>
+					</table>
+
+					</th>
+				</tr>
+				<tr>
+					<th scope="col">
+					<table width="477" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td align="center" scope="col">
+							<table width="353" height="21" border="0" align="center"
+								cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="right" scope="col"><img
+										src="img/texto_100_seguro.png" width="146" height="26" /></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</th>
+				</tr>
+				<tr>
+					<th scope="col"></th>
+				</tr>
+
+			</table>
+			</td>
+		</tr>
+	</table>
+	</body>
+
+</f:view>
 </rich:page>
