@@ -1,12 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "
+http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <rich:page xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j" contentType="text/html">
+	xmlns:a4j="http://richfaces.org/a4j" contentType="text/html"
+	xmlns:easyfaces="http://easyfaces.com.br/easyfaces">
 
 <f:view>
-	<h:head>
+	<head>
 
 	<style type="text/css">
 <!--
@@ -30,9 +34,9 @@ body {
 -->
 </style>
 
-	</h:head>
+	</head>
 
-	< body>
+	<body>
 	<br />
 	<br />
 	<br />
@@ -64,19 +68,26 @@ body {
 								cellspacing="0">
 								<tr>
 									<td height="53" align="center" valign="middle" scope="col">
-									<h:form>
+									
 									<table width="386" border="0" align="center" cellpadding="0"
 										cellspacing="0">
 										<tr>
-											<td width="386" align="left" valign="bottom" scope="col"><label><span
-												class="Texto_cpf_login"><strong>SEU CPF: <h:inputText
-												value="" name="cpf" type="text" class="formularios" id="cpf"
-												size="15" /> SENHA:</strong></span><h:inputSecret name="senha"
+											<td width="386" align="left" valign="middle" scope="col">
+											<h:form>
+												<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login"/>
+												&nbsp;&nbsp; 
+											 	<easyfaces:inputCpf useMaskSize="true" useMask="true"  styleClass="formularios"/>
+											 	<h:outputLabel value="SENHA:" styleClass="Texto_cpf_login"/>
+											 	&nbsp; 
+												<h:inputSecret name="senha"
 												type="password" class="formularios" id="senha" size="13" />
-											<h:commandButton image="img/boot_entrar.png" title="ENTRAR..." /></label></td>
+												&nbsp; 
+												<h:commandButton  image="img/boot_entrar.png" />
+											</h:form>
+											</td>
 										</tr>
 									</table>
-									</h:form>
+									
 									</td>
 								</tr>
 							</table>
