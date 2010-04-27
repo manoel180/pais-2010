@@ -1,6 +1,3 @@
-.botao{
-
-}
 a:link {
 	text-decoration:none;
 }
@@ -60,4 +57,13 @@ a:active {
 	color: #56778B;
 	background-color: #DBE4E9;
 	border: 1px solid #CEDBE1;
+}
+
+#caixa_center{
+	height: 480px;
+	left: 50%;
+	margin: -200px 0 0 -300px;
+	position: absolute;
+	top: 50%;
+	width: 40%;
 }

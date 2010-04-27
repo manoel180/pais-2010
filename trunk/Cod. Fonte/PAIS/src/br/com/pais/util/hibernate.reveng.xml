@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 <hibernate-reverse-engineering>
-	<table-filter match-name="tbl_celulas" match-catalog="pais"></table-filter>
+	<table-filter match-schema="pais" match-name=".*"></table-filter>
+	<table-filter match-name="tbl_Celulas" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_Discipulos" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_Documentos" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_Encontros" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_EstadoCivil" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_ForAcademicaDiscipulos"
+		match-catalog="pais">
+	</table-filter>
+	<table-filter match-name="tbl_ForEclesiasticasDiscipulos"
+		match-catalog="pais">
+	</table-filter>
+	<table-filter match-name="tbl_FormacaoAcademica"
+		match-catalog="pais">
+	</table-filter>
+	<table-filter match-name="tbl_FormacaoEclesiasticas"
+		match-catalog="pais">
+	</table-filter>
+	<table-filter match-name="tbl_FunEclesiasticasDiscipulos"
+		match-catalog="pais">
+	</table-filter>
+	<table-filter match-name="tbl_FuncaoEclesiasticas"
+		match-catalog="pais">
+	</table-filter>
+	<table-filter match-name="tbl_Geracoes" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_Movimento" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_Participa" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_Repasse" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_TelCelulas" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_bairro" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_estado" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_localidade" match-catalog="pais"></table-filter>
+	<table-filter match-name="tbl_logradouro" match-catalog="pais"></table-filter>
 </hibernate-reverse-engineering>
