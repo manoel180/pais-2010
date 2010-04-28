@@ -1,13 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
-		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
+    <session-factory name="">
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.password">123</property>
+        <property name="hibernate.connection.password">pais</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/pais</property>
-        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.username">pais</property>
+        <property name="hibernate.default_schema">pais</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.show_sql">true</property>
+        <mapping class="br.com.pais.domain.Bairro" />
+        <mapping class="br.com.pais.domain.FunEclesiasticasDiscipulos" />
+        <mapping class="br.com.pais.domain.Repasse" />
+        <mapping class="br.com.pais.domain.Discipulos" />
+        <mapping class="br.com.pais.domain.Encontros" />
+        <mapping class="br.com.pais.domain.Celulas" />
+        <mapping class="br.com.pais.domain.Documentos" />
+        <mapping class="br.com.pais.domain.EstadoCivil" />
+        <mapping class="br.com.pais.domain.FormacaoEclesiasticas" />
+        <mapping class="br.com.pais.domain.Logradouro" />
+        <mapping class="br.com.pais.domain.Estado" />
+        <mapping class="br.com.pais.domain.FuncaoEclesiasticas" />
+        <mapping class="br.com.pais.domain.Geracoes" />
+        <mapping class="br.com.pais.domain.Movimento" />
+        <mapping class="br.com.pais.domain.Localidade" />
+        <mapping class="br.com.pais.domain.TelCelulas" />
+        <mapping class="br.com.pais.domain.FormacaoAcademica" />
     </session-factory>
 </hibernate-configuration>
