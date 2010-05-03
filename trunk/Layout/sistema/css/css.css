@@ -17,11 +17,11 @@ a:active {
 	font-weight: normal;
 	color: #393939;
 }
-.Fonte_12 {
+.Fonte_12_Logado {
 	font-family: Trebuchet MS;
 	font-size: 12px;
 	font-weight: normal;
-	color: #393939;
+	color: #07335F;
 }
 .Fonte_13 {
 	font-family: Trebuchet MS;
@@ -57,4 +57,25 @@ a:active {
 	color: #56778B;
 	background-color: #DBE4E9;
 	border: 1px solid #CEDBE1;
+}
+
+.borda_meio {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	background-color: #E6EDF0;
+	border: 1px solid #B3C9D5;
+}
+.TEXTO_12 {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-weight: normal;
+	color: #07335F;
+}
+.TEXTO_11 {
+	font-family: Trebuchet MS;
+	font-size: 11px;
+	font-weight: normal;
+	color: #07335F;
 }
