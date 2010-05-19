@@ -8,25 +8,22 @@
 
 <f:view>
 	<h:head>
-
 		<link href="css/css.css" rel="stylesheet" type="text/css" />
-
-	</h:head>
-	
+	</h:head>	
 <h:form>
 		<div id="pgCentralizado">
 		
-		<p:panel closable="true" toggleable="true" styleClass="fundo">
-		
-					<h:graphicImage value="/img/logo.png" width="374" height="145" style="align: center;" />
-<div align="right">				
-					<table align="right" background="img/barra_cpf_senha.png"
-									border="0" cellpadding="0" cellspacing="0" width="475">
+		<p:panel closable="true" toggleable="true" styleClass="fundo" >
+		<div align="center">
+					<h:graphicImage value="/img/logo.png" width="374" height="145" style="align:center"  />
+					</div>
+					<table align="center" background="img/barra_cpf_senha.png"
+									border="0" cellpadding="0" cellspacing="0" width="474">
 									<tbody>
 										<tr>
 											<th scope="col">
 											<table align="center" border="0" cellpadding="0"
-												cellspacing="0" width="474">
+												cellspacing="0" width="374">
 												<tbody>
 													<tr>
 														<td scope="col" align="center" height="53" valign="middle">
@@ -37,7 +34,7 @@
 																	<td scope="col" align="center" valign="bottom"
 																		width="386">
 								<h:outputLabel value="SEU CPF:"	styleClass="Texto_cpf_login"  /> <span/>
-								<p:inputMask id="cpf"  mask="999.999.999-99" converterMessage="false" size="15"  styleClass="formularios"  />
+								<p:inputMask id="cpf"  mask="999.999.999-99"  size="15"  styleClass="formularios"  />
 								
 																
 								<h:outputLabel value="SENHA:" styleClass="Texto_cpf_login" for="senha" /> <span/>
@@ -53,10 +50,11 @@
 					</table></td>
 	</tr>
 	</tbody></table></th></tr></tbody></table>							
-	</div> 		
+	 		
 				<div align="center"><p:commandButton
 					image="img/esqueci_senha.png" type="image"
-					style="vertical-align:bottom;" /> <h:graphicImage
+					style="vertical-align:bottom;" />
+					 <h:graphicImage
 					value="img/texto_100_seguro.png" width="146" height="26" /></div>
 			
 		</p:panel>
