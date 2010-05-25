@@ -1,10 +1,42 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
-<f:view>
-<h:form >
-	<h:commandButton value="Salvar" actionListener="#{loginBean.salvar}" />
-	</h:form>
-</f:view>
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:i="http://primefaces.prime.com.tr/touch">
+<h:head>
+		<link  rel="stylesheet" type="text/css" href="css/css.css" />
+		<link rel="stylesheet" type="text/css" href="../css/css.css" />
+</h:head>
+<h:body>
+<div id="pgCentralizado">
+<h:outputLabel value="Bem Vindo" styleClass="a"/><br/>
+<h:graphicImage value="img/logo.png" width="380" height="145" style="align:center"  />
+<h:form>
+
+	<p:panel id="panel" header="Register">
+	
+		<p:focus />
+		
+		<p:messages />
+		
+		<h:panelGrid columns="3">
+			<h:outputLabel for="firstname" value="Firstname: *" />
+			<h:inputText id="firstname" value="#{pprBean.firstname}" required="true" label="Firstname">
+				<f:validateLength minimum="2" />
+			</h:inputText>
+			<p:message for="firstname" />
+			
+			<h:outputLabel for="surname" value="Surname: *" />
+			<h:inputText id="surname" value="#{pprBean.surname}" required="true" label="Surname"/>
+			<p:message for="surname" />
+		</h:panelGrid>
+		
+		<p:commandButton value="Submit" update="panel" actionListener="#{pprBean.savePerson}" />
+	</p:panel>
+
+</h:form>
+
+</div>
+</h:body>
 </html>
