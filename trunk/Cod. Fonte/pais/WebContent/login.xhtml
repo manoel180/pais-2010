@@ -4,27 +4,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.prime.com.tr/ui">
-
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:stella="http://stella.caelum.com.br/faces">  
 <f:view>
+ 
 	<h:head>
 		<link  rel="stylesheet" type="text/css" href="css/css.css" />
 		<link rel="stylesheet" type="text/css" href="../css/css.css" />
-	</h:head>	
-<h:form>
-		<div id="pgCentralizado">
 		
-		<p:panel closable="true" toggleable="true" styleClass="fundo" >
+	</h:head>	
+
+ 
+    
+		<div id="pgCentralizado">
+		<h:form >
+		
+		<p:panel id="panel" closable="true" toggleable="true" styleClass="fundo" >
 		<div align="center">
 					<h:graphicImage value="img/logo.png" width="380" height="145" style="align:center"  />
 					</div>
-					<table align="center" background="img/barra_cpf_senha.png"
+					
+					  
+					<p:messages showDetail="true" 	showSummary="true" rendered="true"  />
+					<table  align="center" background="img/barra_cpf_senha.png;"
 									border="0" cellpadding="0" cellspacing="0" width="474">
 									<tbody>
 										<tr>
 											<th scope="col">
 											<table align="center" border="0" cellpadding="0"
-												cellspacing="0" width="374">
+												cellspacing="0" width="374" >
+												
 												<tbody>
 													<tr>
 														<td scope="col" align="center" height="53" valign="middle">
@@ -34,16 +43,22 @@
 																<tr>
 																	<td scope="col" align="center" valign="bottom"
 																		width="386">
-								<h:outputLabel value="SEU CPF:"	styleClass="Texto_cpf_login"  /> <span/>
-								<p:inputMask id="cpf"  mask="999.999.999-99"  size="15"  styleClass="formularios"  />
-								
+								<p:focus>
+								<h:outputLabel value="SEU CPF:"	styleClass="Texto_cpf_login" for="cpfMask" /> <span/>
+								<p:inputMask id="cpfMask"  mask="999.999.999-99" size="15" maxlength="14" value="#{loginBean.cpf}" styleClass="formularios" required="true" > 
+									 	<f:attribute name="fieldRef" value="CPF" />
+								</p:inputMask>
+																							
+								<h:outputLabel value="SENHA:" styleClass="Texto_cpf_login" for="senhaSecret"  /> <span/>
+								<h:inputSecret id="senhaSecret" readonly="#{loginBean.edita}" styleClass="formularios" rendered="true" maxlength="14"  required="true" size="17" >
+									<f:attribute name="fieldRef" value="Senha" />
+								</h:inputSecret> 
 																
-								<h:outputLabel value="SENHA:" styleClass="Texto_cpf_login" for="senha" /> <span/>
-								<h:inputSecret id="senha" styleClass="formularios" maxlength="13" required="true" size="15" /> 
-								<p:message for="senha" />
-								<p:watermark for="senha" value="Digite sua senha" />								
 								<span/><span/><span/><span/><span/>
-								<p:commandButton image="img/boot_entrar.png" type="image" style="vertical-align:bottom;" ajax="false" action="#{loginBean.salvar}" />
+								
+								<h:commandButton image="img/boot_entrar.png" style="vertical-align:bottom;"  action="#{loginBean.logar}" readonly="#{loginBean.edita}"/>
+								</p:focus>
+				
 								</td>
 								</tr>
 </tbody>
@@ -51,16 +66,18 @@
 					</table></td>
 	</tr>
 	</tbody></table></th></tr></tbody></table>							
-	 		
+	 			
 				<div align="center"><p:commandButton
 					image="img/esqueci_senha.png" type="image"
 					style="vertical-align:bottom;" />
 					 <h:graphicImage
 					value="img/texto_100_seguro.png" width="146" height="26" /></div>
-			
+		
 		</p:panel>
 		
+		</h:form>
 		</div>
-</h:form>
+
 </f:view>
+
 </html>
