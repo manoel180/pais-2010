@@ -1,15 +1,43 @@
-body{
+.yui-skin-sam .yui-panel .bd {
+	background: #333333;
+	background-color: #E7EFF2;
+	color: #CCCCCC;
+}
+
+.yui-skin-sam .yui-panel .hd {
+
+
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal;
+	color: #466273;
+}
+
+.yui-skin-sam .yui-panel-container.shadow .underlay {
+	background-color: #333333;
+	bottom: -7px;
+	left: 7px;
+	opacity: 0.5;
+	position: absolute;
+	right: -7px;
+	top: 7px;
+}
+
+.yui-skin-sam .container-close {
+	// background: url(../images/dialogclose.png) no-repeat;
+}
+
+body {
 	background-image: url("../img/fundo.jpg");
 	background-color: #E7EFF2;
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
- 	background-repeat: repeat-x;
-	
+	background-repeat: repeat-x;
 }
 
-#pgCentralizado{
+#pgCentralizado {
 	height: 500px;
 	left: 50%;
 	margin: -200px 0 0 -300px;
@@ -18,26 +46,30 @@ body{
 	width: 40%;
 }
 
-
-.fundo .pf-panel-bd{
+.fundo .pf-panel-bd {
 	background-color: transparent;
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
- 	background-repeat: repeat-x;
-	
-	}
+	background-repeat: repeat-x;
+	border-color: transparent;
+	border: 0;
+	border-color: #;
+}
 
 a:link {
-	text-decoration:none;
+	text-decoration: none;
 }
+
 a:hover {
-	text-decoration:underline;
+	text-decoration: underline;
 }
+
 a:visited {
 	text-decoration: none;
 }
+
 a:active {
 	text-decoration: none;
 }
@@ -48,18 +80,21 @@ a:active {
 	font-weight: normal;
 	color: #393939;
 }
+
 .Fonte_12_Logado {
 	font-family: Trebuchet MS;
 	font-size: 12px;
 	font-weight: normal;
 	color: #07335F;
 }
+
 .Fonte_13 {
 	font-family: Trebuchet MS;
 	font-size: 13px;
 	font-weight: normal;
 	color: #393939;
 }
+
 .Fonte_13_Branco {
 	font-family: Trebuchet MS;
 	font-size: 13px;
@@ -74,12 +109,13 @@ a:active {
 	color: #6A8D21;
 }
 
-.Texto_cpf_login {
+.Texto_cpf_login  {
 	font-family: Trebuchet MS;
 	font-size: 13px;
 	font-weight: normal;
 	color: #466273;
 }
+
 .formularios {
 	font-family: Trebuchet MS;
 	font-size: 12px;
@@ -98,12 +134,14 @@ a:active {
 	background-color: #E6EDF0;
 	border: 1px solid #B3C9D5;
 }
+
 .TEXTO_12 {
 	font-family: Trebuchet MS;
 	font-size: 12px;
 	font-weight: normal;
 	color: #07335F;
 }
+
 .TEXTO_11 {
 	font-family: Trebuchet MS;
 	font-size: 11px;

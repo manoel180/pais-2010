@@ -3,80 +3,80 @@
  */
 package br.com.pais.managedbeans;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.event.ActionEvent;
 
-import br.com.pais.dao.EstadoDao;
-import br.com.pais.dao.impl.EstadoDaoImp;
-import br.com.pais.entities.Estado;
+import org.primefaces.component.focus.Focus;
+
+import br.com.pais.exception.GenericException;
 import br.com.pais.exception.ValidarCPFException;
+import br.com.pais.mensagens.MessageManagerImpl;
 import br.com.pais.util.ValidarCPF;
+
+
+
+
 
 /**
  * @author manoel
  */
 
 @ManagedBean(name = "loginBean")
-@RequestScoped()
+@SessionScoped()
 public class LoginBean {
 
-	protected Estado estado;
-	protected EstadoDao estadoDao;
+	protected String cpf ="";
+	
+	protected String senha;
+	
+	protected Focus focus;
+	protected String email;
+	
+	protected boolean editar = true; 
+	
+	
 
-	protected String cpf;
-	protected boolean edita = true;
-
-	public void salvar() {
-		estado = new Estado();
-		estadoDao = new EstadoDaoImp();
-		estado.setUfeNo("am");
-
-		estado.setUfeSg("MM");
-
-		estadoDao.salvar(estado);
-
-	}
-
-	public String logar() {
+	public String logar(){
 		try {
-			if (ValidarCPF.validarCPF(cpf)== true) {
+			if (ValidarCPF.validarCPF(cpf)== true && senha.equals("123")) {
 				return "/teste.mir";
 			} else {
-				return "/login.mir";
+				throw new GenericException("usuario.invalido_detail");
+				
+				//return "/login.mir";
 			}
 		} catch (ValidarCPFException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (GenericException e) {
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro",
+			"usuario.invalido_detail");
 		}
-		return "/teste.mir";
+		return "teste.mir";
 	}
-	public void verificacpf(){
+	public void verificacpf(ActionEvent ev){
+	/*public void verificacpf(){*/
 		try {
 			if(ValidarCPF.validarCPF(cpf) == true){		
-				edita=false;
+				/*ev.getComponent().getId();*/
+				editar=false;					
+				focus.setFor("senhaSecret");
+				
 			}else{
 				cpf = "";
+				focus.setFor("cpfMask");
+				
 			}
 		} catch (ValidarCPFException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 	}
 	
 	/**
-	 * @return the estado
-	 */
-	public Estado getEstado() {
-		return estado;
-	}
-
-	/**
-	 * @param estado
-	 *            the estado to set
-	 */
-	public void setEstado(Estado estado) {
-		this.estado = estado;
-	}
+	
 
 	/**
 	 * @return the cpf
@@ -94,17 +94,58 @@ public class LoginBean {
 	}
 
 	/**
-	 * @return the edita
+	 
+
+	/**
+	 * @return the focus
 	 */
-	public boolean isEdita() {
-		return edita;
+	public Focus getFocus() {
+		return focus;
 	}
 
 	/**
-	 * @param edita the edita to set
+	 * @param focus the focus to set
 	 */
-	public void setEdita(boolean edita) {
-		this.edita = edita;
+	public void setFocus(Focus focus) {
+		this.focus = focus;
 	}
 
+	/**
+	 * @return the editar
+	 */
+	public boolean isEditar() {
+		return editar;
+	}
+
+	/**
+	 * @param editar the editar to set
+	 */
+	public void setEditar(boolean editar) {
+		this.editar = editar;
+	}
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	/**
+	 * @return the senha
+	 */
+	public String getSenha() {
+		return senha;
+	}
+	/**
+	 * @param senha the senha to set
+	 */
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+	
 }
