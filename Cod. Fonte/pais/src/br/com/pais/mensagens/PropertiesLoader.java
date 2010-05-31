@@ -27,7 +27,7 @@ public class PropertiesLoader {
     }  
   
     protected String getValor(String chave){  
-            return (String)props.getProperty(chave);  
+            return props.getProperty(chave);  
     }  
 }  
 
