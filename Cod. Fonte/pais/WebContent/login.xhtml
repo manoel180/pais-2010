@@ -4,94 +4,118 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.prime.com.tr/ui" >  
-<f:view >
- 
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+<f:view>
+
 	<h:head>
-		<link  rel="stylesheet" type="text/css" href="css/css.css" />
-		<link rel="stylesheet" type="text/css" href="../css/css.css" />
-	</h:head>	 
-		<p:dialog id="dialog"   header="Esqueci a senha!!!" underlay="shadow"  visible="none" modal="true"  effect="fade" fixedCenter="true" widgetVar="dlg"  >    
-	   	 <h:form>
-	   		<h:panelGrid  columns="3" >
-	   		    
-		       	<h:outputLabel value="SEU CPF:"	styleClass="Texto_cpf_login" for="cpfMaskDialog" /> 
-		       	<p:inputMask id="cpfMaskDialog" value="#{loginBean.cpf}" mask="999.999.999-99" size="20" maxlength="14" styleClass="formularios" required="true"  />
-				<p:message id="msgdialog1" for="cpfMaskDialog" showDetail="true" showSummary="false" />
-				
-				<h:outputLabel value="SEU EMAIL:" styleClass="Texto_cpf_login" for="emailTxtDialog" />
-		        <h:inputText id="emailTxtDialog" value="#{loginBean.email}" size="20" autocomplete="off" styleClass="formularios" required="true" />
-		        <p:message id="msgdialog2" for="emailTxtDialog" showDetail="true" showSummary="false"/>
-		        
-		    </h:panelGrid>
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/css.css" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/css.css" />
+	</h:head>
+
+	<p:dialog header="Esqueci a senha!!!" underlay="shadow" visible="none"
+		modal="true" effect="fade" fixedCenter="true" widgetVar="dlg">
+		<h:form id="form3">
+			<p:growl  id="dlgMsg" showDetail="true" showSummary="true" sticky="true"/>
 			<h:panelGrid columns="2">
-		       	<p:captcha id="captcha" language="pt"   theme="white"  publicKey="6Ld1dLoSAAAAAK_jurnwfq7eXMZ2yVk_pCeOwsy0"/>
-		        <p:message id="msgdialog3" for="captcha" showDetail="true" />
-	        </h:panelGrid>  
-	        <p:commandButton image="/img/boot_enviar_senha.png" type="image" update="msgdialog1,msgdialog2,msgdialog3" value="Enviar" />
-	      
-	     </h:form>
- 		</p:dialog>
-	<div id="pgCentralizado">			
-		
-		<p:outputPanel id="panel"  rendered="true" styleClass="fundo"   >
-		<h:form id="form1" >
-		<div align="center">
-					<h:graphicImage value="img/logo.png" width="380" height="145" style="align:center" />
-					</div>
-					<p:messages id="msg" showDetail="true" showSummary="true" />
+
+				<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login"
+					for="cpfMaskDialog" />
+				<p:inputMask id="cpfMaskDialog" validatorMessage="CPF"
+					value="#{loginBean.cpf}" mask="999.999.999-99" size="20"
+					maxlength="14" styleClass="formularios" required="true" />
+
+
+				<h:outputLabel value="SEU EMAIL:" styleClass="Texto_cpf_login"
+					for="emailTxtDialog" />
+				<h:inputText id="emailTxtDialog" value="#{loginBean.email}"
+					size="20" autocomplete="off" styleClass="formularios" validatorMessage="Email inválido"
+					required="true">
+					<f:attribute name="fieldRef" value="EMAIL:" />
+					 <mj:regexValidator pattern=".+@.+\.[a-z]+" />
 					
-					
-					<table  align="center" background="img/barra_cpf_senha.png;"
-									border="0" cellpadding="0" cellspacing="0" width="474">
-									<tbody>
-										<tr>
-											<th scope="col">
-											<table align="center" border="0" cellpadding="0"
-												cellspacing="0" width="374" >
-												
-												<tbody>
-													<tr>
-														<td scope="col" align="center" height="53" valign="middle">
-														<table align="center" border="0" cellpadding="0"
-															cellspacing="0" width="386">
-															<tbody>
-																<tr>
-																	<td scope="col" align="center" valign="bottom"
-																		width="386">
-							
-								<p:focus binding="#{loginBean.focus }"/>
-								<h:outputLabel value="SEU CPF:"	styleClass="Texto_cpf_login" for="cpfMask" /> <span/>
-								<p:inputMask id="cpfMask" mask="999.999.999-99" size="15" maxlength="14"   value="#{loginBean.cpf}" styleClass="formularios" required="true" >
-									<f:attribute name="fieldRef" value="CPF" /> 
-									<p:ajax id="ajax" actionListener="#{loginBean.verificacpf}"  event="change"  update="panel" />
-								</p:inputMask>
-																							
-								<h:outputLabel value="SENHA:" styleClass="Texto_cpf_login" for="senhaSecret"  /> <span/>
-								<h:inputSecret id="senhaSecret" readonly="#{loginBean.editar}" value="#{loginBean.senha}" styleClass="formularios" maxlength="14"  required="true" size="17" >
-									<f:attribute name="fieldRef" value="Senha" />
-								</h:inputSecret> 
-																
-								<span/><span/><span/><span/><span/>
-								
-								<h:commandButton image="img/boot_entrar.png" style="vertical-align:bottom;"  action="#{loginBean.logar}"  />
-								
-				
-								</td>
-								</tr>
-</tbody>
-						
-					</table></td>
-	</tr>
-	</tbody></table></th></tr></tbody></table>						
-	 	</h:form>	
-		<h:form id="form3">	
-				<div align="center">
-					<p:commandButton image="img/esqueci_senha.png" type="image"	style="vertical-align:bottom;" value="javascript:void(0)" onclick="dlg.show()" />
-					<h:graphicImage	value="img/texto_100_seguro.png" width="146" height="26" />
-				</div>
+				</h:inputText>
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<p:captcha id="captcha" language="pt" theme="white" required="true"
+					publicKey="6Ld1dLoSAAAAAK_jurnwfq7eXMZ2yVk_pCeOwsy0">
+					<f:attribute name="fieldRef" value="Captcha:" />
+				</p:captcha>
+			</h:panelGrid>
+			<p:commandButton actionListener="#{loginBean.esqueciSenha}"
+				image="/img/boot_enviar_senha.png" type="image" update="Msg"
+				value="Enviar" />
+
 		</h:form>
-		</p:outputPanel>
-		</div>
+	</p:dialog>
+	<div id="pgCentralizado"><p:outputPanel id="panel"
+		rendered="true" styleClass="fundo">
+		<mj:focus  for="form1:cpfMask"/>
+		<h:form id="form1">
+		
+			<div align="center"><h:graphicImage value="img/logo.png"
+				width="380" height="145" style="align:center" /></div>
+			<p:growl id="msg" sticky="true" showDetail="true" showSummary="true" />
+
+
+			<table align="center" background="img/barra_cpf_senha.png;"
+				border="0" cellpadding="0" cellspacing="0" width="474">
+				<tbody>
+					<tr>
+						<th scope="col">
+						<table align="center" border="0" cellpadding="0" cellspacing="0"
+							width="374">
+
+							<tbody>
+								<tr>
+									<td scope="col" align="center" height="53" valign="middle">
+									<table align="center" border="0" cellpadding="0"
+										cellspacing="0" width="386">
+										<tbody>
+											<tr>
+												<td scope="col" align="center" valign="bottom" width="386">
+
+												<p:focus binding="#{loginBean.focus }" /> <h:outputLabel
+													value="SEU CPF:" styleClass="Texto_cpf_login" for="cpfMask" />
+												<span /> <p:inputMask id="cpfMask" mask="999.999.999-99"
+													size="15" maxlength="14" value="#{loginBean.cpf}"
+													styleClass="formularios" required="true">
+													<f:attribute name="fieldRef" value="CPF" />
+													<p:ajax id="ajax" actionListener="#{loginBean.validarcpf}"
+														event="change" update="panel" />
+												</p:inputMask> <h:outputLabel value="SENHA:" styleClass="Texto_cpf_login"
+													for="senhaSecret" /> <span /> <h:inputSecret
+													id="senhaSecret" readonly="#{loginBean.editar}"
+													value="#{loginBean.senha}" styleClass="formularios"
+													maxlength="14" required="true" size="17">
+													<f:attribute name="fieldRef" value="Senha" />
+												</h:inputSecret> <span /><span /><span /><span /><span /> <h:commandButton
+													image="img/boot_entrar.png" style="vertical-align:bottom;"
+													action="#{loginBean.logar}" /></td>
+											</tr>
+										</tbody>
+
+									</table>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						</th>
+					</tr>
+				</tbody>
+			</table>
+		
+		</h:form>
+		<h:form id="form2">
+			<div align="center">
+				<p:commandButton image="img/esqueci_senha.png" type="image"	style="vertical-align:bottom;" value="javascript:void(0)" onclick="dlg.show()" />
+				<h:graphicImage value="img/texto_100_seguro.png" width="146" height="26" />
+			</div>
+		</h:form>
+	</p:outputPanel></div>
+
+
+
+
 </f:view>
 </html>
