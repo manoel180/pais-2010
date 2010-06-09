@@ -6,7 +6,7 @@ package br.com.pais.mensagens;
 import javax.faces.application.FacesMessage;
 
 /**
- * @author Cl� dos Souza
+ * @author Manoel
  *
  */
 public class MessageManagerImpl {

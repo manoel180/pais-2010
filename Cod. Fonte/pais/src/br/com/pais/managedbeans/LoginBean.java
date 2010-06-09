@@ -3,6 +3,7 @@
  */
 package br.com.pais.managedbeans;
 
+import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -10,6 +11,9 @@ import javax.faces.event.ActionEvent;
 
 import org.primefaces.component.focus.Focus;
 
+import br.com.pais.dao.DiscipuloDao;
+import br.com.pais.dao.impl.DiscipuloDaoImp;
+import br.com.pais.entities.Discipulos;
 import br.com.pais.exception.GenericException;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.mensagens.MessageManagerImpl;
@@ -28,36 +32,51 @@ import br.com.pais.util.ValidarCPF;
 public class LoginBean {
 
 	protected String cpf ="";
-	
-	protected String senha;
-	
+	protected String senha = null;
 	protected Focus focus;
-	protected String email;
+	protected String email = null;
+	
 	
 	protected boolean editar = true; 
 	
+	protected Discipulos discipulos = new Discipulos();
+	protected DiscipuloDao discipuloDao = new DiscipuloDaoImp();
+	protected Map<String, String> params;
 	
-
 	public String logar(){
+		
+		//params.put("cpf",cpf);
+		//discipuloDao.pesqParam("Discipulo.findbyCPF", params);
 		try {
+			
 			if (ValidarCPF.validarCPF(cpf)== true && senha.equals("123")) {
-				return "/teste.mir";
+				return "/principal.mir";
 			} else {
+				
 				throw new GenericException("usuario.invalido_detail");
 				
-				//return "/login.mir";
 			}
 		} catch (ValidarCPFException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (GenericException e) {
+			cpf = "";
+			focus.setFor("cpfMask");
+			editar=true;		
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro",
 			"usuario.invalido_detail");
+			return "/login.mir";
+		} catch (GenericException e) {
+			cpf = "";
+			focus.setFor("cpfMask");
+			editar=true;		
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro",
+			"usuario.invalido_detail");
+			return "/login.mir";
 		}
-		return "teste.mir";
+		
 	}
-	public void verificacpf(ActionEvent ev){
-	/*public void verificacpf(){*/
+	
+	public void validarcpf(ActionEvent ev){
+		/*public void verificacpf(){*/
 		try {
 			if(ValidarCPF.validarCPF(cpf) == true){		
 				/*ev.getComponent().getId();*/
@@ -71,11 +90,37 @@ public class LoginBean {
 			}
 		} catch (ValidarCPFException e) {
 			// TODO Auto-generated catch block
-			
+			cpf = "";
+			focus.setFor("cpfMask");
 		}
 	}
+		
+	public void esqueciSenha(){
+		
+		
+		/*Verifica o cpf se é válido*/
+			try {
+				if(ValidarCPF.validarCPF(cpf) == true){		
+					
+					
+				}else{
+					cpf = "";
+					//focus.setFor("cpfMaskDialog");
+					
+				}
+			} catch (ValidarCPFException e) {
+				// TODO Auto-generated catch block
+				cpf = "";
+				//focus.setFor("cpfMaskDialog");
+			}
+		}
+		
+	
+	
 	
 	/**
+	 * GETTERS and SETTERS
+	 */
 	
 
 	/**
@@ -147,5 +192,6 @@ public class LoginBean {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
 	
 }
