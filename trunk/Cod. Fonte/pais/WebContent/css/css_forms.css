@@ -1,3 +1,80 @@
+/*
+*CSS Dock
+*/
+.pf-dock-top,.pf-dock-bottom {
+	position: relative;
+	height: 50px;
+	text-align: center;
+}
+
+.pf-dock-container-top {
+	position: absolute;
+	height: 50px;
+	background: url(dock-bg-top.gif);
+	padding-left: 20px;
+}
+
+a.pf-dock-item-top {
+	display: block;
+	width: 40px;
+	color: #000;
+	position: absolute;
+	top: 0;
+	text-align: center;
+	text-decoration: none;
+	font: bold 12px Arial, Helvetica, sans-serif;
+}
+
+.pf-dock-item-top img {
+	border: none;
+	margin: 5px 10px 0;
+	width: 100%;
+}
+
+.pf-dock-item-top span {
+	display: none;
+	padding-left: 20px;
+}
+
+.pf-dock-bottom {
+	width: 100%;
+	bottom: 0;
+	position: absolute;
+	left: 0;
+}
+
+.pf-dock-container-bottom {
+	position: absolute;
+	height: 50px;
+	background: url(dock-bg-bottom.gif);
+	padding-left: 20px;
+}
+
+a.pf-dock-item-bottom {
+	display: block;
+	font: bold 12px Arial, Helvetica, sans-serif;
+	width: 40px;
+	color: #000;
+	bottom: 0;
+	position: absolute;
+	text-align: center;
+	text-decoration: none;
+}
+
+.pf-dock-item-bottom span {
+	display: none;
+	padding-left: 20px;
+}
+
+.pf-dock-item-bottom img {
+	border: none;
+	margin: 5px 10px 0;
+	width: 100%;
+}
+
+/*
+*Fim do CSS Dock
+*/
 .yui-skin-sam .yui-panel .bd {
 	background: #333333;
 	background-color: #E7EFF2;
@@ -21,18 +98,29 @@
 	top: 7px;
 }
 
-.yui-skin-sam  .container-close{ 
+.yui-skin-sam  .container-close {
 	background: url(../img/dialogclose.png) no-repeat;
 }
 
-body{
-	background-image: url("../img/fundo.jpg");
-	background-color: #E7EFF2;
+body {
+	background-color: #02234C;
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
 	background-repeat: repeat-x;
+	size: auto;
+	margin: 0;
+	padding: 0;
+}
+
+.fundobanner {
+	left: 15%;
+	background-position: center;
+	background: url(../img/topo.jpg) no-repeat;
+	position: absolute;
+	width: 900px;
+	height: 216px;
 }
 
 #pgCentralizado {

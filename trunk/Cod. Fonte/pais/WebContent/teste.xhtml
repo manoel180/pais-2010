@@ -10,9 +10,12 @@
 </h:head>
 <h:body>
 <div id="pgCentralizado">
+<h:form>
 <h:outputLabel value="Bem Vindo" styleClass="a"/><br/>
 <h:graphicImage value="img/logo.png" width="380" height="145" style="align:center"  />
-
+<p:captcha id="captcha" language="pt" theme="white" publicKey="6Ld1dLoSAAAAAK_jurnwfq7eXMZ2yVk_pCeOwsy0" validatorMessage="Valor invalido"/>
+<h:commandButton action="#{email.sendSimpleMail}"></h:commandButton>
+</h:form>
 </div>
 </h:body>
 </html>

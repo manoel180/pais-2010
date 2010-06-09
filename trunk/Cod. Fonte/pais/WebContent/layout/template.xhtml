@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.prime.com.tr/ui"
+      	xmlns:ui="http://java.sun.com/jsf/facelets"> 
+<h:head>
+		<link rel="stylesheet" type="text/css" href="css/css_forms.css" />
+		<link rel="stylesheet" type="text/css" href="../css/css_forms.css" />
+	</h:head>
+<body>
+
+        <div id="geral">
+			
+            <div id="topo">
+
+                <ui:insert name="topo">
+          				<ui:include src="bannertopo.xhtml" />
+          				
+                </ui:insert>
+                               
+
+            </div>
+
+            <div id="esquerda" align="left">
+
+                <ui:insert name="esquerda">
+                Esquerda
+                	<ui:include src="geracoes.xhtml"/>
+                </ui:insert>
+				
+            </div>
+
+            <div id="conteudo">
+
+                <ui:insert name="conteudo"></ui:insert>
+
+            </div>
+
+            <div id="direita" align="right">
+
+                  <ui:insert name="direita">
+                  </ui:insert>
+
+            </div>
+
+            <div id="rodape" align="center">
+
+                <ui:insert name="rodape">
+                copyright MN Soluções em TI...
+              </ui:insert>
+
+            </div>
+    	</div>
+	</body>
+
+</html>
