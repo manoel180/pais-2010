@@ -68,7 +68,9 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	public T pesquisarPorId(ID id) {
 		return getEntityManager().find(oClass, id);
 	}
-
+	
+	
+	
 	//Falta Finalizar
 	@Override
 	public T salvar(T object) {
@@ -133,7 +135,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 
 	//Falta Atualizar
 	@SuppressWarnings("unchecked")
-	public T pesqParam(String query, Map<String, Object> params) {
+	public T pesqParam(String query, Map<String, String> params) {
 		Query q = getEntityManager().createQuery(query);
 		for (String chave : params.keySet()) {
 			q.setParameter(chave, params.get(chave));

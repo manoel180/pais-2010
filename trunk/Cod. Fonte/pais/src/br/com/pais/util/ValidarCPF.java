@@ -32,7 +32,7 @@ public class ValidarCPF {
 					|| cpf.equals("999.999.999-99")
 					|| cpf.equals("000.000.000-00")) {
 				valido=false;
-				throw new ValidarCPFException("CPF Inv√°lido");  
+				throw new ValidarCPFException("CPF Inv·lido");  
 			} else {
 				validator.assertValid(cpf);
 
