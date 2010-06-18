@@ -75,21 +75,26 @@ a.pf-dock-item-bottom {
 /*
 *Fim do CSS Dock
 */
+
+/*
+* CSS Panel
+*/
+
 .yui-skin-sam .yui-panel .bd {
-	background: #333333;
-	background-color: #E7EFF2;
-	color: #CCCCCC;
+	background: #D9E4E9;
+	background-color: #D9E4E9;
+	color: #D9E4E9;
 }
 
 .yui-skin-sam .yui-panel .hd {
 	font-family: Trebuchet MS;
 	font-size: 13px;
 	font-weight: normal;
-	color: #466273;
+	color: blue;
 }
 
 .yui-skin-sam .yui-panel-container.shadow .underlay {
-	background-color: #333333;
+	background-color: #D9E4E9;
 	bottom: -7px;
 	left: 7px;
 	opacity: 0.5;
@@ -102,6 +107,113 @@ a.pf-dock-item-bottom {
 	background: url(../img/dialogclose.png) no-repeat;
 }
 
+/*
+* fim CSS Panel
+*/
+
+/*
+
+Panel das equipes
+*/
+.pf-panel {
+	background: #D9E4E9 no-repeat;
+	border-color: #808080;
+	border-style: solid;
+	border-width: 1px 0;
+	position: relative;
+	border-style: hidden;
+}
+
+
+.pf-panel-hd,.pf-panel-bd,.pf-panel-ft {
+	
+	//background: #D9E4E9;
+	//background-color: #D9E4E9;
+	//border-color: #808080;
+	border-style: hidden;
+	//border-width: 0px;
+	margin: 0 -1px;
+}
+
+.pf-panel-hd {
+	
+	background: url(../img/barra_geracao.png) repeat-x  ;
+	//color: #D9E4E9;
+	text-align: center;
+	font-size: 93%;
+	font-weight: bold;
+	line-height: 2;
+	padding: 0 10px;
+	//border-bottom: 1px solid #CCC;
+	border-style: hidden;
+}
+
+.pf-panel-bd {
+	
+	padding: 10px;
+	
+}
+
+.pf-panel-bd,.pf-panel-ft {
+	background-color: #D9E4E9;
+	
+}
+
+.pf-panel-ft {
+	border-style: hidden;
+	border-top: 1px solid #808080;
+	font-size: 77%;
+	padding: 5px 10px;
+}
+
+.pf-panel-hd-controls {
+	cursor: pointer;
+	right: 6px;
+	top: 6px;
+	position: absolute;
+	overflow: hidden;
+}
+
+.pf-panel-toggler-expanded,.pf-panel-toggler-collapsed,.pf-panel-closer,.pf-panel-options
+	{
+	display: block;
+	float: right;
+	margin-left: 3px;
+}
+
+.pf-panel-closer {
+	width: 25px;
+	height: 15px;
+}
+
+
+
+/*
+Fim do panel equipe
+*/
+
+
+
+
+
+
+/*
+	layout
+*/
+.yui-layout {
+	background: url('../img/fundo2.jpg') ;
+}
+
+ .yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-bd {
+                        
+                        background-color: transparent;
+                        border: 0px;
+                }
+
+
+/*
+	fim layout
+*/
 body {
 	background-color: #02234C;
 	margin-left: 0px;
@@ -114,13 +226,23 @@ body {
 	padding: 0;
 }
 
+.fundoform {
+	background-image: url("../img/fundo.jpg");
+}
+
 .fundobanner {
-	left: 15%;
 	background-position: center;
 	background: url(../img/topo.jpg) no-repeat;
-	position: absolute;
+	height: 190px;
+	position: relative;
+}
+
+.fundobanner2 {
+	background-position: center;
+	background: url(../img/topo.jpg) no-repeat;
 	width: 900px;
 	height: 216px;
+	position: relative;
 }
 
 #pgCentralizado {
@@ -167,10 +289,11 @@ a:active {
 	color: #393939;
 }
 
-.Fonte_12_Logado {
+.Fonte_12_Logado{
 	font-family: Trebuchet MS;
 	font-size: 12px;
 	font-weight: normal;
+	font: bold;
 	color: #07335F;
 }
 
