@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view contentType="text/html">
+	<h:head>
+		<title><ui:insert name="title">PAIS - Pastores e Apóstolos Integrados em Sistema </ui:insert>
+		</title>
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/css_forms.css" />
+		<link rel="stylesheet" type="text/css" href="../css/css_forms.css" />
+	</h:head>
+
+
+	<center><p:layout fullPage="false" 
+		style="width:900px;height:620px;">
+		<p:layoutUnit position="top" gutter="false" height="200" proxyResize="true">
+			<ui:insert name="topo">
+				<ui:include src="bannertopo.xhtml" />
+
+			</ui:insert>
+		</p:layoutUnit>
+
+
+		<p:layoutUnit position="left" width="207" maxWidth="207"
+			resizable="true" proxyResize="true">
+			<ui:insert name="esquerda">
+				<ui:include src="geracoes.xhtml" />
+			</ui:insert>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center" height="620" proxyResize="true"
+			scrollable="true" maxWidth="200" maxHeight="620">
+			<ui:include src="menu-vc-esta.xhtml" />
+
+
+			<ui:insert name="conteudo">
+
+			</ui:insert>
+		</p:layoutUnit>
+
+
+
+		<p:layoutUnit position="bottom" height="30" proxyResize="true">
+			<ui:insert name="rodape">
+				<center>Copyright © 2010. Todos os direitos reservados.</center>
+			</ui:insert>
+		</p:layoutUnit>
+
+
+	</p:layout></center>
+</f:view>
+
+</html>

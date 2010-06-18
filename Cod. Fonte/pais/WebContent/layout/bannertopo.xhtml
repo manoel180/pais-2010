@@ -6,32 +6,30 @@
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-<div class="fundobanner" align="center"><p:outputPanel
-	style="aling: center;">
+  
+<div class="fundobanner" align="center">
+
+<p:outputPanel style="aling: center;">
 
 	<br />
 	<br />
-	
-	<!--<h:outputText value="BEM VINDO," styleClass="Fonte_12_Logado"/><br/>
-			<h:outputText value="Sr(a):  Renê Terra Nova" styleClass="Fonte_12_Logado"/>
-			
-			<h:graphicImage value="/img/ap_rene.jpg" width="61" height="59" />
-		
-	-->
-	<table width="317" border="0" align="right" cellpadding="5"
-		cellspacing="0">
+	<table width="400" border="0" align="right" cellpadding="5"	cellspacing="0">
 		<tr>
-			<td width="294" align="right" valign="top" class="Fonte_12_Logado"
-				scope="col">BEM VINDO,<br />
-			<h:outputText value="Sr(a):  Renê Terra Nova"
-				styleClass="Fonte_12_Logado" /></td>
+			<td width="294" align="right" valign="top" class="Fonte_12_Logado" scope="col">
+                        BEM VINDO,<br />
+				<h:outputLabel value="Sr(a):  Renê Terra Nova" styleClass="Fonte_12_Logado"  />
+				
+			</td>
 			<td width="61" align="right" scope="col"><h:graphicImage
 				value="/img/ap_rene.jpg" width="61" height="59" /></td>
 		</tr>
 	</table>
-	<br/><br/><br/><br/><br/><br/>
+	<!-- <br/><br/><br/><br/><br/><br/> -->
+	
 	<ui:include src="menu-superior.xhtml" />
 
 </p:outputPanel>
+
 </div>
+
 </ui:composition>

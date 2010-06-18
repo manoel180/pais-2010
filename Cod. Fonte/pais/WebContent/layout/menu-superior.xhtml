@@ -5,28 +5,17 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
-	<f:view>
-		<h:head>
-			<link type="text/css" rel="stylesheet"
-				href="#{request.contextPath}/css/css_forms.css"></link>
-				<style type="text/css">
-		body {
-			margin:0;
-			padding: 0;
-		}
-	</style>
-		</h:head>
 
-		<p:dock position="top" proximity="10" itemWidth="85">
+		<p:dock halign="true"  position="bottom" proximity="10" itemWidth="85">
 			<p:menuitem icon="/img/botoes/home1.png" url="/principal.mir" />
 			<p:menuitem icon="/img/botoes/cadastro1.png" url="#" />
 			<p:menuitem icon="/img/botoes/relatorios1.png" url="#" />
 			<p:menuitem icon="/img/botoes/mensagens1.png" url="#" />
 			<p:menuitem icon="/img/botoes/financeiro1.png" url="#" />
 			<p:menuitem icon="/img/botoes/eventos3.png" url="#" />
-			<p:menuitem icon="/img/botoes/sair.png" url="#" />
+			<p:menuitem icon="/img/botoes/sair.png" url="/login.mir" />
 
 
 		</p:dock>
-	</f:view>
+	
 </ui:composition>
