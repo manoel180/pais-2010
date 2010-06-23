@@ -1,0 +1,28 @@
+TELAS DO PAIS
+
+Login
+Principal ou index
+Cadastro de Discípulo
+cadastro de País
+cadastro de Estados
+cadastro de Cidade 
+cadastro de Bairro
+cadastro de Logradouro
+cadastro de Função Eclesiástica.
+Cadastro de Formação Eclesiástica.
+Cadastro de Encontros
+Cadastro da movimentação financeira (incluir o repasse)
+Cadastrado de Eventos
+Mensagens de informação de repasse, de aviso de qualquer tipo.
+
+Relatórios
+
+Qual líder de célula mais cadastrou discípulo
+Qual célula arrecadou mais
+Quanto foi arrecadado mensalmente
+Quantidade de encontro realizados
+Quantidade de Discipulos geral
+Quantidade de Discípulos por Zona
+Quantidade de pessoas lideres de células
+Quantidade de discípulo de determinado líder de célula
+Quantidade arrecadade cadalíder de célula.
