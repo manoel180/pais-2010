@@ -25,7 +25,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	private final Class<T> oClass;// object class	
 
 	//fica
-	private EntityManager getEntityManager() {
+	protected EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}
 

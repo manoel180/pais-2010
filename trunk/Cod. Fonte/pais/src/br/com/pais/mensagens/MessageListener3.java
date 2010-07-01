@@ -12,7 +12,12 @@ package br.com.pais.mensagens;
 
   public class MessageListener3 implements PhaseListener {
 
-      public PhaseId getPhaseId() {
+      /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public PhaseId getPhaseId() {
           return PhaseId.RENDER_RESPONSE;
       }
 
