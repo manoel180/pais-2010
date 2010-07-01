@@ -3,10 +3,10 @@
  */
 package br.com.pais.managedbeans;
 
-import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.component.focus.Focus;
@@ -41,35 +41,39 @@ public class LoginBean {
 	
 	protected Discipulos discipulos = new Discipulos();
 	protected DiscipuloDao discipuloDao = new DiscipuloDaoImp();
-	protected Map<String, String> params;
+	
 	
 	public String logar(){
 		
-		//params.put("cpf",cpf);
-		//discipuloDao.pesqParam("Discipulo.findbyCPF", params);
+		
 		try {
 			
-			if (ValidarCPF.validarCPF(cpf)== true && senha.equals("123")) {
-				return "/principal.mir";
+			if (ValidarCPF.validarCPF(cpf)== true ) {
+				discipulos = discipuloDao.encontrarPorCPF(cpf);
+					if(discipulos.getDisSenha().equals(senha)){
+						return "/principal.mir";
+					}
+					 else {
+							throw new GenericException("usuario.invalido_detail");
+						}
 			} else {
-				
 				throw new GenericException("usuario.invalido_detail");
-				
 			}
 		} catch (ValidarCPFException e) {
 			// TODO Auto-generated catch block
 			cpf = "";
 			focus.setFor("cpfMask");
 			editar=true;		
-			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro",
-			"usuario.invalido_detail");
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro", "usuario.invalido_detail");
 			return "/login.mir";
 		} catch (GenericException e) {
 			cpf = "";
 			focus.setFor("cpfMask");
 			editar=true;		
-			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro",
-			"usuario.invalido_detail");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "erro", "CPF ou SENHA inválida");
+			facesContext.addMessage(null, message);
+		//MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro", "usuario.invalido_detail");
 			return "/login.mir";
 		}
 		
