@@ -1,12 +1,45 @@
 <?xml version="1.0"?>
 <faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
-	<!-- Tratamento das Mensagens de Exceção -->
-	<application>
-		<message-bundle>br.com.pais.mensagens.mensagens</message-bundle>
-	</application>
-	<lifecycle>
-		<phase-listener>br.com.pais.mensagens.MessageListener3</phase-listener>
-	</lifecycle>
- </faces-config>
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+ <managed-bean>
+  <managed-bean-name>discipuloBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.DiscipuloBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>estadoCivilBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.EstadoCivilBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>fileUploadController</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.FileUploadController</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>loginBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.LoginBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>logradouroBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.LogradouroBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>sendEMail</managed-bean-name>
+  <managed-bean-class>br.com.pais.util.SendEMail</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <!--
+ <faces-config-extension>
+  <phase-listener>br.com.pais.mensagens.MessageListener3</phase-listener>
+ </faces-config-extension>
+
+ 
+ Tratamento das Mensagens de Exceção -->
+ <application>
+  <message-bundle>br.com.pais.mensagens.mensagens</message-bundle>
+ </application>
+</faces-config>
