@@ -9,13 +9,30 @@
 		<link rel="stylesheet" type="text/css" href="../css/css.css" />
 </h:head>
 <h:body>
-<div id="pgCentralizado">
-<h:form>
-<h:outputLabel value="Bem Vindo" styleClass="a"/><br/>
-<h:graphicImage value="img/logo.png" width="380" height="145" style="align:center"  />
-<p:captcha id="captcha" language="pt" theme="white" publicKey="6Ld1dLoSAAAAAK_jurnwfq7eXMZ2yVk_pCeOwsy0" validatorMessage="Valor invalido"/>
-<h:commandButton action="#{email.sendSimpleMail}"></h:commandButton>
-</h:form>
-</div>
+<div id="pgCentralizado"> <h:form id="form">
+            <p:menubar >
+              
+            <p:submenu>
+            	<f:facet name="label">
+            		<p:menuitem id="principal" label="&nbsp;&nbsp;&nbsp;PRINCIPAL" icon="img/home1.png" actionListener="#{usuarioBean.IrPrincipal}"/>
+            	</f:facet>
+            </p:submenu>
+            	
+            	<p:submenu label="CADASTROS&nbsp;&nbsp;&nbsp;"  labelStyleClass="cadastro" >	
+					<p:menuitem label="ASSOCIADOS" actionListener="#{discipuloBean.prepararDiscipulos}"/>
+					<p:menuitem label="USUÁRIOS"/>            	
+            	</p:submenu>
+            	<p:submenu  label="RELATÓRIOS&nbsp;&nbsp;&nbsp;" labelStyleClass="relatorio">
+					<p:menuitem label="ASSOCIADOS"/>
+					<p:menuitem label="USUÁRIOS"/>            	
+            	</p:submenu>
+            	<p:submenu>  
+             <f:facet name="label">  
+                 <p:menuitem value="&nbsp;&nbsp;&nbsp;&nbsp;SAIR DO SISTEMA" icon="img/sair1.png" />  
+             </f:facet>  
+         </p:submenu>  
+            </p:menubar>
+              
+            </h:form></div>
 </h:body>
 </html>

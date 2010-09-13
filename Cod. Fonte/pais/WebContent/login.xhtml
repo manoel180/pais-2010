@@ -9,26 +9,26 @@
 <f:view contentType="text/html" >  
 
 	<h:head>
+		
 		<link rel="stylesheet" type="text/css" href="../css/css.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/css.css" />
 	</h:head>
 
 	<p:dialog header="Esqueci a senha!!!" underlay="shadow" visible="none"
-		modal="true" effect="fade" fixedCenter="true" widgetVar="dlg">
+		modal="true" effect="fade" fixedCenter="true"  widgetVar="dlg">
 		<h:form id="form3">
-			<p:growl  id="dlgMsg" showDetail="true" showSummary="true" sticky="true"/>
+			<p:growl  id="dlgMsg" showDetail="true" showSummary="true"  sticky="false"/>
 			<h:panelGrid columns="2">
 
-				<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login"
+				<h:outputLabel  value="SEU CPF:" styleClass="Texto_cpf_login"
 					for="cpfMaskDialog" />
-				<p:inputMask id="cpfMaskDialog" validatorMessage="CPF"
+				<p:inputMask   id="cpfMaskDialog" validatorMessage="CPF"
 					value="#{loginBean.cpf}" mask="999.999.999-99" size="20"
 					maxlength="14" styleClass="formularios" required="true" />
 
-
 				<h:outputLabel value="SEU EMAIL:" styleClass="Texto_cpf_login"
 					for="emailTxtDialog" />
-				<h:inputText id="emailTxtDialog" value="#{loginBean.email}"
+				<h:inputText id="emailTxtDialog" value="#{loginBean.email}" 
 					size="20" autocomplete="off" styleClass="formularios" validatorMessage="Email inválido"
 					required="true">
 					<f:attribute name="fieldRef" value="EMAIL:" />
@@ -77,7 +77,7 @@
 
 												<p:focus binding="#{loginBean.focus }" /> <h:outputLabel
 													value="SEU CPF:" styleClass="Texto_cpf_login" for="cpfMask" />
-												<span /> <p:inputMask id="cpfMask" mask="999.999.999-99"
+												<span /> <p:inputMask id="cpfMask" autocomplete="off" mask="999.999.999-99"
 													size="15" maxlength="14" value="#{loginBean.cpf}"
 													styleClass="formularios" required="true">
 													<f:attribute name="fieldRef" value="CPF" />
@@ -90,7 +90,9 @@
 													maxlength="14" required="true" size="17">
 													<f:attribute name="fieldRef" value="Senha" />
 												</h:inputSecret> <span /><span /><span /><span /><span /> 
-													<h:commandButton image="img/boot_entrar.png" style="vertical-align:bottom;"	action="#{loginBean.logar}" />										
+													<h:commandButton image="img/boot_entrar.png"  style="vertical-align:bottom;"	action="#{loginBean.logar}" >
+														<p:ajax update="panel" />
+													</h:commandButton>										
 												</td>
 											</tr>
 										</tbody>
