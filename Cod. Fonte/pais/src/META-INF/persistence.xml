@@ -14,11 +14,11 @@
 			<property name="hibernate.connection.driver_class"
 				value="com.mysql.jdbc.Driver" />
 			<property name="hibernate.connection.url"
-				value="jdbc:mysql://localhost/wwwpais_sistema" />
+				value="jdbc:mysql://localhost/wwwpais_sistema?autoReconnect=true" />
 			<property name="hibernate.connection.username"
-				value="root" />
+				value="wwwpais_suporte" />
 			<property name="hibernate.connection.password"
-				value="123" />
+				value="06112218" />
 
 			<!--Configuracoes de Debug-->
 			<property name="hibernate.show_sql" value="true" />
@@ -26,7 +26,7 @@
 			<property name="use_sql_comments" value="true" />
 			
             <!--Configuração do segundo nível de cache-->
-            <property name="hibernate.cache.provider_class" 
+            <!--<property name="hibernate.cache.provider_class" 
                       value="net.sf.ehcache.hibernate.EhCacheProvider" />
             
             <property name="hibernate.cache.provider_configuration"
@@ -43,7 +43,7 @@
             
             
 
-            <!--Configuração do pool de c3p0-->           
+            --><!--Configuração do pool de c3p0--><!--           
             <property name="hibernate.c3p0.min_size" value="5" />
             <property name="hibernate.c3p0.max_size" value="20" />
             <property name="hibernate.c3p0.timeout" value="300" />
@@ -52,7 +52,7 @@
             
 
 
-		</properties>
+		--></properties>
 
 	</persistence-unit>
 </persistence>
