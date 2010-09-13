@@ -2,23 +2,23 @@ package br.com.pais.exception;
 
 
 
-public class ValidarCPFException extends Exception {
+public class ValidarTEException extends Exception {
 
 	/**
 	 * 
 	 */
 //	private static final long serialVersionUID = 8275122096296509180L;
 
-	public ValidarCPFException(String msg) {
+	public ValidarTEException(String msg) {
 		super(msg);
 	
 	}
 
-	public ValidarCPFException(String msg, Throwable throwable) {
+	public ValidarTEException(String msg, Throwable throwable) {
 		super(msg, throwable);
 	}
 
-	public ValidarCPFException(Throwable throwable) {
+	public ValidarTEException(Throwable throwable) {
 		super(throwable);
 	}
 
