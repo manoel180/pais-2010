@@ -4,8 +4,6 @@
 package br.com.pais.managedbeans;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
@@ -27,8 +25,6 @@ import br.com.pais.util.ValidarCPF;
  * @author manoel
  */
 
-@ManagedBean(name = "loginBean")
-@SessionScoped()
 public class LoginBean {
 
 	protected String cpf ="";
