@@ -5,24 +5,31 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	>
 
 <f:view contentType="text/html">
 	<h:head>
-		<title><ui:insert name="title">PAIS - Pastores e Apóstolos Integrados em Sistema </ui:insert>
+		<title>
+		<ui:insert name="title">PAIS - Pastores e Apóstolos Integrados em Sistema </ui:insert>
 		</title>
+		 <script type="text/javascript" src="../util/zeroesq.js"></script>
 		<link rel="stylesheet" type="text/css"
 			href="#{request.contextPath}/css/css_forms.css" />
 		<link rel="stylesheet" type="text/css" href="../css/css_forms.css" />
 	</h:head>
 
+<h:body>
 
-	<center><p:layout fullPage="false" 
-		style="width:900px;height:620px;">
-		<p:layoutUnit position="top" gutter="false" height="200" proxyResize="true">
+	<center>
+	<p:layout fullPage="false" 
+		style="width:900px; height:720px;">
+		<p:layoutUnit position="top" gutter="false" height="210"
+			proxyResize="true">
 			<ui:insert name="topo">
 				<ui:include src="bannertopo.xhtml" />
-
+<br/><br />
 			</ui:insert>
 		</p:layoutUnit>
 
@@ -35,13 +42,14 @@
 		</p:layoutUnit>
 
 		<p:layoutUnit position="center" height="620" proxyResize="true"
-			scrollable="true" maxWidth="200" maxHeight="620">
+			scrollable="true"   maxWidth="200" maxHeight="620">
 			<ui:include src="menu-vc-esta.xhtml" />
-
-
+			<br />
+			<p:growl id="msg" showDetail="true" showSummary="true"  />
 			<ui:insert name="conteudo">
 
 			</ui:insert>
+			
 		</p:layoutUnit>
 
 
@@ -54,6 +62,7 @@
 
 
 	</p:layout></center>
+	</h:body>
 </f:view>
 
 </html>
