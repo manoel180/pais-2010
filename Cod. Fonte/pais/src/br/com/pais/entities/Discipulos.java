@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 12/09/2010 22:48:01 by Hibernate Tools 3.3.0.GA
+// Generated 13/09/2010 13:58:41 by Hibernate Tools 3.3.0.GA
 
 import java.util.Date;
 import java.util.HashSet;
@@ -29,11 +29,11 @@ public class Discipulos implements java.io.Serializable {
 
 	private Integer disCod;
 	private Estadocivil estadocivil;
+	private Logradouro logradouro;
 	private Formacaoacademica formacaoacademica;
 	private Discipulos discipulos;
-	private Logradouro logradouro;
 	private Geracoes geracoes;
-	private byte[] disfoto;
+	private String disfoto;
 	private String disemail;
 	private String disnome;
 	private String dispai;
@@ -57,68 +57,7 @@ public class Discipulos implements java.io.Serializable {
 	private Set<Participa> participas = new HashSet<Participa>(0);
 	private Set<Funeclesiasticasdiscipulos> funeclesiasticasdiscipuloses = new HashSet<Funeclesiasticasdiscipulos>(
 			0);
-
-	public Discipulos() {
-	}
-
-	public Discipulos(Estadocivil estadocivil,
-			Formacaoacademica formacaoacademica, Discipulos discipulos,
-			Logradouro logradouro, Geracoes geracoes, String disnome,
-			String dismae, char dism12, String disCpf, String disNuEndereco) {
-		this.estadocivil = estadocivil;
-		this.formacaoacademica = formacaoacademica;
-		this.discipulos = discipulos;
-		this.logradouro = logradouro;
-		this.geracoes = geracoes;
-		this.disnome = disnome;
-		this.dismae = dismae;
-		this.dism12 = dism12;
-		this.disCpf = disCpf;
-		this.disNuEndereco = disNuEndereco;
-	}
-
-	public Discipulos(Estadocivil estadocivil,
-			Formacaoacademica formacaoacademica, Discipulos discipulos,
-			Logradouro logradouro, Geracoes geracoes, byte[] disfoto,
-			String disemail, String disnome, String dispai, String disconjuge,
-			String dismae, Date disdatanascimento, char dism12,
-			String disSenha, String disCpf, String disRg, String disTitEleitor,
-			String disNuEndereco, String disEndComplemento,
-			Set<Repasse> repasses,
-			Set<Formacaoeclesiasticas> formacaoeclesiasticases,
-			Set<Bases> basesesForLiderGovJusto,
-			Set<Bases> basesesForLiderAcaoSocial, Set<Discipulos> discipuloses,
-			Set<Teldiscipulos> teldiscipuloses, Set<Participa> participas,
-			Set<Funeclesiasticasdiscipulos> funeclesiasticasdiscipuloses) {
-		this.estadocivil = estadocivil;
-		this.formacaoacademica = formacaoacademica;
-		this.discipulos = discipulos;
-		this.logradouro = logradouro;
-		this.geracoes = geracoes;
-		this.disfoto = disfoto;
-		this.disemail = disemail;
-		this.disnome = disnome;
-		this.dispai = dispai;
-		this.disconjuge = disconjuge;
-		this.dismae = dismae;
-		this.disdatanascimento = disdatanascimento;
-		this.dism12 = dism12;
-		this.disSenha = disSenha;
-		this.disCpf = disCpf;
-		this.disRg = disRg;
-		this.disTitEleitor = disTitEleitor;
-		this.disNuEndereco = disNuEndereco;
-		this.disEndComplemento = disEndComplemento;
-		this.repasses = repasses;
-		this.formacaoeclesiasticases = formacaoeclesiasticases;
-		this.basesesForLiderGovJusto = basesesForLiderGovJusto;
-		this.basesesForLiderAcaoSocial = basesesForLiderAcaoSocial;
-		this.discipuloses = discipuloses;
-		this.teldiscipuloses = teldiscipuloses;
-		this.participas = participas;
-		this.funeclesiasticasdiscipuloses = funeclesiasticasdiscipuloses;
-	}
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "disCod", unique = true, nullable = false)
@@ -138,6 +77,16 @@ public class Discipulos implements java.io.Serializable {
 
 	public void setEstadocivil(Estadocivil estadocivil) {
 		this.estadocivil = estadocivil;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "disEndereco", nullable = false)
+	public Logradouro getLogradouro() {
+		return this.logradouro;
+	}
+
+	public void setLogradouro(Logradouro logradouro) {
+		this.logradouro = logradouro;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -161,16 +110,6 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "disEndere�o", nullable = false)
-	public Logradouro getLogradouro() {
-		return this.logradouro;
-	}
-
-	public void setLogradouro(Logradouro logradouro) {
-		this.logradouro = logradouro;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "disGeracao", nullable = false)
 	public Geracoes getGeracoes() {
 		return this.geracoes;
@@ -181,11 +120,11 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@Column(name = "disfoto")
-	public byte[] getDisfoto() {
+	public String getDisfoto() {
 		return this.disfoto;
 	}
 
-	public void setDisfoto(byte[] disfoto) {
+	public void setDisfoto(String disfoto) {
 		this.disfoto = disfoto;
 	}
 

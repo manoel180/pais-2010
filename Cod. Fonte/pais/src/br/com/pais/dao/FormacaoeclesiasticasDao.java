@@ -1,9 +1,9 @@
 package br.com.pais.dao;
 
-import br.com.pais.entities.Discipulos;
+import br.com.pais.entities.Formacaoeclesiasticas;
 
 
-public interface FormacaoeclesiasticasDao extends DaoGenerico<Discipulos, Integer> {
-	public Discipulos encontrarPorCPF(String cpf) ;
+public interface FormacaoeclesiasticasDao extends DaoGenerico<Formacaoeclesiasticas, Integer> {
+	
 	
 }
