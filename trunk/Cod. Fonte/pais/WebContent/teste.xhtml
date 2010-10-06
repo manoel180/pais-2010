@@ -10,28 +10,10 @@
 </h:head>
 <h:body>
 <div id="pgCentralizado"> <h:form id="form">
-            <p:menubar >
-              
-            <p:submenu>
-            	<f:facet name="label">
-            		<p:menuitem id="principal" label="&nbsp;&nbsp;&nbsp;PRINCIPAL" icon="img/home1.png" actionListener="#{usuarioBean.IrPrincipal}"/>
-            	</f:facet>
-            </p:submenu>
+            
             	
-            	<p:submenu label="CADASTROS&nbsp;&nbsp;&nbsp;"  labelStyleClass="cadastro" >	
-					<p:menuitem label="ASSOCIADOS" actionListener="#{discipuloBean.prepararDiscipulos}"/>
-					<p:menuitem label="USUÁRIOS"/>            	
-            	</p:submenu>
-            	<p:submenu  label="RELATÓRIOS&nbsp;&nbsp;&nbsp;" labelStyleClass="relatorio">
-					<p:menuitem label="ASSOCIADOS"/>
-					<p:menuitem label="USUÁRIOS"/>            	
-            	</p:submenu>
-            	<p:submenu>  
-             <f:facet name="label">  
-                 <p:menuitem value="&nbsp;&nbsp;&nbsp;&nbsp;SAIR DO SISTEMA" icon="img/sair1.png" />  
-             </f:facet>  
-         </p:submenu>  
-            </p:menubar>
+            <h:commandButton action="#{discipuloBean.prepararDiscipulo}"/>	
+            
               
             </h:form></div>
 </h:body>

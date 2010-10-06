@@ -15,11 +15,12 @@
 		<tr>
 			<td width="294" align="right" valign="top" class="Fonte_12_Logado" scope="col">
                         BEM VINDO,<br />
-				<h:outputLabel value="Sr(a):  Renê Terra Nova" styleClass="Fonte_12_Logado"  />
+				<h:outputLabel value="#{loginBean.discipuloSessao.discipulos.disnome}" styleClass="Fonte_12_Logado"  />
 				
 			</td>
-			<td width="61" align="right" scope="col"><h:graphicImage
-				value="/img/ap_rene.jpg" width="61" height="59" /></td>
+			<td width="61" align="right" scope="col">
+			<p:graphicImage cache="true"  value="#{loginBean.discipuloSessao.discipulos.disfoto}" 
+			width="61" height="59" /></td>
 		</tr>
 	</table>
 	 <br/><br/><br/><br/><br/><br/> 
