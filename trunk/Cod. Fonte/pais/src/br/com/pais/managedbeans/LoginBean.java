@@ -3,11 +3,15 @@
  */
 package br.com.pais.managedbeans;
 
+import java.io.InputStream;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.component.focus.Focus;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
@@ -15,6 +19,7 @@ import br.com.pais.entities.Discipulos;
 import br.com.pais.exception.GenericException;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.mensagens.MessageManagerImpl;
+import br.com.pais.util.ApplicationSecurityManager;
 import br.com.pais.util.ValidarCPF;
 
 
@@ -31,7 +36,8 @@ public class LoginBean {
 	protected String senha = null;
 	protected Focus focus;
 	protected String email = null;
-	
+	private StreamedContent image;  
+	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 	
 	protected boolean editar = true; 
 	
@@ -47,6 +53,7 @@ public class LoginBean {
 			if (ValidarCPF.validarCPF(cpf)== true ) {
 				discipulos = discipuloDao.encontrarPorCPF(cpf);
 					if(discipulos.getDisSenha().equals(senha)){
+						discipuloSessao.setDiscipulos(discipulos);
 						return "/principal.mir";
 					}
 					 else {
@@ -191,6 +198,20 @@ public class LoginBean {
 	 */
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	/**
+	 * @return the discipuloSessao
+	 */
+	public ApplicationSecurityManager getDiscipuloSessao() {
+		return discipuloSessao;
+	}
+
+	/**
+	 * @param discipuloSessao the discipuloSessao to set
+	 */
+	public void setDiscipuloSessao(ApplicationSecurityManager discipuloSessao) {
+		this.discipuloSessao = discipuloSessao;
 	}
 
 	

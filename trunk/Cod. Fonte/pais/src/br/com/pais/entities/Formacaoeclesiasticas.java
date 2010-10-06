@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 12/09/2010 22:48:01 by Hibernate Tools 3.3.0.GA
+// Generated 13/09/2010 13:58:41 by Hibernate Tools 3.3.0.GA
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +21,10 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "formacaoeclesiasticas", catalog = "wwwpais_sistema", uniqueConstraints = @UniqueConstraint(columnNames = "forDescricao"))
 public class Formacaoeclesiasticas implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer forCod;
 	private String forDescricao;
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
