@@ -12,11 +12,11 @@
   <managed-bean-class>br.com.pais.managedbeans.EstadoCivilBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
- <managed-bean>
-  <managed-bean-name>fileUploadController</managed-bean-name>
-  <managed-bean-class>br.com.pais.managedbeans.FileUploadController</managed-bean-class>
-  <managed-bean-scope>session</managed-bean-scope>
- </managed-bean>
+<!-- <managed-bean>-->
+<!--  <managed-bean-name>fileUploadController</managed-bean-name>-->
+<!--  <managed-bean-class>br.com.pais.managedbeans.FileUploadController</managed-bean-class>-->
+<!--  <managed-bean-scope>session</managed-bean-scope>-->
+<!-- </managed-bean>-->
  <managed-bean>
   <managed-bean-name>loginBean</managed-bean-name>
   <managed-bean-class>br.com.pais.managedbeans.LoginBean</managed-bean-class>
@@ -32,6 +32,16 @@
   <managed-bean-class>br.com.pais.util.SendEMail</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>formacaoAcademicaBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.FormacaoAcademicaBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>funcaoeclesiasticasBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.FuncaoeclesiasticasBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
  <!--
  <faces-config-extension>
   <phase-listener>br.com.pais.mensagens.MessageListener3</phase-listener>
@@ -41,5 +51,8 @@
  Tratamento das Mensagens de Exceção -->
  <application>
   <message-bundle>br.com.pais.mensagens.mensagens</message-bundle>
- </application>
-</faces-config>
+ </application><!--
+ <lifecycle>
+  <phase-listener>br.com.pais.util.CtrPhaseListener</phase-listener>
+ </lifecycle>
+--></faces-config>
