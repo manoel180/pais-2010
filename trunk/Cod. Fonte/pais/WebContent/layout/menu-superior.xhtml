@@ -1,19 +1,59 @@
-<html xmlns="http://www.w3.org/1999/xhtml" 
-xmlns:h="http://java.sun.com/jsf/html"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-		<p:dock halign="true"  position="bottom" proximity="10" itemWidth="85">
-			<p:menuitem icon="/img/botoes/home1.png" url="/principal.mir" />
-			<p:menuitem icon="/img/botoes/cadastro1.png" url="#" />
-			<p:menuitem icon="/img/botoes/relatorios1.png" url="#" />
-			<p:menuitem icon="/img/botoes/mensagens1.png" url="#" />
-			<p:menuitem icon="/img/botoes/financeiro1.png" url="#" />
-			<p:menuitem icon="/img/botoes/eventos3.png" url="#" />
-			<p:menuitem icon="/img/botoes/sair.png" url="/login.mir" />
+<div align="left">
+<h:form>
+	
+<p:menubar autoSubmenuDisplay="true">
+		<p:submenu>
+ 			<f:facet name="label">
+				<p:menuitem value="PRINCIPAL" align="left"  ajax="false" url="/index.mir" />
+			</f:facet>
+		</p:submenu>
 
+		<p:submenu label="CADASTRAR" align="left" >
+			<p:menuitem value="Novo Discípulo"   action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
+			<p:menuitem value="Nova Célula"   rendered="#{loginBean.cadCelulas}" ajax="false"/>
+		</p:submenu>
+		
+		<p:submenu  label="FINANCEIRO"  align="left" >
+			<p:menuitem value="&nbsp;Fazer Repasse &nbsp;" ajax="false" />
+			<p:menuitem value="&nbsp;Receber Repasse &nbsp;" ajax="false" />
+		</p:submenu>
+		<p:submenu label="RELATÓRIOS"  >
+			<p:menuitem value="&nbsp;Listar Repasse&nbsp;" ajax="false" />
+					
+		</p:submenu>
+		<p:submenu label="EVENTOS" >
+				<p:menuitem value="&nbsp;Encontros&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Congressos&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Celebrações&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Batismos nas Águas&nbsp;" ajax="false" />
+		</p:submenu>
 
-		</p:dock>
+		<p:submenu label="ESCOLA DE LÍDERES" >
+			<p:menuitem value="&nbsp; Abrir Escola&nbsp;" ajax="false" />
+			<p:menuitem value="&nbsp; Lançar Notas&nbsp;" ajax="false" />
+		</p:submenu>
+		
+		<p:submenu label="MENSAGENS"  >
+			<p:menuitem value="&nbsp;Enviar Mensagem&nbsp;" ajax="false" />
+			<p:menuitem value="&nbsp;Listar Enviadas&nbsp;" ajax="false" />
+		</p:submenu>
+		
+		<p:submenu>
+ 			<f:facet name="label">
+				<p:menuitem action="#{loginBean.sairAplicacao}" value="SAIR" align="left"  ajax="false" />
+			</f:facet>
+		</p:submenu>
+	</p:menubar>
+	
+</h:form>
+</div>
 
 </html>
