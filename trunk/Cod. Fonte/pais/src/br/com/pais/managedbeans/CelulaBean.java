@@ -12,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.event.FileUploadEvent;
@@ -29,6 +30,7 @@ import br.com.pais.dao.impl.FormacaoeclesiasticasDaoImp;
 import br.com.pais.dao.impl.FuncaoeclesiasticasDaoImp;
 import br.com.pais.dao.impl.LogradouroDaoImp;
 import br.com.pais.entities.Bairro;
+import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Encontros;
 import br.com.pais.entities.Estado;
@@ -50,42 +52,28 @@ import br.com.pais.util.ValidarTituloEleitor;
  * @author manoel
  */
 
-public class DiscipuloBean {
+public class CelulaBean {
 
-	protected boolean editar = true;
-
-	private Discipulos discipulos = new Discipulos();
-	private Encontros encontros = new Encontros();
-	private Geracoes geracoes = new Geracoes();
-	private Estadocivil estadocivil = new Estadocivil();
-	private Formacaoacademica formacaoacademica = new Formacaoacademica();
-	private Formacaoeclesiasticas formacaoeclesiastica = new Formacaoeclesiasticas();
-	private Funcaoeclesiasticas funcaoeclesiasticas = new Funcaoeclesiasticas();
 	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 
 	// Objetos Daos
+	private LogradouroDao logradouroDao = new LogradouroDaoImp();
 	private FuncaoeclesiasticasDao funcaoeclesiasticasDao = new FuncaoeclesiasticasDaoImp();
+	private DiscipuloDao discipuloDao = new DiscipuloDaoImp();
+
+	protected boolean editar = true;
+	private Celulas celulas = new Celulas();
+	private Discipulos discipulos = new Discipulos();
+
 	byte[] conteudo;
 	String path;
 
-	private List<Formacaoeclesiasticas> ListaFormacoesEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
-	// private List<Encontros> ListaEncontros = new ArrayList<Encontros>();
-	private List<Funcaoeclesiasticas> listaFuncaoEclesiasticas = new ArrayList<Funcaoeclesiasticas>();
-	private DualListModel<Encontros> ListaEncontros = new DualListModel<Encontros>();
-	private DualListModel<Formacaoeclesiasticas> ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>();
-	private List<Encontros> source = new ArrayList<Encontros>();
-	private List<Encontros> target = new ArrayList<Encontros>();
-
-	private List<Formacaoeclesiasticas> sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
-	private List<Formacaoeclesiasticas> targetFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
+	private DualListModel<Discipulos> ListaDiscipulos = new DualListModel<Discipulos>();
+	private List<Discipulos> source = new ArrayList<Discipulos>();
+	private List<Discipulos> target = new ArrayList<Discipulos>();
 
 	private Formacaoeclesiasticas[] SelecaoFormacoesEclesiasticas;
 	private Encontros[] SelecaoEncontros;
-
-	private FormacaoeclesiasticasDao formacaoeclesiasticasDao = new FormacaoeclesiasticasDaoImp();
-	private DiscipuloDao discipuloDao = new DiscipuloDaoImp();
-
-	private String nomeArquivoSelecionado;
 	private StreamedContent imagem;
 
 	private Estado estado = new Estado();
@@ -93,14 +81,8 @@ public class DiscipuloBean {
 	private Bairro bairro = new Bairro();
 	private Logradouro logradouro = new Logradouro();
 
-	// Objetos Daos
-	private LogradouroDao logradouroDao = new LogradouroDaoImp();
-
 	private boolean editarSenha;
-	
-	
-	
-	
+
 	// Buscar pelo cep
 	public void buscarCEP(AjaxBehaviorEvent event) {
 		// String cep = getLogradouro().getCep().substring(0, 5);
@@ -117,137 +99,36 @@ public class DiscipuloBean {
 		// return cep;
 	}
 
-	public void isCasado(AjaxBehaviorEvent event) {
-		if (estadocivil.getEstCod() == 2) {
-			editar = false;
-		} else {
-			editar = true;
-			discipulos.setDisconjuge(null);
-		}
+	// ComboBox Discipulos
+	public SelectItem[] getDiscipulosCombo() {
+		List<Discipulos> llc = discipuloDao.listarLideresCelulas(discipuloSessao.getDiscipulos().getDisCod());
+		List<SelectItem> itens = new ArrayList<SelectItem>(llc.size());
 
+		for (Discipulos lc : llc) {
+			itens.add(new SelectItem(lc.getDisCod(), lc.getDisnome()));
+		}// for end
+		return itens.toArray(new SelectItem[itens.size()]);
 	}
+	
 
-	public void isDiscipulo(AjaxBehaviorEvent event) {
-		if (funcaoeclesiasticas.getFunCod() == 1
-				|| funcaoeclesiasticas.getFunCod() == 2) {
-			editarSenha = true;
-			discipulos.setDisSenha(null);
-		} else {
 
-			editarSenha = false;
-
-		}
-
-	}
-
-	public void validarcpf(AjaxBehaviorEvent ev) {
-		try {
-			if (ValidarCPF.validarCPF(getDiscipulos().getDisCpf()) == false) {
-
-				discipulos.setDisCpf(null);
-			}
-		} catch (ValidarCPFException e) {
-			// TODO Auto-generated catch block
-			discipulos.setDisCpf(null);
-		}
-	}
-
-	public void validartituloeleitor(AjaxBehaviorEvent ev) {
-		FacesContext context = FacesContext.getCurrentInstance();
-		try {
-			int qtdCompleta = 0;
-			String zeros = "";
-			if (getDiscipulos().getDisTitEleitor().length() > 0) {
-				qtdCompleta = 12 - getDiscipulos().getDisTitEleitor().length();
-				for (int i = 0; i < qtdCompleta; i++) {
-					zeros += "0";
-				}
-				discipulos.setDisTitEleitor(zeros
-						+ getDiscipulos().getDisTitEleitor());
-				if (ValidarTituloEleitor.validarTE(getDiscipulos()
-						.getDisTitEleitor()) == false) {
-					discipulos.setDisTitEleitor(null);
-				}
-			}
-		} catch (ValidarTEException e) {
-			// TODO Auto-generated catch block
-
-			context.addMessage(null, new FacesMessage("Erro",
-					"CEP não encontrado. "));
-			discipulos.setDisTitEleitor(null);
-		}
-	}
-
-	public String handleFileUpload(FileUploadEvent event) {
-
-		try {
-			setNomeArquivoSelecionado(event.getFile().getFileName());
-			imagem = new DefaultStreamedContent(event.getFile()
-					.getInputstream());
-
-			// Para pegar direto o caminho da imagem
-			FacesContext faces = FacesContext.getCurrentInstance();
-			HttpServletRequest request = (HttpServletRequest) faces
-					.getExternalContext().getRequest();
-			String path = request.getSession().getServletContext()
-					.getRealPath("/fotos");
-			// String webDirPath = urlArquivo.substring(0,
-			// urlArquivo.indexOf(webDir)+webDir.length());
-			// System.out.println(webDirPath);
-
-			conteudo = event.getFile().getContents();
-
-			String caminho = path + "\\" + discipulos.getDisCpf() + ".jpg";// event.getFile().getFileName();
-			// //new
-			// ApplicationSecurityManager().getDiscipulos().getDisCpf();//
-
-			/*FileOutputStream fos = new FileOutputStream(caminho);
-
-			fos.write(conteudo);
-
-			fos.close();
-*/
-		} catch (IOException ex) {
-			Logger.getLogger(FileUploadController.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-		return nomeArquivoSelecionado;
-	}
-
-	public String prepararDiscipulo() {
-		listaFuncaoEclesiasticas = funcaoeclesiasticasDao.listarFuncaoPorSexo(
-				discipuloSessao.getDiscipulos().getDisSexo(), discipuloSessao
-						.getDiscipulos().getFuncaoeclesiasticas().getFunCod());
+	public String prepararCelula() {
+		
 		editar = false;
 		editarSenha = true;
-		source = new ArrayList<Encontros>();
-		target = new ArrayList<Encontros>();
-		sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
-		targetFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
-		nomeArquivoSelecionado = null;
-		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp()
-				.todos());
-		source.addAll(new EncontrosDaoImp().todos());
+		source = new ArrayList<Discipulos>();
+		target = new ArrayList<Discipulos>();
+		
+		
+	//	source.addAll(new DiscipuloDaoImp().listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod());
 
-		funcaoeclesiasticas = new Funcaoeclesiasticas();
-		geracoes = new Geracoes();
 
-		ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>(
-				sourceFormacaoEclesiasticas, targetFormacaoEclesiasticas);
-		ListaEncontros = new DualListModel<Encontros>(source, target);
+		ListaDiscipulos= new DualListModel<Discipulos>(source, target);
 		logradouro = new Logradouro();
-		formacaoacademica = new Formacaoacademica();
 
-		discipulos = new Discipulos();
-		discipulos.setDism12('n');
-
-		InputStream stream = this.getClass().getResourceAsStream(
-				"/br/com/pais/util/sem_foto.jpg");
-		imagem = new DefaultStreamedContent(stream, "image/jpeg", "sem_foto");
-		// ListaEncontros = new EncontrosDaoImp().todos();
-		// ListaFormacoesEclesiasticas = formacaoeclesiasticasDao.todos();
-
-		return "/cad/discipulos.mir";
+		celulas = new Celulas();
+				
+		return "/cad/celulas.mir";
 
 	}
 
@@ -298,7 +179,7 @@ public class DiscipuloBean {
 						funcaoeclesiasticas.getFunDescricao(),
 						discipulos.getDisnome(), discipulos.getDisemail(),
 						discipulos.getDisSenha(), discipulos.getDisCpf());
-			} 
+			}
 		} else {
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "ERRO!!!",
@@ -318,11 +199,11 @@ public class DiscipuloBean {
 			HttpServletRequest request = (HttpServletRequest) faces
 					.getExternalContext().getRequest();
 			String path = request.getSession().getServletContext()
-					.getRealPath("/fotos/");
+					.getRealPath("/fotos");
 
 			// conteudo = event.getFile().getContents();
 			Foto = discipulos.getDisCpf() + ".jpg";
-			String caminho = path + "/" + Foto;// event.getFile().getFileName();
+			String caminho = path + "\\" + Foto;// event.getFile().getFileName();
 
 			FileOutputStream fos = new FileOutputStream(caminho);
 
@@ -663,6 +544,21 @@ public class DiscipuloBean {
 	public void setListaFuncaoEclesiasticas(
 			List<Funcaoeclesiasticas> listaFuncaoEclesiasticas) {
 		this.listaFuncaoEclesiasticas = listaFuncaoEclesiasticas;
+	}
+
+	/**
+	 * @return the celulas
+	 */
+	public Celulas getCelulas() {
+		return celulas;
+	}
+
+	/**
+	 * @param celulas
+	 *            the celulas to set
+	 */
+	public void setCelulas(Celulas celulas) {
+		this.celulas = celulas;
 	}
 
 }

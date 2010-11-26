@@ -10,25 +10,27 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import br.com.pais.dao.DaoGenerico;
 
 // Default is read only
 
-public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T, ID> {
+public class DaoGenericoImp<T, ID extends Serializable> implements
+		DaoGenerico<T, ID> {
 
-	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("pais");
+	private static EntityManagerFactory emf = Persistence
+			.createEntityManagerFactory("pais");
 
 	private EntityManager entityManager = emf.createEntityManager();
 
-	private final Class<T> oClass;// object class	
+	private final Class<T> oClass;// object class
 
-	//fica
+	// fica
 	protected EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}
-
 
 	public Class<T> getObjectClass() {
 		return this.oClass;
@@ -39,8 +41,8 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	public void setEntityManager(EntityManager em) {
 		this.entityManager = em;
 	}
-	
-	//Não Mecher
+
+	// Não Mecher
 	@SuppressWarnings("unchecked")
 	public DaoGenericoImp() {
 		this.oClass = (Class<T>) ((ParameterizedType) getClass()
@@ -48,7 +50,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@Override
 	public T atualizar(T object) {
 		getEntityManager().merge(object);
@@ -56,24 +58,22 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@Override
 	public void excluir(T object) {
 		object = getEntityManager().merge(object);
 		getEntityManager().remove(object);
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@Override
 	public T pesquisarPorId(ID id) {
 		return getEntityManager().find(oClass, id);
 	}
-	
-	
-	
-	//Falta Finalizar
+
+	// Falta Finalizar
 	@Override
-	public T salvar(T object) {
+	public boolean salvar(T object) {
 		/*
 		 * getEntityManager().clear(); getEntityManager().persist(object);
 		 */EntityManager em = getEntityManager();
@@ -82,26 +82,36 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 			em.persist(object);
 			em.getTransaction().commit();
 
+		}
+
+		catch (PersistenceException e) {
+			// TODO: handle exception
+			e.getCause();
+			return false;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			em.getTransaction().rollback();
-
+			return false;
 		} finally {
 			em.close();
 		}
-		return object;
+		return true;
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@SuppressWarnings("unchecked")
 	public List<T> todos() {
-		String queryS = "SELECT obj FROM " + oClass.getSimpleName() + " obj";
-		Query query = getEntityManager().createQuery(queryS);
-		return query.getResultList();
-
+		try {
+			String queryS = "SELECT obj FROM " + oClass.getSimpleName()
+					+ " obj";
+			Query query = getEntityManager().createQuery(queryS);
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			return null;
+		}
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@SuppressWarnings("unchecked")
 	public List<T> listPesqParam(String query, Map<String, Object> params) {
 		Query q = getEntityManager().createQuery(query);
@@ -112,7 +122,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 		return q.getResultList();
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@SuppressWarnings("unchecked")
 	public List<T> listPesqParam(String query, Map<String, Object> params,
 			int maximo, int atual) {
@@ -126,14 +136,14 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 		return q.getResultList();
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@SuppressWarnings("unchecked")
 	public List<T> listPesq(String query) {
 		Query q = getEntityManager().createQuery(query);
 		return q.getResultList();
 	}
 
-	//Falta Atualizar
+	// Falta Atualizar
 	@SuppressWarnings("unchecked")
 	public T pesqParam(String query, Map<String, String> params) {
 		Query q = getEntityManager().createQuery(query);

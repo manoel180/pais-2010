@@ -8,14 +8,10 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
-import br.com.pais.dao.EstadoCivilDao;
 import br.com.pais.dao.FuncaoeclesiasticasDao;
-import br.com.pais.dao.impl.EstadoCivilDaoImp;
 import br.com.pais.dao.impl.FuncaoeclesiasticasDaoImp;
-import br.com.pais.entities.Estadocivil;
 import br.com.pais.entities.Funcaoeclesiasticas;
+import br.com.pais.util.ApplicationSecurityManager;
 
 /**
  * @author manoel
@@ -27,13 +23,13 @@ public class FuncaoeclesiasticasBean {
 
 	// Objetos Daos
 	private  FuncaoeclesiasticasDao funcaoeclesiasticasDao = new FuncaoeclesiasticasDaoImp();
-
+	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 	
 
 	
 	// ComboBox Estado Civil
 	public SelectItem[] getFuncEclesiasticaCombo() {
-		List<Funcaoeclesiasticas> lfe = funcaoeclesiasticasDao.todos();
+		List<Funcaoeclesiasticas> lfe = funcaoeclesiasticasDao.listarFuncaoPorSexo(discipuloSessao.getDiscipulos().getDisSexo(),discipuloSessao.getDiscipulos().getFuncaoeclesiasticas().getFunCod());
 		List<SelectItem> itens = new ArrayList<SelectItem>(lfe.size());
 
 		for (Funcaoeclesiasticas fe : lfe) {
