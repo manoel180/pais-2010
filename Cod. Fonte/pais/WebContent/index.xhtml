@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<f:view contentType="text/html">
+	<h:head>
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/css.css" />
+		<link type="text/css" rel="stylesheet"
+			href="#{request.contextPath}/css/redmond/skin.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/menu2.css" />
+		<link rel="stylesheet" type="text/css"
+			href="#{request.contextPath}/css/css_forms.css" />
+
+		<style type="text/css">
+.ui-widget {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: none;
+}
+
+.ui-widget-content {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: #D9E4E9;
+	
+	color: #07335F;
+}
+
+.ui-state-default {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: #D9E4E9;
+	color: #07335F;
+}
+
+.ui-tabs {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: #D9E4E9 !important;
+}
+
+.ui-picklist-item {
+	font-size: 13px !important;
+	background: none !important;
+	border: none !important;
+}
+
+.ui-widget-header {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: url("#{request.contextPath}/img/fundo_equipes.png") repeat-x
+		!important;
+}
+
+.ui-tabs-nav {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: url("#{request.contextPath}/img/fundo_equipes.png") repeat-x
+		!important;
+}
+
+.ui-menubar {
+	width: 940px !important;
+	height: 30px;
+	position: fixed;
+	border: none !important;
+	background: url("#{request.contextPath}/img/fundo_menu_alfa.png")
+		no-repeat !important;
+}
+
+.ui-menubar>.bd>ul {
+	border: none !important;
+	height: 30px;
+	background: transparent;
+}
+
+.ui-menubar-item .ui-menubar-item-label {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	list-style-type: none;
+	border: none;
+	font: normal;
+	color: #07335F;
+	cursor: pointer;
+}
+
+.ui-menu .ui-menu-item .ui-menu-item-label {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	list-style-type: none;
+	border: none;
+	font: normal;
+	color: #07335F;
+	cursor: pointer;
+}
+
+.themeMenu {
+	overflow: auto;
+	width: 960px;
+}
+/* Menu */
+</style>
+	</h:head>
+
+	<body>
+
+
+	<table width="100%" border="0" align="center" cellpadding="0"
+		cellspacing="0" bgcolor="#E8EFF3">
+		<tr>
+			<td align="center" valign="top" scope="col">
+			<table width="100%" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td height="214" align="center"
+						background="/pais/img/fundo_topo.png" scope="col">
+					<table width="960" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="216" align="center" valign="top"
+								background="/pais/img/topo_novo.png" scope="col">
+							<table width="960" border="0" align="center" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<th scope="col">&nbsp;</th>
+								</tr>
+								<tr>
+									<td align="right" scope="col">
+									<table width="290" border="0" align="right" cellpadding="2"
+										cellspacing="0">
+										<tr>
+											<td width="33" height="20" align="center" valign="top"
+												class="Fonte_14_Branca" scope="col"><p:graphicImage
+												value="#{loginBean.discipuloSessao.discipulos.disfoto}"
+												width="41" height="40" /></td>
+											<td width="249" align="left" valign="top"
+												class="Fonte_13_Logado" scope="col"><strong>Bem
+											Vindo,</strong><br />
+											SR(A): <h:outputLabel
+												value="#{loginBean.discipuloSessao.discipulos.disnome}"
+												styleClass="Fonte_13_Logado" /></td>
+										</tr>
+										<tr>
+											<td height="20" align="right" valign="top"
+												class="Fonte_14_Branca" scope="col"><img
+												src="/pais/img/calendar_empty.png" width="25" height="25" /></td>
+											<td align="left" class="Fonte_13_Logado" scope="col"><strong>Dia
+											da Semana: </strong><h:outputLabel value="#{data_Hora.dia}" /></td>
+										</tr>
+
+										<tr>
+											<td height="20" align="right" valign="top"
+												class="Fonte_14_Branca" scope="col"><img
+												src="/pais/img/old_clock.png" width="25" height="25" /></td>
+											<td align="left" class="Fonte_13_Logado" scope="col"><h:form
+												id="horaForm">
+												<strong>Hora Certa: </strong>
+
+												<h:outputLabel id="hora" value="#{data_Hora.hora}" />
+												<p:poll interval="1" update="hora" process="hora"
+													autoStart="true" />
+											</h:form></td>
+										</tr>
+
+										<tr>
+											<td height="20" align="right" valign="top"
+												class="Fonte_14_Branca" scope="col"></td>
+											<td align="left" class="Fonte_13_Logado" scope="col"><strong>
+
+											</strong></td>
+
+										</tr>
+
+									</table>
+									</td>
+								</tr>
+								<tr>
+									<th scope="col">&nbsp;</th>
+								</tr>
+
+								<tr>
+									<td height="30" align="center" scope="col">
+
+									<table width="880" border="0" align="center" cellpadding="0"
+										cellspacing="0">
+										<tr>
+											<td height="30" align="center" scope="col"><ui:include
+												src="layout/menu-superior.xhtml" /></td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td height="4" align="center" scope="col">
+					<table width="100%" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="3" align="center"
+								background="/pais/img/barra_fundo_rodape.png" scope="col"><img
+								src="/pais/img/barra_fundo_rodape.png" width="3" height="3" /></td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" scope="col">
+					<table width="960" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<th scope="col">
+							<table width="960" border="0" align="center" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<td colspan="5" align="center"
+										background="/pais/img/barra_fundo_menu.png" scope="col"><img
+										src="/pais/img/barra_fundo_menu.png" width="10" height="10" /></td>
+								</tr>
+								<tr>
+
+									<th width="12" scope="col"></th>
+									<td scope="col"/>
+									<td width="728" rowspan="2" valign="top" bgcolor="#E8EFF3"
+										scope="col">
+
+									<table width="720" border="0" align="right" cellpadding="0"
+										cellspacing="0">
+
+										<tr>
+										
+											<td height="29" align="left" scope="col">
+											<h:form>
+											<ui:insert name="menu-vc-esta" /></h:form></td>
+										</tr>
+										<tr>
+											<td  align="left">
+											<ui:insert name="conteudo" />
+											</td>
+										</tr>
+										
+									</table>
+									</td>
+
+								</tr>
+								<tr>
+									<td align="center" valign="top" bgcolor="#E8EFF3" scope="col" width="200">
+									<p:outputPanel style="background:#D9E4E9;">
+										<p:effect type="slide" event="load" />
+										<p:panel header="PRIMEIRA EQUIPE"  
+											toggleable="true" closable="true">
+											<table width="200" border="0" align="center" cellpadding="0"
+												cellspacing="0">
+
+												<tr>
+													<th colspan="3" bgcolor="#D9E4E9" scope="col">
+														<img src="/pais/img/botoes/divisor.png" width="10" height="10" />
+														<h:form>
+														<p:dataTable var="m12" value="#{loginBean.listaEquipe1}"
+															width="200" paginator="false" rows="12"
+															selectionMode="single" style="background:#D9E4E9; "
+															emptyMessage="Nenhum Discípulo Cadastrado">
+															<p:column style="background:#D9E4E9; " width="20">
+																<img src="/pais/img/botoes/pasta.png" width="18"
+																	height="15" />
+															</p:column>
+															<p:column style="background:#D9E4E9; border:none;"
+																width="200">
+																<span class="Fonte_12_Logado"> <h:outputText
+																	value="#{m12.disnome}" styleClass="Fonte_12_Logado" />
+																</span>
+															</p:column>
+														</p:dataTable>
+
+
+													</h:form>
+													<img src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													</th>
+													
+												</tr>
+											</table>
+										</p:panel>
+
+										<p:panel rendered="#{loginBean.le2Exibir}" closable="true"
+											header="SEGUNDA EQUIPE" toggleable="true">
+											<table width="200" border="0" align="center" cellpadding="0"
+												cellspacing="0">
+
+												<tr>
+													<th colspan="3" bgcolor="#D9E4E9" scope="col"><img
+														src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													<h:form>
+														<p:dataTable var="m12" value="#{loginBean.listaEquipe2}"
+															width="200" emptyMessage="Nenhum Discípulo Cadastrado"
+															paginator="false" rows="12" selectionMode="single"
+															style="background:#D9E4E9; ">
+															<p:column style="background:#D9E4E9; " width="20">
+																<img src="/pais/img/botoes/pasta.png" width="18"
+																	height="15" />
+															</p:column>
+															<p:column style="background:#D9E4E9; border:none;"
+																width="200">
+																<span class="Fonte_12_Logado"> <h:outputText
+																	value="#{m12.disnome}" styleClass="Fonte_12_Logado" />
+																</span>
+															</p:column>
+														</p:dataTable>
+													</h:form>
+													<img src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													</th>
+												</tr>
+											</table>
+										</p:panel>
+										
+										<p:panel  rendered="#{loginBean.le3Exibir}" closable="true"
+											header="TERCEIRA EQUIPE" toggleable="true">
+											<table width="200" border="0" align="center" cellpadding="0"
+												cellspacing="0">
+
+												<tr>
+													<th colspan="3" bgcolor="#D9E4E9" scope="col"><img
+														src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													<h:form>
+														<p:dataTable var="m12" value="#{loginBean.listaEquipe3}"
+															width="200" emptyMessage="Nenhum Discípulo Cadastrado"
+															paginator="false" rows="12" selectionMode="single"
+															style="background:#D9E4E9; ">
+															<p:column style="background:#D9E4E9; " width="20">
+																<img src="/pais/img/botoes/pasta.png" width="18"
+																	height="15" />
+															</p:column>
+															<p:column style="background:#D9E4E9; border:none;"
+																width="200">
+																<span class="Fonte_12_Logado"> <h:outputText
+																	value="#{m12.disnome}" styleClass="Fonte_12_Logado" />
+																</span>
+															</p:column>
+														</p:dataTable>
+
+
+													</h:form>
+													<img src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													</th>
+												</tr>
+											</table>
+										</p:panel>
+
+										<p:panel rendered="#{loginBean.le4Exibir}" closable="true"
+											header="QUARTA EQUIPE" toggleable="true">
+											<table width="200" border="0" align="center" cellpadding="0"
+												cellspacing="0">
+
+
+												<tr>
+													<th colspan="3" bgcolor="#D9E4E9" scope="col"><img
+														src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													<h:form>
+														<p:dataTable var="m12" value="#{loginBean.listaEquipe4}"
+															width="200" emptyMessage="Nenhum Discípulo Cadastrado"
+															paginator="false" rows="12" selectionMode="single"
+															style="background:#D9E4E9; ">
+															<p:column style="background:#D9E4E9; " width="20">
+																<img src="/pais/img/botoes/pasta.png" width="18"
+																	height="15" />
+															</p:column>
+															<p:column style="background:#D9E4E9; border:none;"
+																width="200">
+																<span class="Fonte_12_Logado"> <h:outputText
+																	value="#{m12.disnome}" styleClass="Fonte_12_Logado" />
+																</span>
+															</p:column>
+														</p:dataTable>
+
+
+													</h:form>
+													<img src="/pais/img/botoes/divisor.png" width="10" height="10" />
+													</th>
+												</tr>
+
+											</table>
+										</p:panel>
+
+
+
+									</p:outputPanel></td>
+
+									<th scope="col">&nbsp;</th>
+
+									<th scope="col">&nbsp;</th>
+								</tr>
+								<tr>
+								</tr>
+							</table>
+							</th>
+						</tr>
+						<tr>
+							<th scope="col">&nbsp;</th>
+						</tr>
+						<tr>
+							<th scope="col">&nbsp;</th>
+						</tr>
+						<tr>
+							<th scope="col">&nbsp;</th>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" background="/pais/img/barra_fundo_rodape.png"
+						scope="col"><img src="/pais/img/barra_fundo_rodape.png"
+						width="3" height="3" /></td>
+				</tr>
+				<tr>
+					<td height="50" align="center" bgcolor="#D1DEE4" scope="col"><span
+						class="Texto_cpf_login">Copyrigth 2010 | <strong>Ministério
+					Internacional da Restauração</strong>. Todos os direitos reservados</span></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+
+	</body>
+
+
+
+</f:view>
+
+</html>
+
