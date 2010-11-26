@@ -1,3 +1,11 @@
+/*Fonte do Tema*/
+.ui-widget,
+.ui-widget .ui-widget {
+font-size: 12px !important;
+}
+
+
+
 .yui-skin-sam .yui-panel .bd {
 	background: #333333;
 	background-color: #E7EFF2;
@@ -25,8 +33,62 @@
 	background: url(../img/dialogclose.png) no-repeat;
 }
 
+.ui-datatable{
+	border-color: transparent !important;
+	text-align: left;
+	border: none !important;}
+
+.ui-datatable-data{
+	border-color: transparent !important;
+	text-align: left;
+	border: none !important;
+}
+
+.ui-datatable table {
+	border-color: transparent !important;
+	border: none !important;
+	border-collapse: separate;
+    width:100%;
+    text-align: left;
+}
+
+.ui-datatable .ui-datatable-data td {
+    border-right:none;
+    border: none;
+    text-align: left;
+    padding: 2px 2px 0;
+    //padding:4px 10px 4px 10px;
+}
+.ui-datatable th, .ui-datatable tfoot td {
+   
+    white-space:normal;
+    padding:0;
+    border-right:none;
+    border: none;
+    text-align: left;
+}
+
+
+
+
+.ui-datatable-data {
+	border-color: transparent !important;
+	text-align: left;
+	border: none !important;}
+
+.ui-datatable .ui-datatable-data td {
+	border-color: transparent !important;
+	text-align: left;
+	border: none !important;
+}
+
+.ui-datatable-liner{
+	border-color: transparent !important;
+	text-align: left;
+	border: none !important;}
+
 body{
-	background-image: url("../img/fundo.jpg");
+	background-image: url("#{request.contextPath}/img/fundo.jpg");
 	background-color: #E7EFF2;
 	margin-left: 0px;
 	margin-top: 0px;
@@ -55,6 +117,8 @@ body{
 	border: 0;
 	border-color: #;
 }
+
+
 
 a:link {
 	text-decoration: none;

@@ -1,3 +1,89 @@
+.ui-widget {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+}
+.ui-tabs{
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: #D9E4E9 !important;
+
+}
+.ui-picklist-item{
+	font-size: 13px !important;
+	background: none !important;
+	border: none !important;
+}
+.ui-widget-header{
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: url("#{request.contextPath}/img/fundo_equipes.png") repeat-x !important;
+
+}
+.ui-tabs-nav {
+	font-size: 12px !important;
+	font-family: Trebuchet MS !important;
+	border: none !important;
+	background: url("#{request.contextPath}/img/fundo_equipes.png") repeat-x
+		 !important;
+}
+
+.ui-menubar {
+	width: 940px !important;
+	height: 30px;
+	position: fixed;
+	border: none !important;
+	background: url("#{request.contextPath}/img/fundo_menu_alfa.png")
+		no-repeat !important;
+}
+
+.ui-menubar>.bd>ul {
+	border: none !important;
+	height: 30px;
+	background: transparent;
+	
+}
+
+.ui-menubar-item .ui-menubar-item-label {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	list-style-type: none;
+	border: none;
+	font: normal;
+	color: #07335F;
+	cursor: pointer;
+}
+
+.ui-menu .ui-menu-item .ui-menu-item-label {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	list-style-type: none;
+	border: none;
+	font: normal;
+	color: #07335F;
+	cursor: pointer;
+}
+
+.themeMenu {
+	overflow: auto;
+	width: 960px;
+}
+/* Menu */
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 CSS Calendar
 */
@@ -467,7 +553,7 @@ a.pf-dock-item-bottom {
 }
 
 .yui-skin-sam  .container-close {
-	background: url(../img/dialogclose.png) no-repeat;
+	//background: url(../img/dialogclose.png) no-repeat;
 }
 
 /*
@@ -480,7 +566,7 @@ Panel das equipes
 	background: #D9E4E9 no-repeat;
 	border-color: #808080;
 	border-width: 1px 0;
-	position: relative;
+	position: static;
 	border-style: hidden;
 }
 
@@ -570,19 +656,19 @@ body {
 }
 
 .fundoform {
-	background-image: url("../img/fundo.jpg");
+	background-image: url("#{request.contextPath}/img/fundo.jpg");
 }
 
 .fundobanner {
 	background-position: center;
-	background: url(../img/topo.jpg) no-repeat;
+	background: url(#{request.contextPath}/img/topo.jpg) no-repeat;
 	height: 190px;
 	position: relative;
 }
 
 .fundobanner2 {
 	background-position: center;
-	background: url(../img/topo.jpg) no-repeat;
+	background: url(#{request.contextPath}/img/topo.jpg) no-repeat;
 	width: 900px;
 	height: 216px;
 	position: relative;
@@ -644,11 +730,18 @@ a:active {
 .Fonte_12_Logado {
 	font-family: Trebuchet MS;
 	font-size: 12px;
-	font-weight: normal;
-	font: bold;
+	font-weight: normal bold;
+	font: bold bolder;
 	color: #07335F;
 }
 
+.Fonte_13_Logado {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #07335F;
+}
 .Fonte_13 {
 	font-family: Trebuchet MS;
 	font-size: 13px;
