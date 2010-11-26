@@ -3,6 +3,8 @@
  */
 package br.com.pais.managedbeans;
 
+import javax.faces.event.ActionEvent;
+
 import br.com.pais.dao.LogradouroDao;
 import br.com.pais.dao.impl.LogradouroDaoImp;
 import br.com.pais.entities.Bairro;
@@ -26,10 +28,10 @@ public class LogradouroBean extends DiscipuloBean{
 	private LogradouroDao logradouroDao = new LogradouroDaoImp(); 
 
 	//Buscar pelo cep
-	public void buscarCEP(){
+	public void buscarCEP(ActionEvent actionEvent){
 	
-		String cep = getLogradouro().getCep2().substring(0, 5);
-		cep += getLogradouro().getCep2().substring(6, 9);
+		String cep = getLogradouro().getCep().substring(0, 5);
+		cep += getLogradouro().getCep().substring(6, 9);
 		logradouro = logradouroDao.encontrarPorCEP(cep);
 		//logradouro.getBairro().;
 		//cidade = bairro.getLocalidade();

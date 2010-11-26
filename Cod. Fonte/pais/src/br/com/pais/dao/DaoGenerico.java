@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface DaoGenerico<T, ID extends Serializable> {
 	public Class<T> getObjectClass();
-	public T salvar(T object);
+	public boolean salvar(T object);
 	public T pesquisarPorId(ID id);
 	public T atualizar(T object);
 	public void excluir(T object);

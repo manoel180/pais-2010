@@ -32,7 +32,7 @@ public class FormacaoAcademicaBean {
 		List<SelectItem> itens = new ArrayList<SelectItem>(lfa.size());
 
 		for (Formacaoacademica fc : lfa) {
-			itens.add(new SelectItem(fc.getForCod(),fc.getForDescricao()));
+			itens.add(new SelectItem(fc.getForAcCod(),fc.getForAcDescricao()));
 		}// for end
 		return itens.toArray(new SelectItem[itens.size()]);
 	}
