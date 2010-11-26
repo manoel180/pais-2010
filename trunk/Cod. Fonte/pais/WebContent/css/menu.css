@@ -1,0 +1,155 @@
+.yuimenubar li,.yuimenu li {
+	
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	list-style-type: none;
+	border: none;
+	font:normal bold; 
+	color: #07335F;
+	cursor: pointer;
+	
+	
+}
+
+.yui-skin-sam .yuimenubar {
+	font-size: large;
+	line-height: 0;//2;
+	line-height: 0;//1.9;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	list-style-type: none;
+	background: url("../img/fundo_menu_alfa.png");
+	border: none;
+	font:normal bold; 
+	color: #07335F;
+	cursor: pointer;
+
+}
+
+.yui-skin-sam .yuimenubaritem-selected {
+	font-size: 93%;
+	line-height: 2;
+	line-height: 1.9;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	list-style-type: none;
+	background: url("../img/fundo_menu_alfa.png");
+	font:normal bold; 
+	color: #07335F;
+	cursor: pointer;
+	
+}
+
+.yui-skin-sam .yuimenubarnav .yuimenubaritemlabel-selected {
+	font-size: 93%;
+	line-height: 2;
+	*line-height: 1.9;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font:normal bold;
+	color: #07335F; 
+	border-left-width: none;
+	margin-left: 0px;
+	list-style-type: none;
+	*left: -1px;
+	cursor: pointer;
+}
+
+.yui-skin-sam .yuimenu .bd {
+	
+	background: url("../img/fundo_menu_alfa.png");
+	border: none;
+	color: #07335F;
+}
+
+.yui-skin-sam .yuimenu ul {
+	padding: 0px 0;
+	border-width: 0px 0 0 0;
+	background: url("../img/fundo_menu_alfa.png");
+	border: none;
+	border-style: none;
+	color: #07335F;
+}
+
+.yui-skin-sam .yuimenu .topscrollbar,.yui-skin-sam .yuimenu .bottomscrollbar
+	{
+	height: 15px;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	color: #07335F;
+	border: none;
+	background: url("../img/fundo_menu_alfa.png");
+}
+
+.yui-skin-sam .yuimenuitemlabel  {
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	color: #07335F;
+	border: none;
+	background: #BED1DA;
+	//background: url("../img/fundo_menu_alfa.png");
+	cursor: pointer;
+	border-style: none;
+	border-color: transparent;
+	border-width: 0 0px;
+}
+
+.yui-skin-sam .yuimenubar {
+	line-height: 32px;
+	background: url("../img/fundo_menu_alfa.png");
+	color: #07335F;
+	border: none;
+	position: relative;
+	width: 100%;
+}
+
+.yui-skin-sam .yuimenubaritemlabel {
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	color: #07335F; 
+	position: static;
+	border: none;
+	width: 98%;
+
+}
+
+.yui-skin-sam .yuimenubaritemlabel-selected {
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	line-height: 2;
+	cursor: pointer;
+	background: url("../img/fundo_menu_ouver.png");
+	color: #C1D3DC;
+}
+
+.yui-skin-sam .yuimenuitemlabel-selected {
+	background: url("../img/fundo_menu_ouver.png");
+	color: #C1D3DC;
+}
+
+.yui-skin-sam  .yui-skin-sam .yuimenuitemlabel:visited {
+	
+	cursor:pointer;
+	background: url("../img/fundo_menu_ouver.png");
+	color: #C1D3DC;
+}	
+
+.yui-skin-sam .yuimenu .bd {
+	line-height: 30px;
+	background: #ACC4D1;
+	font:normal bolder; 
+	color: #07335F;
+	border: none;
+	width: 100%;
+	
+}
+
+.yui-skin-sam .yui-menu-shadow-visible {
+	background-color: transparent;
+	opacity: .12;
+	filter: alpha(opacity = 12);
+}
