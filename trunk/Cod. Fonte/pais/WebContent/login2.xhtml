@@ -52,42 +52,67 @@
 		<mj:focus for="form1:cpfMask" />
 		<h:form id="form1">
 
-			<h:graphicImage value="/img/logo.png" width="380" height="145" />
+			<h:graphicImage value="/img/logo.png" width="380" height="145"
+				 />
+	
+	<p:growl id="msg" sticky="true" showDetail="true" showSummary="true" />
+	<p:focus />
 
-			<p:growl id="msg" sticky="true" showDetail="true" showSummary="true" />
-			<p:focus />
+	<table
+		background="#{request.contextPath}/img/barra_cpf_senha.png" border="0"
+		cellpadding="0" cellspacing="0" width="500">
+		<tbody>
+			<tr>
+				<th scope="col" >
+				<table align="center" border="0" cellpadding="0" cellspacing="0"
+					width="500">
 
-			<table background="#{request.contextPath}/img/barra_cpf_senha.png"
-				border="0" cellpadding="0" cellspacing="0" width="471" height="57">
-				<tr>
-					<td scope="col" align="center" valign="middle" width="471">
-					<h:outputLabel
-						value="SEU CPF:" styleClass="Texto_cpf_login" for="cpfMask" /> <span />
-					<p:inputMask id="cpfMask" autocomplete="off" mask="999.999.999-99"
-						size="15" maxlength="14" value="#{loginBean.cpf}"
-						styleClass="formularios" required="true">
-					</p:inputMask> <h:outputLabel value="SENHA:" styleClass="Texto_cpf_login"
-						for="senhaSecret" /> <span /> <h:inputSecret id="senhaSecret"
-						value="#{loginBean.senha}" styleClass="formularios" maxlength="14"
-						required="true" size="15">
+					<tbody>
+						<tr>
+							<td scope="col" align="center" height="53" valign="middle">
+							<table align="center" border="0" cellpadding="0" cellspacing="0"
+								width="500">
+								<tbody>
+									<tr>
+										<td scope="col" align="center" valign="middle" width="500">
 
-					</h:inputSecret> <span /><span /><span /><span /><span /> <h:commandButton
-						image="/img/boot_entrar.png" style="vertical-align:bottom;"
-						action="#{loginBean.logar}">
+										<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login"
+											for="cpfMask" /> <span /> <p:inputMask id="cpfMask"
+											autocomplete="off" mask="999.999.999-99" size="15"
+											maxlength="14" value="#{loginBean.cpf}"
+											styleClass="formularios" required="true">
+										</p:inputMask> <h:outputLabel value="SENHA:" styleClass="Texto_cpf_login"
+											for="senhaSecret" /> <span /> <h:inputSecret
+											id="senhaSecret" value="#{loginBean.senha}"
+											styleClass="formularios" maxlength="14" required="true"
+											size="15">
 
-					</h:commandButton></td>
-				</tr>
+										</h:inputSecret> <span /><span /><span /><span /><span /> <h:commandButton
+											image="/img/boot_entrar.png" style="vertical-align:bottom;"
+											action="#{loginBean.logar}">
 
-			</table>
-			
+										</h:commandButton></td>
+									</tr>
+								</tbody>
 
-		</h:form>
-		<h:form id="form2">
-			<div align="center"><h:graphicImage
-				value="/img/esqueci_senha.png" onclick="dlg.show()" /> <h:graphicImage
-				value="/img/texto_100_seguro.png" width="146" height="26" /></div>
-		</h:form>
-	</p:outputPanel></center>
+							</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</th>
+			</tr>
+		</tbody>
+	</table>
+
+	</h:form>
+	<h:form id="form2">
+		<div align="center"><h:graphicImage
+			value="/img/esqueci_senha.png" onclick="dlg.show()" /> <h:graphicImage
+			value="/img/texto_100_seguro.png" width="146" height="26" /></div>
+	</h:form>
+	</p:outputPanel>
+	</center>
 	</div>
 
 

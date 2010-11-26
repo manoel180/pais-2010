@@ -2,6 +2,9 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
+	<table-filter match-name="discipuloscelulas"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
 	<table-filter match-name="bairro" match-catalog="wwwpais_sistema"></table-filter>
 	<table-filter match-name="bases" match-catalog="wwwpais_sistema"></table-filter>
 	<table-filter match-name="celulas"
@@ -11,6 +14,9 @@
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="discipulos"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="discipuloscelulas"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="encontros"
@@ -32,9 +38,6 @@
 	<table-filter match-name="funcaoeclesiasticas"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="funeclesiasticasdiscipulos"
-		match-catalog="wwwpais_sistema">
-	</table-filter>
 	<table-filter match-name="geracoes"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
@@ -42,6 +45,9 @@
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="logradouro"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="mensagem"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="movimento"
@@ -54,15 +60,6 @@
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="statusbase"
-		match-catalog="wwwpais_sistema">
-	</table-filter>
-	<table-filter match-name="telbases"
-		match-catalog="wwwpais_sistema">
-	</table-filter>
-	<table-filter match-name="telcelulas"
-		match-catalog="wwwpais_sistema">
-	</table-filter>
-	<table-filter match-name="teldiscipulos"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="tipobases"
