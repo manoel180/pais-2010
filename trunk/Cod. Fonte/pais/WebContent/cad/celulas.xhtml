@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+<ui:define name="menu-vc-esta">
+
+<table width="620" border="0" align="left"  cellpadding="0" background="/pais/img/barra_linha.png"
+				cellspacing="0">
+				<tr>
+					<td  align="left" 
+						scope="col">
+						<span class="Fonte_12_Logado"></span>  
+						<h:outputLabel  value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11"/>
+						</td>
+		<td>
+ <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden"  >  
+     <p:menuitem value="home" url="/index.mir" />  
+      <p:menuitem value="CADASTRO"/>  
+       <p:menuitem value="CADASTRO DE CÉLULAS" action="#{discipuloBean.prepararDiscipulo}" ajax="false" />    
+ </p:breadCrumb> 
+
+</td>
+
+				</tr>
+			 </table> 
+</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<br />
+		<h:form id="form1" prependId="false">
+			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+
+			<p:focus />
+			<p:tabView orientation="top">
+				<p:tab id="tabDadosPessoais" title="Dados Pessoais">
+				  
+					<h:panelGrid columns="2">
+
+						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+
+							<h:outputLabel value="Nome:" styleClass="formulariosObrigatorio"
+								for="nomeTxt" />
+
+							<h:inputText id="discipulador" size="30" styleClass="formularios2" required="true" value="#{loginBean.discipuloSessao.discipulos.disnome}" readonly="true" requiredMessage="Discipulador é obrigatório"/>
+
+							<h:outputLabel value="Hora da Reunião:" styleClass="Texto_cpf_login"
+								for="hrReuniao" />
+							<p:inputMask mask="99:99" id="hrReuniao"
+								value="#{celulaBean.celulas.celHorarioReuniao}" size="6"
+								styleClass="formularios2" required="true" tabindex="4"
+								requiredMessage="Hora da Reunião é obrigatória">
+								<f:convertDateTime type="time" locale="pt_BR"  />
+							</p:inputMask>
+
+							<h:outputLabel value="Dia da Reunião:" styleClass="Texto_cpf_login" for="diaReuniao" />
+							<h:selectOneMenu id="diaReuniao" value="#{celulaBean.celulas.celDiaReuniao}"
+								requiredMessage="Dia da Reunião é obrigatória" tabindex="7"
+								styleClass="formularios" required="true">
+								<f:selectItem itemValue="Domingo" itemLabel="Domingo"/>
+								<f:selectItem itemValue="Domingo" itemLabel="Segunda"/>
+								<f:selectItem itemValue="Domingo" itemLabel="Terça"/>
+								<f:selectItem itemValue="Domingo" itemLabel="Quarta"/>
+								<f:selectItem itemValue="Domingo" itemLabel="Quinta"/>
+								<f:selectItem itemValue="Domingo" itemLabel="Sexta"/>
+								<f:selectItem itemValue="Domingo" itemLabel="Sábado"/>
+							</h:selectOneMenu>
+						</h:panelGrid>
+							<center style="width: 300px;"><p:graphicImage id="foto"
+								value="#{discipuloBean.imagem}" width="120" height="116"
+								cache="false" /> <br />
+							 </center>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			<br />
+	
+	
+			<p:tabView id="tabView"  activeIndex="3" effect="opacity" contentTransition="true" >
+	  
+				<p:tab id="tbendereco" title="Endereço">
+
+						
+						<h:panelGrid columns="4" id="pnlEndereco"
+							columnClasses="coluna1, coluna2, coluna1, coluna2"
+							>
+							<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio"
+								for="cep" />
+
+							<h:inputText id="cep" size="20" tabindex="11"
+										requiredMessage="CEP é obrigatório"
+										value="#{discipuloBean.logradouro.cep}" maxlength="8"
+										styleClass="formularios2" required="true">
+										<p:watermark value="Somente Números" for="cep" />
+										<f:ajax render="tipo end cidade bairro estado num complemento" execute="@this"
+											event="change" listener="#{discipuloBean.buscarCEP}" />
+									</h:inputText>
+							<h:outputText />
+							<h:outputLink
+										value="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco"
+										target="_blank">
+										<h:graphicImage value="/img/busca_cep.jpg" />
+									</h:outputLink>
+
+							<h:outputLabel value="Tipo:" styleClass="formulariosObrigatorio"
+								for="tipo" />
+							<h:inputText id="tipo" styleClass="formularios2" required="true"
+								value="#{discipuloBean.logradouro.logTipoLogradouro}" size="20"
+								readonly="true" />
+							<h:outputLabel value="Endereço:" styleClass="formulariosObrigatorio"
+								for="end" />
+							<h:inputText id="end" value="#{discipuloBean.logradouro.logNo}" required="true"
+								 styleClass="formularios2" size="30" readonly="true" />
+							<h:outputLabel value="Número:" styleClass="Texto_cpf_login"
+								for="num" />
+							<p:inputMask mask="?9999"  id="num" maxlength="4" tabindex="12" 
+							size="4" styleClass="formularios2" 
+								value="#{discipuloBean.discipulos.disEndNumero}" >
+							</p:inputMask>	
+								<h:outputLabel value="Complemento:" styleClass="Texto_cpf_login"
+								for="complemento" />
+							<h:inputText id="complemento" maxlength="10" 
+							size="4" styleClass="formularios2" tabindex="13"
+								value="#{discipuloBean.discipulos.disEndComplemento}" />
+							<h:outputLabel value="Bairro:" styleClass="formulariosObrigatorio"
+								for="bairro" />
+							<h:inputText id="bairro" styleClass="formularios2" required="true"
+								value="#{discipuloBean.logradouro.bairro.baiNo}" readonly="true" />
+							<h:outputLabel value="Cidade:" styleClass="formulariosObrigatorio"
+								for="cidade" />
+							<h:inputText id="cidade" styleClass="formularios2" required="true"
+								value="#{discipuloBean.logradouro.bairro.localidade.locNo}"
+								readonly="true" />
+							<h:outputLabel value="Estado:" styleClass="formulariosObrigatorio"
+								for="estado" />
+							<h:inputText id="estado" styleClass="formularios2" required="true"
+								value="#{discipuloBean.logradouro.bairro.localidade.estado.ufeNo}"
+								readonly="true" />
+						</h:panelGrid>					
+				</p:tab>
+
+				
+
+				<p:tab id="tbdiscipulos" title="Discípulos">
+					<center><h:panelGrid columns="2"
+						columnClasses="coluna1, coluna2">
+
+						<center><p:pickList value="#{discipuloBean.listaEncontros}" 
+						var="encontros"  converter="encontrosConverter" styleClass="formulariosObrigatorio"
+							itemLabel="#{encontros.encDescricao}" tabindex="24"
+							itemValue="#{encontros}" 
+							addAllLabel="Adicionar Todos" addLabel="Adicionar"
+							removeAllLabel="Remover Todos"  removeLabel="Remover"
+							 effect="fade"   > 
+							
+								<f:facet name="sourceCaption">Discípulos</f:facet>
+								<f:facet name="targetCaption">Discípulos da Célula</f:facet>
+						
+						</p:pickList> </center>
+					</h:panelGrid></center>
+				</p:tab>
+			</p:tabView>
+			
+			<br />
+			
+			<h:commandButton value="Salvar..." styleClass="formularios" tabindex="25"
+				actionListener="#{discipuloBean.salvar}"></h:commandButton>
+		</h:form>
+	</ui:define>
+
+
+
+</ui:composition>
