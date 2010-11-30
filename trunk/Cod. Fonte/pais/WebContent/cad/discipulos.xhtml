@@ -251,6 +251,7 @@
 
 				</p:tab>
 				<p:tab id="tbMinisteriais" title="Dados Ministeriais">
+					<p:outputPanel id="panel">
 					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 						<h:outputLabel value="Função Eclesiástica:"
 							styleClass="formulariosObrigatorio" for="funcaoeclesiastica" />
@@ -273,20 +274,24 @@
 						<h:inputText id="discipulador" size="30" styleClass="formularios2" required="true"
 							value="#{loginBean.discipuloSessao.discipulos.disnome}" readonly="true"
 							requiredMessage="Discipulador é obrigatório" />
-
-						<h:outputLabel value="Equipe:" styleClass="formulariosObrigatorio"
+						
+						<h:outputLabel value="M12?:" styleClass="formulariosObrigatorio" for="m12" />
+						<h:selectOneRadio id="m12" styleClass="Texto_cpf_login" value="#{discipuloBean.discipulos.dism12}" tabindex="21"
+							requiredMessage="M12 é obrigatório" >
+							<f:selectItem itemLabel="Sim" itemValue="s" />
+							<f:selectItem itemLabel="Não" itemValue="n" />
+							<f:ajax event="change" listener="#{discipuloBean.isM12}" execute="m12"  render="panel"/>
+						</h:selectOneRadio>
+						
+						<h:outputLabel value="Equipe:" styleClass="formulariosObrigatorio" id="lblgeracao" rendered="#{discipuloBean.editarM12}"
 							for="geracao" />
-						<h:selectOneMenu id="geracao" value="#{discipuloBean.geracoes.gerCod}" requiredMessage="Geração é obrigatória" styleClass="formularios" required="true" tabindex="20">
+						<h:selectOneMenu  id="geracao" rendered="#{discipuloBean.editarM12}" value="#{discipuloBean.geracoes.gerCod}" requiredMessage="Geração é obrigatória" styleClass="formularios" required="true" tabindex="20">
 							<f:selectItems value="#{geracaoBean.geracaoCombo}"/>
 						</h:selectOneMenu>
 
-						<h:outputLabel value="M12:" styleClass="formulariosObrigatorio" for="m12" />
-						<h:selectOneRadio id="m12" styleClass="Texto_cpf_login" value="#{discipuloBean.discipulos.dism12}" tabindex="21"
-							requiredMessage="M12 é obrigatório">
-							<f:selectItem itemLabel="Sim" itemValue="s" />
-							<f:selectItem itemLabel="Não" itemValue="n" />
-						</h:selectOneRadio>
+						
 					</h:panelGrid>
+					</p:outputPanel>
 				</p:tab>
 				<p:tab id="tbformacaoeclesiastica" title="Formação Eclesiástica">
 					<center><h:panelGrid columns="2"
