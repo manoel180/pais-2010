@@ -14,6 +14,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.component.behavior.ajax.AjaxBehavior;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DualListModel;
@@ -97,6 +98,8 @@ public class DiscipuloBean {
 	private LogradouroDao logradouroDao = new LogradouroDaoImp();
 
 	private boolean editarSenha;
+
+	private boolean editarM12 = false;
 	
 	
 	
@@ -123,6 +126,17 @@ public class DiscipuloBean {
 		} else {
 			editar = true;
 			discipulos.setDisconjuge(null);
+		}
+
+	}
+	
+	public void isM12(AjaxBehaviorEvent event) {
+		if (discipulos.getDism12() == 's') {
+			editarM12  = true;
+			geracoes=(null);
+		} else {
+			editarM12 = false;
+			
 		}
 
 	}
@@ -220,6 +234,7 @@ public class DiscipuloBean {
 						.getDiscipulos().getFuncaoeclesiasticas().getFunCod());
 		editar = false;
 		editarSenha = true;
+		editarM12 = false;
 		source = new ArrayList<Encontros>();
 		target = new ArrayList<Encontros>();
 		sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
@@ -663,6 +678,20 @@ public class DiscipuloBean {
 	public void setListaFuncaoEclesiasticas(
 			List<Funcaoeclesiasticas> listaFuncaoEclesiasticas) {
 		this.listaFuncaoEclesiasticas = listaFuncaoEclesiasticas;
+	}
+
+	/**
+	 * @return the editarM12
+	 */
+	public boolean isEditarM12() {
+		return editarM12;
+	}
+
+	/**
+	 * @param editarM12 the editarM12 to set
+	 */
+	public void setEditarM12(boolean editarM12) {
+		this.editarM12 = editarM12;
 	}
 
 }
