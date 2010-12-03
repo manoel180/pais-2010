@@ -44,9 +44,9 @@
 
 						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 							<h:outputLabel value="Lider da Célula:" styleClass="formulariosObrigatorio" for="nomeDiscipulador" />
-							<h:inputText id="discipulador" size="30" styleClass="formularios2" value="#{loginBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
+							<h:inputText id="nomeDiscipulador" size="30" styleClass="formularios2" value="#{loginBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
 							<h:outputLabel value="Nome da Célula:" styleClass="Texto_cpf_login" for="nomeCelula" />
-							<h:inputText id="nome" size="30" styleClass="formularios2" required="true" value="#{celulaBean.celulas.celNome}" requiredMessage="Nome da célula é obrigatório"/>
+							<h:inputText id="nomeCelula" size="30" styleClass="formularios2" required="true" value="#{celulaBean.celulas.celNome}" requiredMessage="Nome da célula é obrigatório"/>
 							<h:outputLabel value="Hora da Reunião:" styleClass="Texto_cpf_login" for="hrReuniao" />
 							<p:inputMask mask="99:99" id="hrReuniao"
 								value="#{celulaBean.celulas.celHorarioReuniao}" size="8"
@@ -57,21 +57,21 @@
 
 							<h:outputLabel value="Dia da Reunião:" styleClass="Texto_cpf_login" for="diaReuniao" />
 							<h:selectOneMenu id="diaReuniao" value="#{celulaBean.celulas.celDiaReuniao}"
-								requiredMessage="Dia da Reunião é obrigatória" tabindex="7"
+								requiredMessage="Dia da Reunião é obrigatório" tabindex="7"
 								styleClass="formularios" required="true">
 								<f:selectItem itemValue="Domingo" itemLabel="Domingo"/>
-								<f:selectItem itemValue="Domingo" itemLabel="Segunda"/>
-								<f:selectItem itemValue="Domingo" itemLabel="Terça"/>
-								<f:selectItem itemValue="Domingo" itemLabel="Quarta"/>
-								<f:selectItem itemValue="Domingo" itemLabel="Quinta"/>
-								<f:selectItem itemValue="Domingo" itemLabel="Sexta"/>
-								<f:selectItem itemValue="Domingo" itemLabel="Sábado"/>
+								<f:selectItem itemValue="Segunda" itemLabel="Segunda"/>
+								<f:selectItem itemValue="Terça" itemLabel="Terça"/>
+								<f:selectItem itemValue="Quarta" itemLabel="Quarta"/>
+								<f:selectItem itemValue="Quinta" itemLabel="Quinta"/>
+								<f:selectItem itemValue="Sexta" itemLabel="Sexta"/>
+								<f:selectItem itemValue="Sabado" itemLabel="Sábado"/>
 							</h:selectOneMenu>
 						</h:panelGrid>
 					</h:panelGrid>
 				</p:tab>
 			</p:tabView>
-			<br />
+			<br/>
 	
 	
 			<p:tabView id="tabView"  activeIndex="3" effect="opacity" contentTransition="true" >
@@ -174,12 +174,44 @@
 						</center>
 					    </h:panelGrid>
 					</center>
+					<br/>
+					
+					<p:dataTable
+					id="tbl" 
+					var="dis" 
+					selection="#{celulaBean.celulaSelecionada}"
+					value="#{celulaBean.listaDiscipulosCadastrados}" 
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Associado encontrado"
+					paginatorPosition="bottom">
+
+					<p:column id="dtDisNome" 
+					    filterStyleClass="formularios" resizable="true"
+						sortBy="#{dis.disnome}">
+						<f:facet name="header">
+							<h:outputText value="NOME" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText id="nome" styleClass="Fonte_13" value="#{dis.disnome}"/>
+					</p:column>
+					
+				</p:dataTable>
 				</p:tab>
 				
 			</p:tabView>
 			<br/>
-			<h:commandButton value="Salvar..." styleClass="formularios" tabindex="25"
+			<h:commandButton value="Editar" styleClass="formularios" tabindex="25"
 			actionListener="#{celulaBean.salvar}">
+			</h:commandButton>
+			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="25"
+			action="#{celulaBean.prepararListarCelula}">
 			</h:commandButton>
 		</h:form>
 	</ui:define>
