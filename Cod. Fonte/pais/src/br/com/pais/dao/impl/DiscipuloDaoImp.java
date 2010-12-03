@@ -2,16 +2,13 @@ package br.com.pais.dao.impl;
 
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.entities.Discipulos;
-import br.com.pais.mensagens.MessageManagerImpl;
 
-public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer>
-		implements DiscipuloDao {
+public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> implements DiscipuloDao {
 
 	@Override
 	public Discipulos encontrarPorCPF(String cpf) {
@@ -33,7 +30,6 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer>
 	@Override
 	public List<Discipulos> listarM12(int discipulador, int geracao) {
 		try {
-
 			Query query = getEntityManager().createQuery(
 					"From Discipulos d " + "where d.discipulos.disCod ="
 							+ discipulador + " and (d.dism12 = 's') "
@@ -75,7 +71,41 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer>
 		try {
 			Query query = getEntityManager().createQuery(
 					"From Discipulos d " + "where d.discipulos.disCod ="+ discipulador +
-					" and 3<= (count(*) From Discipulos d2 where d.discipulos.discod = d2.discipulos.disCod");
+					" and 3 <= (count(*) From Discipulos d2 where d.discipulos.discod = d2.discipulos.disCod");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+
+	@Override
+	public List<Discipulos> listarM12NaoCadastrados(int discipulador,int celulas) {
+		try {
+			Query query = getEntityManager().createQuery(
+					"From Discipulos d");
+					//"From Discipulos d where d.Celulas.celCod = " + celulas );
+					
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+
+	@Override
+	public List<Discipulos> listarM12Cadastrados(int discipulador, int celula) {
+		try {
+			Query query = getEntityManager().createQuery(
+					"From Discipulos d " +
+					"where d.discod not in (From c.dicipulos from discipuloscelulas) " +
+					"and (d.dism12 = 's') " +
+					"and (d.geracoes.gerCod = " + celula + ") " +
+					"and (d.discipulos.disCod = " + discipulador + ")");
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception

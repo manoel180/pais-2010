@@ -17,11 +17,9 @@ import br.com.pais.dao.DaoGenerico;
 
 // Default is read only
 
-public class DaoGenericoImp<T, ID extends Serializable> implements
-		DaoGenerico<T, ID> {
+public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T, ID> {
 
-	private static EntityManagerFactory emf = Persistence
-			.createEntityManagerFactory("pais");
+	private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("pais");
 
 	private EntityManager entityManager = emf.createEntityManager();
 
