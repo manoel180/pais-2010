@@ -105,9 +105,11 @@
 						</h:panelGrid>
 
 						<h:form prependId="false">
-							<center style="width: 300px;"><p:graphicImage id="foto"
+							<center style="width: 300px;">
+							<p:graphicImage id="foto"
 								value="#{discipuloBean.imagem}" width="120" height="116"
-								cache="false" /> <br />
+								cache="false" /> 
+								<br/>
 
 							<p:fileUpload sizeLimit="1048576" image="/img/but_enviar.jpg"
 								width="68" customUI="true" auto="true" widgetVar="uploader"
@@ -158,10 +160,8 @@
 
 						
 						<h:panelGrid columns="4" id="pnlEndereco"
-							columnClasses="coluna1, coluna2, coluna1, coluna2"
-							>
-							<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio"
-								for="cep" />
+							columnClasses="coluna1, coluna2, coluna1, coluna2">
+							<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio" for="cep" />
 
 							<h:inputText id="cep" size="20" tabindex="11"
 										requiredMessage="CEP é obrigatório"
@@ -318,13 +318,14 @@
 					<center><h:panelGrid columns="2"
 						columnClasses="coluna1, coluna2">
 
-						<center><p:pickList value="#{discipuloBean.listaEncontros}" 
+						<center>
+						<p:pickList value="#{discipuloBean.listaEncontros}" 
 						var="encontros"  converter="encontrosConverter" styleClass="formulariosObrigatorio"
 							itemLabel="#{encontros.encDescricao}" tabindex="24"
 							itemValue="#{encontros}" 
 							addAllLabel="Adicionar Todos" addLabel="Adicionar"
 							removeAllLabel="Remover Todos"  removeLabel="Remover"
-							 effect="fade"   > 
+							 effect="fade"> 
 							
 								<f:facet name="sourceCaption">Encontros</f:facet>
 								<f:facet name="targetCaption">Encontros que já participou</f:facet>
