@@ -64,8 +64,7 @@ public class Discipulos implements java.io.Serializable {
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
-	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
-			0);
+	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(0);
 	private Set<Mensagem> mensagemsForMensDisCod = new HashSet<Mensagem>(0);
 
 	@Id
@@ -321,8 +320,7 @@ public class Discipulos implements java.io.Serializable {
 		return this.formacaoeclesiasticases;
 	}
 
-	public void setFormacaoeclesiasticases(
-			List<Formacaoeclesiasticas> formacaoeclesiasticases) {
+	public void setFormacaoeclesiasticases(List<Formacaoeclesiasticas> formacaoeclesiasticases) {
 		this.formacaoeclesiasticases = formacaoeclesiasticases;
 	}
 
