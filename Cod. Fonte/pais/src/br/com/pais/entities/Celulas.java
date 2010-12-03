@@ -2,8 +2,10 @@ package br.com.pais.entities;
 
 // Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +42,7 @@ public class Celulas implements java.io.Serializable {
 	private String celStatus;
 	private String celTelFixo;
 	private String celTelCelular;
-	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private List<Discipulos> discipuloses = new ArrayList<Discipulos>();
 	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
 
 	public Celulas() {
@@ -57,7 +59,7 @@ public class Celulas implements java.io.Serializable {
 			String celNome, Date celHorarioReuniao, String celDiaReuniao,
 			String celNuEndereco, String celEndComplemento, String celStatus,
 			String celTelFixo, String celTelCelular,
-			Set<Discipulos> discipuloses, Set<Movimento> movimentos) {
+			List<Discipulos> discipuloses, Set<Movimento> movimentos) {
 		this.discipulos = discipulos;
 		this.bases = bases;
 		this.logradouro = logradouro;
@@ -189,11 +191,11 @@ public class Celulas implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "discipuloscelulas", catalog = "wwwpais_sistema", uniqueConstraints = @UniqueConstraint(columnNames = "discipulos"), joinColumns = { @JoinColumn(name = "celulas", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "discipulos", unique = true, nullable = false, updatable = false) })
-	public Set<Discipulos> getDiscipuloses() {
+	public List<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
 
-	public void setDiscipuloses(Set<Discipulos> discipuloses) {
+	public void setDiscipuloses(List<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
 	}
 
