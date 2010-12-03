@@ -70,10 +70,9 @@ public class DiscipuloBean {
 	String path;
 
 	private List<Formacaoeclesiasticas> ListaFormacoesEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
-	// private List<Encontros> ListaEncontros = new ArrayList<Encontros>();
 	private List<Funcaoeclesiasticas> listaFuncaoEclesiasticas = new ArrayList<Funcaoeclesiasticas>();
-	private DualListModel<Encontros> ListaEncontros = new DualListModel<Encontros>();
 	private DualListModel<Formacaoeclesiasticas> ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>();
+	private DualListModel<Encontros> ListaEncontros = new DualListModel<Encontros>();
 	private List<Encontros> source = new ArrayList<Encontros>();
 	private List<Encontros> target = new ArrayList<Encontros>();
 
@@ -240,15 +239,13 @@ public class DiscipuloBean {
 		sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
 		targetFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
 		nomeArquivoSelecionado = null;
-		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp()
-				.todos());
+		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp().todos());
 		source.addAll(new EncontrosDaoImp().todos());
 
 		funcaoeclesiasticas = new Funcaoeclesiasticas();
 		geracoes = new Geracoes();
 
-		ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>(
-				sourceFormacaoEclesiasticas, targetFormacaoEclesiasticas);
+		ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>(sourceFormacaoEclesiasticas, targetFormacaoEclesiasticas);
 		ListaEncontros = new DualListModel<Encontros>(source, target);
 		logradouro = new Logradouro();
 		formacaoacademica = new Formacaoacademica();
@@ -287,8 +284,7 @@ public class DiscipuloBean {
 		}
 		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
 		discipulos.setEncontroses(ListaEncontros.getTarget());
-		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas
-				.getTarget());
+		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
 		discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
 
 		discipulos.setEstadocivil(estadocivil);
@@ -415,8 +411,7 @@ public class DiscipuloBean {
 	 * @param formacaoeclesiastica
 	 *            the formacaoeclesiastica to set
 	 */
-	public void setFormacaoeclesiastica(
-			Formacaoeclesiasticas formacaoeclesiastica) {
+	public void setFormacaoeclesiastica(Formacaoeclesiasticas formacaoeclesiastica) {
 		this.formacaoeclesiastica = formacaoeclesiastica;
 	}
 
@@ -614,8 +609,7 @@ public class DiscipuloBean {
 	 * @param listaFormacaoEclesiasticas
 	 *            the listaFormacaoEclesiasticas to set
 	 */
-	public void setListaFormacaoEclesiasticas(
-			DualListModel<Formacaoeclesiasticas> listaFormacaoEclesiasticas) {
+	public void setListaFormacaoEclesiasticas(DualListModel<Formacaoeclesiasticas> listaFormacaoEclesiasticas) {
 		ListaFormacaoEclesiasticas = listaFormacaoEclesiasticas;
 	}
 
@@ -675,8 +669,7 @@ public class DiscipuloBean {
 	 * @param listaFuncaoEclesiasticas
 	 *            the listaFuncaoEclesiasticas to set
 	 */
-	public void setListaFuncaoEclesiasticas(
-			List<Funcaoeclesiasticas> listaFuncaoEclesiasticas) {
+	public void setListaFuncaoEclesiasticas(List<Funcaoeclesiasticas> listaFuncaoEclesiasticas) {
 		this.listaFuncaoEclesiasticas = listaFuncaoEclesiasticas;
 	}
 
