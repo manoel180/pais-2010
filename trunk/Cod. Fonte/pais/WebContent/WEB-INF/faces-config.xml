@@ -10,6 +10,10 @@
   <converter-id>formacaoEclesiasticaConverter</converter-id>
   <converter-class>br.com.pais.managedbeans.FormacaoEclesiasticaConverter</converter-class>
  </converter>
+ <converter>
+  <converter-id>discipulosConverter</converter-id>
+  <converter-class>br.com.pais.managedbeans.DiscipulosConverter</converter-class>
+ </converter>
  <managed-bean>
   <managed-bean-name>discipuloBean</managed-bean-name>
   <managed-bean-class>br.com.pais.managedbeans.DiscipuloBean</managed-bean-class>
