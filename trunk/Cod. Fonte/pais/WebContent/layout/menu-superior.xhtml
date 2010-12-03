@@ -17,8 +17,14 @@
 		</p:submenu>
 
 		<p:submenu label="CADASTRAR" align="left" >
-			<p:menuitem value="Novo Discípulo"   action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
-			<p:menuitem value="Nova Célula"   rendered="#{loginBean.cadCelulas}" ajax="false"/>
+			<p:menuitem value="Discípulo" action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
+			<p:submenu>  
+                <f:facet name="label">  
+                    <p:menuitem value="Célula"/>  
+                </f:facet>  
+                <p:menuitem value="Nova Célula" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+                <p:menuitem value="Listar Célula" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+            </p:submenu>
 		</p:submenu>
 		
 		<p:submenu  label="FINANCEIRO"  align="left" >
