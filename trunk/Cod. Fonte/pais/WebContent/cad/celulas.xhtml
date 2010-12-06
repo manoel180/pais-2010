@@ -71,7 +71,7 @@
 					</h:panelGrid>
 				</p:tab>
 			</p:tabView>
-			<br />
+			<br/>
 	
 	
 			<p:tabView id="tabView"  activeIndex="3" effect="opacity" contentTransition="true" >
@@ -153,7 +153,7 @@
 
 				<p:tab id="tbdiscipulos" title="Discípulos">
 				        <h:outputLabel value="Geração:" styleClass="Texto_cpf_login" for="geracao"/>
-						<h:selectOneMenu id="geracao" value="#{celulaBean.geracoes.gerCod}" styleClass="formularios">
+						<h:selectOneMenu id="geracao" value="#{celulaBean.celulas.celGeracao}" styleClass="formularios">
 							<f:selectItems value="#{geracaoBean.geracaoCombo}"/>
 							<f:ajax render="m12" execute="@this" event="change" 
 							        listener="#{celulaBean.listarM12PorGeracao}"/>
