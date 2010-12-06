@@ -31,6 +31,7 @@ import javax.persistence.UniqueConstraint;
 public class Celulas implements java.io.Serializable {
 
 	private Integer celCod;
+	private Integer celGeracao;
 	private Discipulos discipulos;
 	private Bases bases;
 	private Logradouro logradouro;
@@ -55,11 +56,12 @@ public class Celulas implements java.io.Serializable {
 		this.celNuEndereco = celNuEndereco;
 	}
 
-	public Celulas(Discipulos discipulos, Bases bases, Logradouro logradouro,
+	public Celulas(Integer celGeracao, Discipulos discipulos, Bases bases, Logradouro logradouro,
 			String celNome, Date celHorarioReuniao, String celDiaReuniao,
 			String celNuEndereco, String celEndComplemento, String celStatus,
 			String celTelFixo, String celTelCelular,
 			List<Discipulos> discipuloses, Set<Movimento> movimentos) {
+		this.celGeracao = celGeracao;
 		this.discipulos = discipulos;
 		this.bases = bases;
 		this.logradouro = logradouro;
@@ -84,6 +86,15 @@ public class Celulas implements java.io.Serializable {
 
 	public void setCelCod(Integer celCod) {
 		this.celCod = celCod;
+	}
+	
+	@Column(name = "celGeracao", unique = true, nullable = false)
+	public Integer getCelGeracao() {
+		return celGeracao;
+	}
+
+	public void setCelGeracao(Integer celGeracao) {
+		this.celGeracao = celGeracao;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
