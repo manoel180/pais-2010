@@ -85,8 +85,11 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 	public List<Discipulos> listarM12NaoCadastrados(int discipulador,int celulas) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Discipulos d");
-					//"From Discipulos d where d.Celulas.celCod = " + celulas );
+					"From Discipulos d " +
+					"where d.discod not in (From c.dicipulos from discipuloscelulas) " +
+					"and (d.dism12 = 's') " +
+					"and (d.geracoes.gerCod = " + celulas + ") " +
+					"and (d.discipulos.disCod = " + discipulador + ")");
 					
 			return query.getResultList();
 		} catch (NoResultException nre) {
@@ -98,14 +101,10 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 	}
 
 	@Override
-	public List<Discipulos> listarM12Cadastrados(int discipulador, int celula) {
+	public List<Discipulos> listarM12Cadastrados(int celula) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Discipulos d " +
-					"where d.discod not in (From c.dicipulos from discipuloscelulas) " +
-					"and (d.dism12 = 's') " +
-					"and (d.geracoes.gerCod = " + celula + ") " +
-					"and (d.discipulos.disCod = " + discipulador + ")");
+					"select  c.discipuloses from Celulas c where c.celCod = "+ celula +")");
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
