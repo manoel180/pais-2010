@@ -33,7 +33,7 @@
 	<ui:define name="conteudo">
 		<br />
 		<br />
-		<h:form id="form1" prependId="false">
+		<h:form id="form">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
 
 			<p:focus />
@@ -152,63 +152,82 @@
 				</p:tab>
 
 				<p:tab id="tbdiscipulos" title="Discípulos">
-				        <h:outputLabel value="Geração:" styleClass="Texto_cpf_login" for="geracao"/>
-						<h:selectOneMenu id="geracao" value="#{celulaBean.geracoes.gerCod}" styleClass="formularios">
-							<f:selectItems value="#{geracaoBean.geracaoCombo}"/>
-							<f:ajax render="m12" execute="@this" event="change" 
-							        listener="#{celulaBean.listarM12PorGeracao}"/>
-						</h:selectOneMenu>
-					<center>
-					    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
-						<center>
-						<p:pickList id="m12" value="#{celulaBean.listaDiscipulos}" 
-						    var="discipulos"  converter="discipulosConverter" styleClass="formulariosObrigatorio"
-							itemLabel="#{discipulos.disnome}" tabindex="24"
-							itemValue="#{discipulos}" 
-							addAllLabel="Adicionar Todos" addLabel="Adicionar"
-							removeAllLabel="Remover Todos"  removeLabel="Remover"
-							effect="fade"> 
-								<f:facet name="sourceCaption">Todos os Discípulos</f:facet>
-								<f:facet name="targetCaption">Discípulos da Célula</f:facet>
-						</p:pickList> 
-						</center>
-					    </h:panelGrid>
-					</center>
 					<br/>
-					
+						
 					<p:dataTable
-					id="tbl" 
+					id="dtDisSelecionados" 
 					var="dis" 
-					selection="#{celulaBean.celulaSelecionada}"
-					value="#{celulaBean.listaDiscipulosCadastrados}" 
-					paginator="true"
-					firstPageLinkLabel="&lt;&lt; Primeiro"
-					lastPageLinkLabel="Ultimo &gt;&gt;"
-					previousPageLinkLabel="&lt; Voltar"
-					nextPageLinkLabel="Avançar &gt;" 
+					selection="#{celulaBean.discipulosSelecionados}"
+					selectionMode="multiple"
+					value="#{celulaBean.listaM12}" 
 					width="100%"
-					sortAscMessage="Ordena em ordem crescente"
-					sortDescMessage="Ordena em ordem descrecente" 
-					rows="10"
-					dynamic="true" emptyMessage="Nenhum Associado encontrado"
-					paginatorPosition="bottom">
-
-					<p:column id="dtDisNome" 
-					    filterStyleClass="formularios" resizable="true"
-						sortBy="#{dis.disnome}">
+					emptyMessage="Nenhum Discipulo encontrado">
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<p:graphicImage value="#{dis.disfoto}" width="41" height="40"/>
+					</p:column>
+					
+					<p:column>
 						<f:facet name="header">
 							<h:outputText value="NOME" styleClass="Fonte_12"/>
 						</f:facet>
-						<h:outputText id="nome" styleClass="Fonte_13" value="#{dis.disnome}"/>
+						<h:outputText styleClass="Fonte_13" value="#{dis.disnome}"/>
 					</p:column>
 					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
+					</p:column>
+					
+					<f:facet name="footer">  
+                   <p:commandButton value="Adicionar/Remover" action="#{celulaBean.adicionarDiscipulos}" 
+                                    image="ui-icon ui-icon-search"
+                                    update="form:dtDisAdicionados"/>
+                    </f:facet>
+					
+				</p:dataTable>
+				<br/>
+				
+				<p:dataTable
+					id="dtDisAdicionados" 
+					var="dis" 
+					selection="#{celulaBean.listDisSelecionados}"
+					value="#{celulaBean.listDisSelecionados}"
+					width="100%"
+					emptyMessage="Nenhum Discipulo associado">
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<p:graphicImage value="#{dis.disfoto}" width="41" height="40"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="NOME" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{dis.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
+					</p:column>
 				</p:dataTable>
 				</p:tab>
 				
 			</p:tabView>
 			<br/>
 			<h:commandButton value="Editar" styleClass="formularios" tabindex="25"
-			actionListener="#{celulaBean.salvar}">
+			actionListener="#{celulaBean.alterar}">
 			</h:commandButton>
 			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="25"
 			action="#{celulaBean.prepararListarCelula}">
