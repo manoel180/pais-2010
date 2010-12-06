@@ -43,6 +43,8 @@ public class CelulaBean {
 	
 	//celulaSelecionada Grid
 	private Celulas celulaSelecionada;
+	private Discipulos[] discipulosSelecionados;
+	private List<Discipulos> listDisSelecionados = new ArrayList<Discipulos>();
 
 	// Objetos Daos
 	private LogradouroDao logradouroDao = new LogradouroDaoImp();
@@ -50,7 +52,7 @@ public class CelulaBean {
 	private CelulaDao celulaDao = new CelulaDaoImp();
 	
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
-	private List<Discipulos> listaDiscipulosCadastrados = new ArrayList<Discipulos>();
+	private List<Discipulos> listaM12 = new ArrayList<Discipulos>();
 
 	private DualListModel<Discipulos> listaDiscipulos = new DualListModel<Discipulos>();
 	private List<Discipulos> sourceDiscipulos = new ArrayList<Discipulos>();
@@ -67,14 +69,26 @@ public class CelulaBean {
 	public void listarM12PorGeracao(AjaxBehaviorEvent event) {
 		sourceDiscipulos = new ArrayList<Discipulos>();
 		targetDiscipulos = new ArrayList<Discipulos>();
-		sourceDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(),geracoes.getGerCod()));
+		sourceDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(),celulas.getCelGeracao()));
 
 		listaDiscipulos = new DualListModel<Discipulos>(sourceDiscipulos, targetDiscipulos);
 	}
+	
+	public String adicionarDiscipulos() {  
+		listDisSelecionados = new ArrayList<Discipulos>();
+		for(Discipulos dis: discipulosSelecionados){
+			//int i = 0;
+			listDisSelecionados.add(dis);
+				 //System.out.println("\n Nome "+listDisSelecionados.get(i).getDisnome());
+		    //i++;
+		 }
+        return null;  
+    }
 
 	public String prepararCelula() {
-		
+		//esquerda
 		sourceDiscipulos = new ArrayList<Discipulos>();
+		//direita
 		targetDiscipulos = new ArrayList<Discipulos>();
 		sourceDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(),1));
 
@@ -97,17 +111,67 @@ public class CelulaBean {
 	    celulas = celulaSelecionada;	
 	    celulas.setLogradouro(celulaSelecionada.getLogradouro());
 	    
-	    listaDiscipulosCadastrados = new ArrayList<Discipulos>();
-		listaDiscipulosCadastrados.addAll(discipuloDao.listarM12NaoCadastrados(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelCod()));
-		//sourceDiscipulos = new ArrayList<Discipulos>();
-		//targetDiscipulos = new ArrayList<Discipulos>();
-		//sourceDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(),1));
-
-		//listaDiscipulos = new DualListModel<Discipulos>(sourceDiscipulos, targetDiscipulos);
+	    listaM12 = new ArrayList<Discipulos>();
+	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
+	    
+	    listDisSelecionados = new ArrayList<Discipulos>();
+	    
+	    listDisSelecionados = new ArrayList<Discipulos>();
+		for(Discipulos dis: celulas.getDiscipuloses()){
+			listDisSelecionados.add(dis);
+		 }
 		
-		//logradouro = celulaSelecionada.getLogradouro();
-		//celulas = celulaSelecionada;
-		//geracoes = celulaSelecionada.get;
+	    //Esquerda
+		//sourceDiscipulos = new ArrayList<Discipulos>();
+	    //Direita
+		//targetDiscipulos = new ArrayList<Discipulos>();
+		//targetDiscipulos.addAll(celulas.getDiscipuloses());
+		//sourceDiscipulos.addAll(discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
+		
+		//listaDiscipulos = new DualListModel<Discipulos>(sourceDiscipulos, targetDiscipulos);
+		//listaDiscipulos.setTarget(celulas.getDiscipuloses());
+		
+		//Varre a listaDiscipulosCadastrados 
+		/*
+	    for (Discipulos dis : listaDiscipulosCadastrados) {
+	    	System.out.println ("\n Tamanho da Lista "+listaDiscipulosCadastrados.size());
+	    	System.out.println ("\n Teste "+listaDiscipulosCadastrados.get(0).getDisnome());
+	        System.out.println ("\n" +dis.getDisCod());
+	    }
+	    
+	    
+		List<String> nomes = new ArrayList<String>();
+	    nomes.add("Anderson");
+	    nomes.add("rodrigo");
+	    nomes.add("karina");
+	    nomes.add("giovanni");
+	    nomes.add("Anderson");
+	    nomes.add("rodrigo"); 
+			
+	    List<String> temp = new ArrayList<String>(nomes);
+		 for(String nome: nomes){
+			 temp.remove(nome);
+			  if(temp.contains(nome))
+				 System.out.println("\n Nome repetido "+nome);
+		 }
+		 
+		/*
+	    List<String> nomes = new ArrayList<String>();
+	    nomes.add("Anderson");
+	    nomes.add("rodrigo");
+	    nomes.add("karina");
+	    nomes.add("giovanni");
+	    nomes.add("Anderson");
+	    nomes.add("rodrigo"); 
+			
+	    List<String> temp = new ArrayList<String>(nomes);
+		 for(String nome: nomes){
+			 temp.remove(nome);
+			  if(temp.contains(nome))
+				 System.out.println("\n Nome repetido "+nome);
+				 
+		 }
+		 */
 				
 		return "/cad/celulasEditar.mir";
 	}
@@ -119,7 +183,7 @@ public class CelulaBean {
 	}
 	
 	
-	public void salvar(ActionEvent event) {
+	public String salvar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		
 		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
@@ -128,10 +192,31 @@ public class CelulaBean {
 		celulas.setDiscipuloses(listaDiscipulos.getTarget());
 
 		if (celulaDao.salvar(celulas) == (true)) {
+			//context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula Cadastrada!"));
+			return prepararListarCelula();
+			
+		} else {
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Erro ao cadastrar!"));
+		}
+		return null;
+	}
+	
+	public void alterar(ActionEvent event) {
+		//FacesContext context = FacesContext.getCurrentInstance();
+		
+		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
+		celulas.setLogradouro(logradouro);
+		celulas.setCelStatus("APROVADO");
+		celulas.setDiscipuloses(listDisSelecionados);
+		celulaDao.atualizar(celulas);
+		
+		/*
+		if (celulaDao.atualizar(celulas)) {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Célula Cadastrada!"));
 		} else {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Erro ao cadastrar!"));
 		}
+		*/
 	}
 	
 
@@ -268,13 +353,29 @@ public class CelulaBean {
 		this.celulaSelecionada = celulaSelecionada;
 	}
 	
-	public List<Discipulos> getListaDiscipulosCadastrados() {
-		return listaDiscipulosCadastrados;
+	public List<Discipulos> getListaM12() {
+		return listaM12;
 	}
 
-	public void setListaDiscipulosCadastrados(
+	public void setListaM12(
 			List<Discipulos> listaDiscipulosCadastrados) {
-		this.listaDiscipulosCadastrados = listaDiscipulosCadastrados;
+		this.listaM12 = listaDiscipulosCadastrados;
+	}
+	
+	public Discipulos[] getDiscipulosSelecionados() {
+		return discipulosSelecionados;
+	}
+
+	public void setDiscipulosSelecionados(Discipulos[] discipulosSelecionados) {
+		this.discipulosSelecionados = discipulosSelecionados;
+	}
+	
+	public List<Discipulos> getListDisSelecionados() {
+		return listDisSelecionados;
+	}
+
+	public void setListDisSelecionados(List<Discipulos> listDisSelecionados) {
+		this.listDisSelecionados = listDisSelecionados;
 	}
 
 }
