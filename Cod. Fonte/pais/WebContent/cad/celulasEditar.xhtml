@@ -33,7 +33,7 @@
 	<ui:define name="conteudo">
 		<br />
 		<br />
-		<h:form id="form">
+		<h:form id="form" prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
 
 			<p:focus />
@@ -137,6 +137,7 @@
 				
 				<p:tab id="tbcontatos" title="Contatos">
 					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+
 						<h:outputLabel value="Tel. Fixo:"
 							styleClass="Texto_cpf_login" for="telTxt" />
 						<p:inputMask mask="(99) 9999-9999" id="telTxt" tabindex="15"
@@ -152,12 +153,13 @@
 				</p:tab>
 
 				<p:tab id="tbdiscipulos" title="Discípulos">
+				    <p:outputPanel id="outPanelDiscipulos">
 					<br/>
 						
 					<p:dataTable
 					id="dtDisSelecionados" 
 					var="dis" 
-					selection="#{celulaBean.discipulosSelecionados}"
+					selection="#{celulaBean.dtDisSelecionadosAdicionar}"
 					selectionMode="multiple"
 					value="#{celulaBean.listaM12}" 
 					width="100%"
@@ -165,29 +167,29 @@
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;FOTO" styleClass="Fonte_12"/>
 						</f:facet>
 						<p:graphicImage value="#{dis.disfoto}" width="41" height="40"/>
 					</p:column>
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="NOME" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;NOME" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText styleClass="Fonte_13" value="#{dis.disnome}"/>
 					</p:column>
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="GERAÇÃO" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
 					</p:column>
 					
-					<f:facet name="footer">  
-                   <p:commandButton value="Adicionar/Remover" action="#{celulaBean.adicionarDiscipulos}" 
+				   <f:facet name="footer">  
+                   <p:commandButton value="Adicionar" action="#{celulaBean.adicionarDiscipulos}" 
                                     image="ui-icon ui-icon-search"
-                                    update="form:dtDisAdicionados"/>
+                                    update="outPanelDiscipulos"/>
                     </f:facet>
 					
 				</p:dataTable>
@@ -196,32 +198,41 @@
 				<p:dataTable
 					id="dtDisAdicionados" 
 					var="dis" 
-					selection="#{celulaBean.listDisSelecionados}"
-					value="#{celulaBean.listDisSelecionados}"
+					selectionMode="multiple"
+					selection="#{celulaBean.dtDisSelecionadosRemover}"
+					value="#{celulaBean.dtDisAdicionados}"
 					width="100%"
 					emptyMessage="Nenhum Discipulo associado">
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;FOTO" styleClass="Fonte_12"/>
 						</f:facet>
 						<p:graphicImage value="#{dis.disfoto}" width="41" height="40"/>
 					</p:column>
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="NOME" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;NOME" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText styleClass="Fonte_13" value="#{dis.disnome}"/>
 					</p:column>
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="GERAÇÃO" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
 					</p:column>
+					
+				   <f:facet name="footer">  
+                   <p:commandButton value="Remover" action="#{celulaBean.removerDiscipulos}" 
+                                    image="ui-icon ui-icon-search"
+                                    update="outPanelDiscipulos"/>
+                    </f:facet>
 				</p:dataTable>
+				
+				</p:outputPanel>
 				</p:tab>
 				
 			</p:tabView>
@@ -229,6 +240,7 @@
 			<h:commandButton value="Editar" styleClass="formularios" tabindex="25"
 			actionListener="#{celulaBean.alterar}">
 			</h:commandButton>
+			&nbsp;
 			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="25"
 			action="#{celulaBean.prepararListarCelula}">
 			</h:commandButton>
