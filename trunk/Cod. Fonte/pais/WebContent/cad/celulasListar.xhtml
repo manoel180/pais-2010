@@ -58,7 +58,7 @@
 					    filterStyleClass="formularios" resizable="true"
 						sortBy="#{cel.celNome}">
 						<f:facet name="header">
-							<h:outputText value="NOME" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;NOME DA CÉLULA" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.celNome}"/>
 					</p:column>
@@ -67,7 +67,7 @@
 						filterStyleClass="formularios" resizable="true"
 						sortBy="#{cel.celDiaReuniao}">
 						<f:facet name="header">
-							<h:outputText value="DIA" styleClass="Fonte_12" />
+							<h:outputText value="&nbsp;DIA DA SEMANA" styleClass="Fonte_12" />
 						</f:facet>
 						<h:outputText value="#{cel.celDiaReuniao}" styleClass="Fonte_13"/>
 					</p:column>
@@ -76,14 +76,16 @@
 						filterStyleClass="formularios" resizable="true"
 						sortBy="#{cel.celHorarioReuniao}">
 						<f:facet name="header">
-							<h:outputText value="HORA" styleClass="Fonte_12" />
+							<h:outputText value="&nbsp;HORA" styleClass="Fonte_12" />
 						</f:facet>
 						<h:outputText value="#{cel.celHorarioReuniao}" styleClass="Fonte_13"/>
 					</p:column>
 					
-					<p:column style="width:12px">
+					<p:column style="width:10px 0px">
 						<f:facet name="header">
-							<h:outputText value="EDITAR" styleClass="Fonte_12" />
+						<center>
+							<h:outputText value="&nbsp;EDITAR" styleClass="Fonte_12" />
+						</center>
 						</f:facet>
 						<p:commandLink title="Editar Célula" action="#{celulaBean.prepararEdicao}" ajax="false">  
                         <center>
@@ -93,22 +95,27 @@
                         </p:commandLink>
 					</p:column>
 					
-					<p:column style="width:15px">
+					<p:column style="width:10px 0px">
 						<f:facet name="header">
-							<h:outputText value="EXCLUIR" styleClass="Fonte_12" />
+						<center>
+							<h:outputText value="&nbsp;EXCLUIR" styleClass="Fonte_12" />
+					    </center>
 						</f:facet>
-						<p:commandLink title="Excluir Célula" action="#{discipuloBean.prepararDiscipulo}" ajax="false">  
+						<p:commandLink title="Excluir Célula" update="pnlCelulaExcluir" oncomplete="celulaExcluir.show()">  
                         <center>
                         <p:graphicImage value="/img/deletar.png"/>     
                         </center>
+                        <f:setPropertyActionListener value="#{cel}" target="#{celulaBean.celulaSelecionada}" />
                         </p:commandLink>
 					</p:column>
 					
-					<p:column style="width:15px">
+					<p:column style="width:10px 0px">
 					    <f:facet name="header">
-							<h:outputText value="DETALHE" styleClass="Fonte_12" />
+					    <center>
+							<h:outputText value="&nbsp;DETALHES" styleClass="Fonte_12" />
+						</center>
 						</f:facet>
-						<p:commandLink title="Detalhe Célula" update="display" oncomplete="celulaDialog.show()">  
+						<p:commandLink title="Detalhe Célula" update="pnlCelulaDetalhe" oncomplete="celulaDetalhe.show()">  
                             <center>
                             <p:graphicImage value="/img/detalhe.png"/>
                             </center> 
@@ -117,16 +124,28 @@
 			        </p:column>
 				</p:dataTable>
 				
-				<p:dialog header="Célula Detalhe" widgetVar="celulaDialog" resizable="false"  
+				<p:dialog header="Célula Detalhe" widgetVar="celulaDetalhe" resizable="false"  
                           modal="true" width="200" showEffect="explode" hideEffect="explode">  
-			        <h:panelGrid id="display" columns="2" cellpadding="4">  		  
-			            <h:outputText value="Nome:" />  
+			        <h:panelGrid id="pnlCelulaDetalhe" columns="2" cellpadding="4">  		  
+			            <h:outputText value="Nome da célula:" />  
 			            <h:outputText value="#{celulaBean.celulaSelecionada.celNome}" />  
-			            <h:outputText value="Dia:" />  
+			            <h:outputText value="Dia da semana:" />  
 			            <h:outputText value="#{celulaBean.celulaSelecionada.celDiaReuniao}" />  
 			            <h:outputText value="Horário:" />  
 			            <h:outputText value="#{celulaBean.celulaSelecionada.celHorarioReuniao}" /> 
 			        </h:panelGrid>  
+			    </p:dialog>
+			    
+			    <p:dialog header="Excluir Celula" widgetVar="celulaExcluir" resizable="false"
+			              modal="true" width="400" showEffect="explode" hideEffect="explode">
+			            <p:outputPanel id="pnlCelulaExcluir">
+			            <h:outputText value="Deseja realmente excluir #{celulaBean.celulaSelecionada.celNome} ?" />
+			            <h:panelGrid columns="2" cellpadding="2">
+			                <p:commandButton value="Sim" action="#{categoriaDialogBean.remover}" 
+			                                 update="aviso,formCategorias" oncomplete="alterar.hide(), remover.hide()" />
+			                <p:commandButton value="Não" onclick="celulaExcluir.hide()" />
+			            </h:panelGrid>  
+			            </p:outputPanel> 
 			    </p:dialog>
 
 					</h:form>

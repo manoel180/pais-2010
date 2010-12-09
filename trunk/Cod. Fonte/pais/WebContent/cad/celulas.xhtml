@@ -35,11 +35,8 @@
 		<br />
 		<h:form id="form1" prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-
-			<p:focus />
 			<p:tabView orientation="top">
-				<p:tab id="tabDadosPessoais" title="Dados do Lider">
-				  
+				<p:tab id="tabDadosPessoais" title="Dados do Lider">	  
 					<h:panelGrid columns="2">
 
 						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
@@ -52,12 +49,12 @@
 								value="#{celulaBean.celulas.celHorarioReuniao}" size="8"
 								styleClass="formularios2" required="true" tabindex="4"
 								requiredMessage="Hora da Reunião é obrigatória">
-							<f:convertDateTime timeStyle="short" type="time" locale="pt_BR"/>
+                            <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
 							</p:inputMask>
 
 							<h:outputLabel value="Dia da Reunião:" styleClass="Texto_cpf_login" for="diaReuniao" />
 							<h:selectOneMenu id="diaReuniao" value="#{celulaBean.celulas.celDiaReuniao}"
-								requiredMessage="Dia da Reunião é obrigatória" tabindex="7"
+								requiredMessage="Dia da Reunião é obrigatória" tabindex="5"
 								styleClass="formularios" required="true">
 								<f:selectItem itemValue="Domingo" itemLabel="Domingo"/>
 								<f:selectItem itemValue="Domingo" itemLabel="Segunda"/>
@@ -73,16 +70,13 @@
 			</p:tabView>
 			<br/>
 	
-	
 			<p:tabView id="tabView"  activeIndex="3" effect="opacity" contentTransition="true" >
 	  
 				<p:tab id="tbendereco" title="Endereço da Célula">
-
-						
 						<h:panelGrid columns="4" id="pnlEndereco" 
 						columnClasses="coluna1, coluna2, coluna1, coluna2">
 							<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio" for="cep" />
-							<h:inputText id="cep" size="20" tabindex="11"
+							<h:inputText id="cep" size="20" tabindex="6"
 										requiredMessage="CEP é obrigatório"
 										value="#{celulaBean.logradouro.cep}" maxlength="8"
 										styleClass="formularios2" required="true">
@@ -109,14 +103,14 @@
 								 styleClass="formularios2" size="30" readonly="true" />
 							<h:outputLabel value="Número:" styleClass="Texto_cpf_login"
 								for="num" />
-							<p:inputMask mask="?9999"  id="num" maxlength="4" tabindex="12" 
+							<p:inputMask mask="?9999"  id="num" maxlength="4" tabindex="7" 
 							size="4" styleClass="formularios2" 
 								value="#{celulaBean.celulas.celNuEndereco}" >
 							</p:inputMask>	
 								<h:outputLabel value="Complemento:" styleClass="Texto_cpf_login"
 								for="complemento" />
 							<h:inputText id="complemento" maxlength="10" 
-							size="30" styleClass="formularios2" tabindex="13"
+							size="30" styleClass="formularios2" tabindex="8"
 								value="#{celulaBean.celulas.celEndComplemento}" />
 							<h:outputLabel value="Bairro:" styleClass="formulariosObrigatorio"
 								for="bairro" />
@@ -139,13 +133,13 @@
 					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 						<h:outputLabel value="Tel. Fixo:"
 							styleClass="Texto_cpf_login" for="telTxt" />
-						<p:inputMask mask="(99) 9999-9999" id="telTxt" tabindex="15"
+						<p:inputMask mask="(99) 9999-9999" id="telTxt" tabindex="9"
 							value="#{celulaBean.celulas.celTelFixo}" autocomplete="off"
 							styleClass="formularios2" />
 
 						<h:outputLabel value="Tel. Celular:"
 							styleClass="Texto_cpf_login" for="telTxt2" />
-						<p:inputMask mask="(99) 9999-9999" id="telTxt2" tabindex="16"
+						<p:inputMask mask="(99) 9999-9999" id="telTxt2" tabindex="10"
 							value="#{celulaBean.celulas.celTelCelular}"
 							autocomplete="off" styleClass="formularios2" />
 					</h:panelGrid>
@@ -163,7 +157,7 @@
 						<center>
 						<p:pickList id="m12" value="#{celulaBean.listaDiscipulos}" 
 						    var="discipulos"  converter="discipulosConverter" styleClass="formulariosObrigatorio"
-							itemLabel="#{discipulos.disnome}" tabindex="24"
+							itemLabel="#{discipulos.disnome}" tabindex="11"
 							itemValue="#{discipulos}" 
 							addAllLabel="Adicionar Todos" addLabel="Adicionar"
 							removeAllLabel="Remover Todos"  removeLabel="Remover"
@@ -178,8 +172,12 @@
 				
 			</p:tabView>
 			<br/>
-			<h:commandButton value="Salvar..." styleClass="formularios" tabindex="25"
+			<h:commandButton value="Salvar" styleClass="formularios" tabindex="12"
 			actionListener="#{celulaBean.salvar}">
+			</h:commandButton>
+			&nbsp;
+			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="13"
+			action="#{celulaBean.prepararListarCelula}">
 			</h:commandButton>
 		</h:form>
 	</ui:define>
