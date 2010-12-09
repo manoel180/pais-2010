@@ -43,8 +43,9 @@ public class CelulaBean {
 	
 	//celulaSelecionada Grid
 	private Celulas celulaSelecionada;
-	private Discipulos[] discipulosSelecionados;
-	private List<Discipulos> listDisSelecionados = new ArrayList<Discipulos>();
+	private Discipulos[] dtDisSelecionadosAdicionar;
+	private Discipulos[] dtDisSelecionadosRemover;
+	private List<Discipulos> dtDisAdicionados = new ArrayList<Discipulos>();
 
 	// Objetos Daos
 	private LogradouroDao logradouroDao = new LogradouroDaoImp();
@@ -75,14 +76,48 @@ public class CelulaBean {
 	}
 	
 	public String adicionarDiscipulos() {  
-		listDisSelecionados = new ArrayList<Discipulos>();
-		for(Discipulos dis: discipulosSelecionados){
-			//int i = 0;
-			listDisSelecionados.add(dis);
-				 //System.out.println("\n Nome "+listDisSelecionados.get(i).getDisnome());
-		    //i++;
-		 }
-        return null;  
+		
+		for(Discipulos dis: dtDisSelecionadosAdicionar){
+			dtDisAdicionados.add(dis);
+		}
+		
+		List<Discipulos> listTemp = new ArrayList<Discipulos>(listaM12);
+	    for (Discipulos dis : dtDisAdicionados) {
+	    	
+	    	for (Discipulos dis2 : listaM12){
+	    		if(dis.getDisCod().equals(dis2.getDisCod())){
+	    			listTemp.remove(dis2);
+	    		}
+	    	}
+	    }
+	    
+	    listaM12 = new ArrayList<Discipulos>();
+	    listaM12.addAll(listTemp);
+	    
+		return null;
+    }
+	
+    public String removerDiscipulos() {  
+		
+		for(Discipulos dis: dtDisSelecionadosRemover){
+			listaM12.add(dis);
+		}
+		
+		
+		List<Discipulos> listTemp = new ArrayList<Discipulos>(dtDisAdicionados);
+	    for (Discipulos dis : listaM12) {
+	    	
+	    	for (Discipulos dis2 : dtDisAdicionados){
+	    		if(dis.getDisCod().equals(dis2.getDisCod())){
+	    			listTemp.remove(dis2);
+	    		}
+	    	}
+	    }
+	    
+	    dtDisAdicionados = new ArrayList<Discipulos>();
+	    dtDisAdicionados.addAll(listTemp);
+	    
+		return null;
     }
 
 	public String prepararCelula() {
@@ -114,64 +149,21 @@ public class CelulaBean {
 	    listaM12 = new ArrayList<Discipulos>();
 	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
 	    
-	    listDisSelecionados = new ArrayList<Discipulos>();
+	    dtDisAdicionados = new ArrayList<Discipulos>();
+	    dtDisAdicionados.addAll(celulas.getDiscipuloses());
 	    
-	    listDisSelecionados = new ArrayList<Discipulos>();
-		for(Discipulos dis: celulas.getDiscipuloses()){
-			listDisSelecionados.add(dis);
-		 }
-		
-	    //Esquerda
-		//sourceDiscipulos = new ArrayList<Discipulos>();
-	    //Direita
-		//targetDiscipulos = new ArrayList<Discipulos>();
-		//targetDiscipulos.addAll(celulas.getDiscipuloses());
-		//sourceDiscipulos.addAll(discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
-		
-		//listaDiscipulos = new DualListModel<Discipulos>(sourceDiscipulos, targetDiscipulos);
-		//listaDiscipulos.setTarget(celulas.getDiscipuloses());
-		
-		//Varre a listaDiscipulosCadastrados 
-		/*
-	    for (Discipulos dis : listaDiscipulosCadastrados) {
-	    	System.out.println ("\n Tamanho da Lista "+listaDiscipulosCadastrados.size());
-	    	System.out.println ("\n Teste "+listaDiscipulosCadastrados.get(0).getDisnome());
-	        System.out.println ("\n" +dis.getDisCod());
+	    List<Discipulos> listTemp = new ArrayList<Discipulos>(listaM12);
+	    for (Discipulos dis : dtDisAdicionados) {
+	    	
+	    	for (Discipulos dis2 : listaM12){
+	    		if(dis.getDisCod().equals(dis2.getDisCod())){
+	    			listTemp.remove(dis2);
+	    		}
+	    	}
 	    }
 	    
-	    
-		List<String> nomes = new ArrayList<String>();
-	    nomes.add("Anderson");
-	    nomes.add("rodrigo");
-	    nomes.add("karina");
-	    nomes.add("giovanni");
-	    nomes.add("Anderson");
-	    nomes.add("rodrigo"); 
-			
-	    List<String> temp = new ArrayList<String>(nomes);
-		 for(String nome: nomes){
-			 temp.remove(nome);
-			  if(temp.contains(nome))
-				 System.out.println("\n Nome repetido "+nome);
-		 }
-		 
-		/*
-	    List<String> nomes = new ArrayList<String>();
-	    nomes.add("Anderson");
-	    nomes.add("rodrigo");
-	    nomes.add("karina");
-	    nomes.add("giovanni");
-	    nomes.add("Anderson");
-	    nomes.add("rodrigo"); 
-			
-	    List<String> temp = new ArrayList<String>(nomes);
-		 for(String nome: nomes){
-			 temp.remove(nome);
-			  if(temp.contains(nome))
-				 System.out.println("\n Nome repetido "+nome);
-				 
-		 }
-		 */
+	    listaM12 = new ArrayList<Discipulos>();
+	    listaM12.addAll(listTemp);
 				
 		return "/cad/celulasEditar.mir";
 	}
@@ -194,7 +186,6 @@ public class CelulaBean {
 		if (celulaDao.salvar(celulas) == (true)) {
 			//context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula Cadastrada!"));
 			return prepararListarCelula();
-			
 		} else {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Erro ao cadastrar!"));
 		}
@@ -207,7 +198,7 @@ public class CelulaBean {
 		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
 		celulas.setLogradouro(logradouro);
 		celulas.setCelStatus("APROVADO");
-		celulas.setDiscipuloses(listDisSelecionados);
+		celulas.setDiscipuloses(dtDisAdicionados);
 		celulaDao.atualizar(celulas);
 		
 		/*
@@ -362,20 +353,28 @@ public class CelulaBean {
 		this.listaM12 = listaDiscipulosCadastrados;
 	}
 	
-	public Discipulos[] getDiscipulosSelecionados() {
-		return discipulosSelecionados;
+	public List<Discipulos> getDtDisAdicionados() {
+		return dtDisAdicionados;
 	}
 
-	public void setDiscipulosSelecionados(Discipulos[] discipulosSelecionados) {
-		this.discipulosSelecionados = discipulosSelecionados;
-	}
-	
-	public List<Discipulos> getListDisSelecionados() {
-		return listDisSelecionados;
+	public void setDtDisAdicionados(List<Discipulos> dtDisAdicionados) {
+		this.dtDisAdicionados = dtDisAdicionados;
 	}
 
-	public void setListDisSelecionados(List<Discipulos> listDisSelecionados) {
-		this.listDisSelecionados = listDisSelecionados;
+	public void setDtDisSelecionadosAdicionar(
+			Discipulos[] dtDisSelecionadosAdicionar) {
+		this.dtDisSelecionadosAdicionar = dtDisSelecionadosAdicionar;
 	}
 
+	public Discipulos[] getDtDisSelecionadosAdicionar() {
+		return dtDisSelecionadosAdicionar;
+	}
+
+	public void setDtDisSelecionadosRemover(Discipulos[] dtDisSelecionadosRemover) {
+		this.dtDisSelecionadosRemover = dtDisSelecionadosRemover;
+	}
+
+	public Discipulos[] getDtDisSelecionadosRemover() {
+		return dtDisSelecionadosRemover;
+	}
 }
