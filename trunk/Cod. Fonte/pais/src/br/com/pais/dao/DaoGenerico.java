@@ -10,12 +10,11 @@ public interface DaoGenerico<T, ID extends Serializable> {
 	public boolean salvar(T object);
 	public T pesquisarPorId(ID id);
 	public T atualizar(T object);
-	public void excluir(T object);
+	void excluir(T object, ID id);
 	public List<T> todos();
 	public List<T> listPesqParam(String query, Map<String, Object> params);
 	public List<T> listPesqParam(String query, Map<String, Object> params, 
 			int maximo, int atual);
 	public List<T> listPesq(String query);
 	public T pesqParam(String query, Map<String, String> params);
-	
 }
