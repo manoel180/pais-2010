@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -14,6 +15,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import br.com.pais.dao.DaoGenerico;
+import br.com.pais.mensagens.MessageManagerImpl;
 
 // Default is read only
 
@@ -48,7 +50,6 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 
 	}
 
-	// Falta Atualizar
 	@Override
 	public T atualizar(T object) {
 		EntityManager em = getEntityManager();
@@ -57,7 +58,6 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 			em.getTransaction().begin();
 			em.merge(object);
 			em.getTransaction().commit();
-
 		}
 
 		catch (PersistenceException e) {
@@ -71,12 +71,33 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 		}
 		return object;
 	}
-
-	// Falta Atualizar
+	
 	@Override
-	public void excluir(T object) {
-		object = getEntityManager().merge(object);
-		getEntityManager().remove(object);
+	public void excluir(T object, ID id ) {
+		EntityManager em = getEntityManager();
+		
+		try {
+			
+			em.getTransaction().begin();
+			em.remove(em.getReference(object.getClass(),id));
+			em.flush();
+			em.getTransaction().commit();
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO,	"sucesso.exclusao_detail", "sucesso.exclusao_detail");
+		}
+		catch (PersistenceException ex) {
+			ex.printStackTrace();
+			
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro.exclusao_datail", "erro.exclusao_datail");
+			em.getTransaction().rollback();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro.exclusao_datail", "erro.exclusao_datail");
+			em.getTransaction().rollback();
+			
+		}finally {
+			em.close();
+		}
 	}
 
 	// Falta Atualizar
@@ -85,19 +106,15 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 		return getEntityManager().find(oClass, id);
 	}
 
-	// Falta Finalizar
 	@Override
 	public boolean salvar(T object) {
-		/*
-		 * getEntityManager().clear(); getEntityManager().persist(object);
-		 */EntityManager em = getEntityManager();
+		EntityManager em = getEntityManager();
+		
 		try {
 			em.getTransaction().begin();
 			em.persist(object);
 			em.getTransaction().commit();
-
 		}
-
 		catch (PersistenceException e) {
 			// TODO: handle exception
 			e.getCause();
