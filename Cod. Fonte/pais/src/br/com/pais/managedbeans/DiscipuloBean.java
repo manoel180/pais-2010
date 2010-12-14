@@ -266,7 +266,7 @@ public class DiscipuloBean {
 	public void salvar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (conteudo == null) {
-			discipulos.setDisfoto("/img/sem_foto.png"); // Falta Verificar
+			discipulos.setDisfoto("/img/sem_foto.jpg"); // Falta Verificar
 		} else {
 			discipulos.setDisfoto("/fotos/" + salvarFoto());
 		}
