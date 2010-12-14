@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
+import br.com.pais.entities.Geracoes;
 
 public class CelulaDaoImp extends DaoGenericoImp<Celulas, Integer> implements CelulaDao{
 
