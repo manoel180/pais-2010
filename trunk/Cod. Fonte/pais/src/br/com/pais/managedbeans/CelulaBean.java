@@ -2,19 +2,23 @@ package br.com.pais.managedbeans;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.DualListModel;
 
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.dao.DiscipuloDao;
+import br.com.pais.dao.GeracaoDao;
 import br.com.pais.dao.LogradouroDao;
 import br.com.pais.dao.impl.CelulaDaoImp;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
+import br.com.pais.dao.impl.GeracaoDaoImp;
 import br.com.pais.dao.impl.LogradouroDaoImp;
 import br.com.pais.entities.Bairro;
 import br.com.pais.entities.Celulas;
@@ -51,8 +55,10 @@ public class CelulaBean {
 	private LogradouroDao logradouroDao = new LogradouroDaoImp();
 	private DiscipuloDao discipuloDao = new DiscipuloDaoImp(); 
 	private CelulaDao celulaDao = new CelulaDaoImp();
+	private  GeracaoDao geracaoDao = new GeracaoDaoImp();
 	
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
+	private List<Geracoes> listaGeracoes = new ArrayList<Geracoes>();
 	private List<Discipulos> listaM12 = new ArrayList<Discipulos>();
 
 	private DualListModel<Discipulos> listaDiscipulos = new DualListModel<Discipulos>();
@@ -67,12 +73,39 @@ public class CelulaBean {
 		}
 	}
 	
-	public void listarM12PorGeracao(AjaxBehaviorEvent event) {
-		sourceDiscipulos = new ArrayList<Discipulos>();
-		targetDiscipulos = new ArrayList<Discipulos>();
-		sourceDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(),celulas.getCelGeracao()));
-
-		listaDiscipulos = new DualListModel<Discipulos>(sourceDiscipulos, targetDiscipulos);
+	public SelectItem[] getGeracaoCombo() {
+		listaGeracoes = new ArrayList<Geracoes>();
+		listaGeracoes.addAll(geracaoDao.listarGeracoes());
+		
+		listaCelulas = new ArrayList<Celulas>();
+    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+    	
+    	List<Geracoes> listGerTemp = new ArrayList<Geracoes>(listaGeracoes);
+	    for (Geracoes ger : listaGeracoes) {
+	    	
+	    	for (Celulas cel : listaCelulas){
+	    		if(cel.getCelGeracao().equals(ger.getGerCod())){
+	    			listGerTemp.remove(ger);
+	    		}
+	    	}
+	    }
+	    
+	    listaGeracoes = new ArrayList<Geracoes>();
+		listaGeracoes.addAll(listGerTemp);
+		
+		List<SelectItem> itens = new ArrayList<SelectItem>(listaGeracoes.size());
+		
+		for (Geracoes g : listaGeracoes) {
+			itens.add(new SelectItem(g.getGerCod(), g.getGerDescricao()));
+		}
+		return itens.toArray(new SelectItem[itens.size()]);
+	}
+	
+	public void listarM12PorGeracao(AjaxBehaviorEvent event) {		
+		listaM12 = new ArrayList<Discipulos>();
+	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
+	    
+	    dtDisAdicionados = new ArrayList<Discipulos>();
 	}
 	
 	public String adicionarDiscipulos() {  
@@ -121,19 +154,18 @@ public class CelulaBean {
     }
 
 	public String prepararCelula() {
-		//esquerda
-		sourceDiscipulos = new ArrayList<Discipulos>();
-		//direita
-		targetDiscipulos = new ArrayList<Discipulos>();
-		sourceDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(),1));
-
-		listaDiscipulos = new DualListModel<Discipulos>(sourceDiscipulos, targetDiscipulos);
 		
 		logradouro = new Logradouro();
 		celulas = new Celulas();
 		geracoes = new Geracoes();
+		
+		//celulas.setCelNome("Teste");
+		//celulas.setCelHorarioReuniao(null);
+		
+	    listaM12 = new ArrayList<Discipulos>();
+	    dtDisAdicionados = new ArrayList<Discipulos>();
 				
-		return "/cad/celulas.mir";
+		return "/cad/celulasCadastro.mir";
 	}
 	
 	public String prepararEdicao() {
@@ -175,25 +207,37 @@ public class CelulaBean {
 	}
 	
 	
-	public String salvar(ActionEvent event) {
+	public String salvar() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		
 		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
 		celulas.setLogradouro(logradouro);
 		celulas.setCelStatus("APROVADO");
-		celulas.setDiscipuloses(listaDiscipulos.getTarget());
-
+		celulas.setDiscipuloses(dtDisAdicionados);
+		
 		if (celulaDao.salvar(celulas) == (true)) {
-			//context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula Cadastrada!"));
-			return prepararListarCelula();
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula cadastrada!"));
+			listaCelulas = new ArrayList<Celulas>();
+	    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		} else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Erro ao cadastrar!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
 		}
-		return null;
+		
+		return "/cad/celulasListar.mir";
 	}
 	
-	public void alterar(ActionEvent event) {
-		//FacesContext context = FacesContext.getCurrentInstance();
+	public void excluir(ActionEvent event) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		
+		celulaDao.excluir(celulaSelecionada,celulaSelecionada.getCelCod());
+		listaCelulas = new ArrayList<Celulas>();
+    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+    	
+    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula excluida!"));
+	}
+	
+	public String alterar() {
+		FacesContext context = FacesContext.getCurrentInstance();
 		
 		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
 		celulas.setLogradouro(logradouro);
@@ -201,13 +245,11 @@ public class CelulaBean {
 		celulas.setDiscipuloses(dtDisAdicionados);
 		celulaDao.atualizar(celulas);
 		
-		/*
-		if (celulaDao.atualizar(celulas)) {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Célula Cadastrada!"));
-		} else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Erro ao cadastrar!"));
-		}
-		*/
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula editada!"));
+		listaCelulas = new ArrayList<Celulas>();
+    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+		
+    	return "/cad/celulasListar.mir";
 	}
 	
 
@@ -376,5 +418,13 @@ public class CelulaBean {
 
 	public Discipulos[] getDtDisSelecionadosRemover() {
 		return dtDisSelecionadosRemover;
+	}
+
+	public void setListaGeracoes(List<Geracoes> listaGeracoes) {
+		this.listaGeracoes = listaGeracoes;
+	}
+
+	public List<Geracoes> getListaGeracoes() {
+		return listaGeracoes;
 	}
 }
