@@ -97,6 +97,10 @@ body{
 	background-repeat: repeat-x;
 }
 
+img{
+    border: none;
+}
+
 #pgCentralizado {
 	height: 500px;
 	left: 50%;
