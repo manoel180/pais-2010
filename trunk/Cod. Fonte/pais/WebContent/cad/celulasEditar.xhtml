@@ -22,7 +22,7 @@
  <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden"  >  
      <p:menuitem value="home" url="/index.mir" />  
       <p:menuitem value="CADASTRO"/>  
-       <p:menuitem value="CADASTRO DE CÉLULAS" action="#{celulaBean.prepararCelula}" ajax="false" />    
+       <p:menuitem value="EDIÇÃO DE CÉLULAS" action="#{celulaBean.prepararEdicao}" ajax="false" />    
  </p:breadCrumb> 
 
 </td>
@@ -52,7 +52,7 @@
 								value="#{celulaBean.celulas.celHorarioReuniao}" size="8"
 								styleClass="formularios2" required="true" tabindex="4"
 								requiredMessage="Hora da Reunião é obrigatória">
-							<f:convertDateTime timeStyle="short" type="time" locale="pt_BR"/>
+							<f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
 							</p:inputMask>
 
 							<h:outputLabel value="Dia da Reunião:" styleClass="Texto_cpf_login" for="diaReuniao" />
@@ -75,10 +75,7 @@
 	
 	
 			<p:tabView id="tabView"  activeIndex="3" effect="opacity" contentTransition="true" >
-	  
 				<p:tab id="tbendereco" title="Endereço da Célula">
-
-						
 						<h:panelGrid columns="4" id="pnlEndereco" 
 						columnClasses="coluna1, coluna2, coluna1, coluna2">
 							<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio" for="cep" />
@@ -153,9 +150,9 @@
 				</p:tab>
 
 				<p:tab id="tbdiscipulos" title="Discípulos">
-				    <p:outputPanel id="outPanelDiscipulos">
 					<br/>
-						
+					
+					<p:outputPanel id="outPanelDiscipulos">	
 					<p:dataTable
 					id="dtDisSelecionados" 
 					var="dis" 
@@ -164,6 +161,10 @@
 					value="#{celulaBean.listaM12}" 
 					width="100%"
 					emptyMessage="Nenhum Discipulo encontrado">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS FORA DA CÉLULA" styleClass="Fonte_12"/>
+					</f:facet>
 					
 					<p:column>
 						<f:facet name="header">
@@ -186,13 +187,15 @@
 						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
 					</p:column>
 					
-				   <f:facet name="footer">  
-                   <p:commandButton value="Adicionar" action="#{celulaBean.adicionarDiscipulos}" 
+				</p:dataTable>
+				<center>
+				<p:commandButton value="Adicionar" action="#{celulaBean.adicionarDiscipulos}" 
                                     image="ui-icon ui-icon-search"
                                     update="outPanelDiscipulos"/>
-                    </f:facet>
-					
-				</p:dataTable>
+                
+				</center>
+				<br/>
+				<br/>
 				<br/>
 				
 				<p:dataTable
@@ -204,6 +207,10 @@
 					width="100%"
 					emptyMessage="Nenhum Discipulo associado">
 					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS DENTRO DA CÉLULA" styleClass="Fonte_12"/>
+					</f:facet>
+						
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="&nbsp;FOTO" styleClass="Fonte_12"/>
@@ -224,13 +231,13 @@
 						</f:facet>
 						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
 					</p:column>
-					
-				   <f:facet name="footer">  
-                   <p:commandButton value="Remover" action="#{celulaBean.removerDiscipulos}" 
+					  
+				</p:dataTable>
+				<center>
+				<p:commandButton value="Remover" action="#{celulaBean.removerDiscipulos}" 
                                     image="ui-icon ui-icon-search"
                                     update="outPanelDiscipulos"/>
-                    </f:facet>
-				</p:dataTable>
+                </center>
 				
 				</p:outputPanel>
 				</p:tab>
@@ -238,7 +245,7 @@
 			</p:tabView>
 			<br/>
 			<h:commandButton value="Editar" styleClass="formularios" tabindex="25"
-			actionListener="#{celulaBean.alterar}">
+			action="#{celulaBean.alterar}">
 			</h:commandButton>
 			&nbsp;
 			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="25"
