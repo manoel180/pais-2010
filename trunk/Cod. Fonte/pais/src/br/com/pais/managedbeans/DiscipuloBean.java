@@ -132,10 +132,10 @@ public class DiscipuloBean {
 	public void isM12(AjaxBehaviorEvent event) {
 		if (discipulos.getDism12() == 's') {
 			editarM12  = true;
-			geracoes=(null);
+			geracoes = new Geracoes();
 		} else {
 			editarM12 = false;
-			
+			geracoes=(null);
 		}
 
 	}
