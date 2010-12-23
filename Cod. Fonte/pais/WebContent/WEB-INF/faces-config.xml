@@ -69,6 +69,16 @@
   <managed-bean-class>br.com.pais.managedbeans.CelulaBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>mensagemBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.MensagemBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>movimentacaoBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.MovimentacaoBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
  <!--
  <faces-config-extension>
   <phase-listener>br.com.pais.mensagens.MessageListener3</phase-listener>

@@ -12,7 +12,7 @@
 <p:menubar autoSubmenuDisplay="true">
 		<p:submenu>
  			<f:facet name="label">
-				<p:menuitem value="PRINCIPAL" align="left"  ajax="false" url="/index.mir" />
+				<p:menuitem action="#{mensagemBean.prepararListarMensagem}" value="&nbsp;PRINCIPAL&nbsp;" ajax="false" />
 			</f:facet>
 		</p:submenu>
 
@@ -28,7 +28,7 @@
 		</p:submenu>
 		
 		<p:submenu  label="FINANCEIRO"  align="left" >
-			<p:menuitem value="&nbsp;Fazer Repasse &nbsp;" ajax="false" />
+		    <p:menuitem value="&nbsp;Fazer Repasse &nbsp;" action="#{movimentacaoBean.listarCelulasMovimento}" ajax="false"/>
 			<p:menuitem value="&nbsp;Receber Repasse &nbsp;" ajax="false" />
 		</p:submenu>
 		<p:submenu label="RELATÓRIOS"  >
@@ -47,9 +47,10 @@
 			<p:menuitem value="&nbsp; Lançar Notas&nbsp;" ajax="false" />
 		</p:submenu>
 		
-		<p:submenu label="MENSAGENS"  >
-			<p:menuitem value="&nbsp;Enviar Mensagem&nbsp;" ajax="false" />
-			<p:menuitem value="&nbsp;Listar Enviadas&nbsp;" ajax="false" />
+		<p:submenu label="MENSAGENS">
+			<p:menuitem action="#{mensagemBean.prepararMensagem}" value="&nbsp;Enviar Mensagem&nbsp;" ajax="false" />
+			<p:menuitem action="#{mensagemBean.caixaEntrada}" value="&nbsp;Caixa Entrada&nbsp;" ajax="false" />
+			<p:menuitem action="#{mensagemBean.caixaSaida}" value="&nbsp;Caixa Saída&nbsp;" ajax="false" />
 		</p:submenu>
 		
 		<p:submenu>
