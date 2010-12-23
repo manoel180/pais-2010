@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+<ui:define name="menu-vc-esta">
+
+<table width="620" border="0" align="left"  cellpadding="0" background="/pais/img/barra_linha.png"
+				cellspacing="0">
+				<tr>
+					<td  align="left" 
+						scope="col">
+						<span class="Fonte_12_Logado"></span>  
+						<h:outputLabel  value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11"/>
+						</td>
+		<td>
+ <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden">  
+     <p:menuitem value="home" url="/index.mir" />  
+      <p:menuitem value="CADASTRO"/>  
+       <p:menuitem value="LISTAR CÉLULAS" action="#{celulaBean.prepararListarCelula}" ajax="false" />    
+ </p:breadCrumb> 
+
+</td>
+				</tr>
+			 </table> 
+</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+		
+		<!--
+		<p:ajaxStatus style="width:31px;height:31px;">  
+		    <f:facet name="start">  
+		        <h:graphicImage value="/img/ajax-loader.gif" />  
+		    </f:facet>  
+		    <f:facet name="complete">  
+		        <h:outputText value="" />  
+		    </f:facet>  
+		</p:ajaxStatus>
+		-->	
+		
+		<h:form prependId="false">		
+		<p:outputPanel id="pnlMensagens">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		
+			<p:tabView orientation="top">
+				<p:tab id="tabListarDiscipulos" title="Discipulos">
+				    <h:outputLabel value="Geração:" styleClass="Texto_cpf_login" for="geracao"/>
+					<h:selectOneMenu id="selGeracao" value="#{mensagemBean.celulas.celGeracao}" styleClass="formularios">
+						<f:selectItem itemValue="0" itemLabel="Selecione"/>
+						<f:selectItems value="#{mensagemBean.geracaoCombo}"/>
+						<f:ajax event="change" listener="#{mensagemBean.listarM12PorGeracao}" execute="selGeracao"  
+						        render="pnlMensagens"/>
+					</h:selectOneMenu>
+					<br/>
+				   
+				   <p:dataTable
+					id="dtDiscipulos" 
+					var="dis" 
+					selectionMode="multiple"
+					selection="#{mensagemBean.discipuloSelecionados}"
+					value="#{mensagemBean.listaDiscipulos}"
+					rendered="#{mensagemBean.dtM12}"
+					width="100%"
+					emptyMessage="Nenhum Discipulo encontrado">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;SELECIONE OS DÍSCIPULOS PARA ENVIAR A MENSAGEM" styleClass="Fonte_12"/>
+					</f:facet>
+						
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;FOTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<p:graphicImage value="#{dis.disfoto}" width="41" height="40"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;NOME" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{dis.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{dis.geracoes.gerDescricao}"/>
+					</p:column> 
+				    </p:dataTable>
+                    
+				</p:tab>
+			</p:tabView>
+			
+			<br/>
+			<p:commandButton value="Enviar Selecionados" update="pnlDialogMensagem"
+			                 oncomplete="mensagemDialog.show()" rendered="#{mensagemBean.dtM12}"
+			                 actionListener="#{mensagemBean.enviarSelecionados}" /> 
+			
+			<p:commandButton value="Enviar Todos Desta Geração" update="pnlDialogMensagem" 
+			                 oncomplete="mensagemDialog.show()" rendered="#{mensagemBean.dtM12}"
+			                 actionListener="#{mensagemBean.enviarTodos}" /> 
+			
+			<p:dialog header="MENSAGEM" widgetVar="mensagemDialog" resizable="false"
+		              modal="true" width="600" showEffect="explode" hideEffect="explode">
+		    <p:outputPanel id="pnlDialogMensagem">
+		            <h:panelGrid columns="1">
+			        <h:outputText value="Mensagem" styleClass="formulariosObrigatorio"/>  
+			        <h:inputTextarea rows="10" cols="75" value="#{mensagemBean.mensagem.mensTexto}" styleClass="formularios2"/>
+			        </h:panelGrid>
+		            <h:panelGrid columns="2" cellpadding="2">
+		                <p:commandButton value="Enviar" actionListener="#{mensagemBean.enviarMensagem}" 
+		                                 update="pnlMensagens" oncomplete="mensagemDialog.hide()" />
+		                <p:commandButton value="Cancelar" onclick="mensagemDialog.hide()" />
+		            </h:panelGrid>  
+		    </p:outputPanel>
+		    </p:dialog>
+			
+			</p:outputPanel>
+			</h:form>
+	</ui:define>
+</ui:composition>
