@@ -143,7 +143,8 @@
 										cellspacing="0">
 										<tr>
 											<td width="33" height="20" align="center" valign="top"
-												class="Fonte_14_Branca" scope="col"><p:graphicImage
+												class="Fonte_14_Branca" scope="col">
+												<p:graphicImage
 												value="#{loginBean.discipuloSessao.discipulos.disfoto}"
 												width="41" height="40" /></td>
 											<td width="249" align="left" valign="top"
@@ -165,14 +166,14 @@
 											<td height="20" align="right" valign="top"
 												class="Fonte_14_Branca" scope="col"><img
 												src="/pais/img/old_clock.png" width="25" height="25" /></td>
-											<td align="left" class="Fonte_13_Logado" scope="col"><h:form
+											<td align="left" class="Fonte_13_Logado" scope="col">
+											<h:form
 												id="horaForm">
 												<strong>Hora Certa: </strong>
-
 												<h:outputLabel id="hora" value="#{data_Hora.hora}" />
-												<p:poll interval="1" update="hora" process="hora"
-													autoStart="true" />
-											</h:form></td>
+												<p:poll interval="1" update="hora" process="hora" autoStart="true" />
+											</h:form>
+											</td>
 										</tr>
 
 										<tr>
