@@ -1,27 +1,52 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
 
-	<ui:composition template="/index.xhtml">
+<ui:define name="menu-vc-esta">
 
-		<ui:define name="title">
-                	PAIS - Pastores e Apóstolos Integrados em Sistema  
-		</ui:define>
+<table width="620" border="0" align="left"  cellpadding="0" background="/pais/img/barra_linha.png"
+				cellspacing="0">
+				<tr>
+					<td  align="left" 
+						scope="col">
+						<span class="Fonte_12_Logado"></span>  
+						<h:outputLabel  value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11"/>
+						</td>
+		<td>
+ <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden">  
+     <p:menuitem value="home" url="/principal.mir" />
+       <p:menuitem value="PRINCIPAL" action="#{mensagemBean.prepararListarMensagem}" ajax="false" />    
+ </p:breadCrumb> 
 
-		<ui:define name="conteudo">
-			
-			
-			
-			
-			Bem vindo
-			
+</td>
+				</tr>
+			 </table> 
+</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+		<h:form prependId="false">		
+		<p:outputPanel id="outPanel">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		
+		    <p:panel id="pnlPrincipal" header="Principal"> 
+					    <p:panel id="pnlMensagens" header="Mensagens" toggleable="true" closable="true"
+					        style="width:200px"   
+						    toggleSpeed="500" widgetVar="panelMensagens">
+						    <h:panelGrid columns="1">
+						        <h:outputText value="Voçê recebeu #{mensagemBean.qtdMensagem} mensagens" />
+						        <p:commandButton value="Listar/Todas" action="#{mensagemBean.caixaEntrada}" ajax="false"/> 
+						    </h:panelGrid> 
+						</p:panel>
+			</p:panel>
 						
-		</ui:define>
-
-	</ui:composition>
-
+		</p:outputPanel>
+		</h:form>
+	</ui:define>
 </ui:composition>
