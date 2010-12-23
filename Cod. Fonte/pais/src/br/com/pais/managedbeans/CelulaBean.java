@@ -10,8 +10,6 @@ import javax.faces.model.SelectItem;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.model.DualListModel;
-
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.GeracaoDao;
@@ -61,10 +59,6 @@ public class CelulaBean {
 	private List<Geracoes> listaGeracoes = new ArrayList<Geracoes>();
 	private List<Discipulos> listaM12 = new ArrayList<Discipulos>();
 
-	private DualListModel<Discipulos> listaDiscipulos = new DualListModel<Discipulos>();
-	private List<Discipulos> sourceDiscipulos = new ArrayList<Discipulos>();
-	private List<Discipulos> targetDiscipulos = new ArrayList<Discipulos>();
-
 	public void buscarCEP(AjaxBehaviorEvent event) {
 		logradouro = logradouroDao.encontrarPorCEP(getLogradouro().getCep());
 		if (logradouro == null) {
@@ -83,7 +77,7 @@ public class CelulaBean {
     	List<Geracoes> listGerTemp = new ArrayList<Geracoes>(listaGeracoes);
 	    for (Geracoes ger : listaGeracoes) {
 	    	
-	    	for (Celulas cel : listaCelulas){
+	    	for(Celulas cel : listaCelulas){
 	    		if(cel.getCelGeracao().equals(ger.getGerCod())){
 	    			listGerTemp.remove(ger);
 	    		}
@@ -95,7 +89,7 @@ public class CelulaBean {
 		
 		List<SelectItem> itens = new ArrayList<SelectItem>(listaGeracoes.size());
 		
-		for (Geracoes g : listaGeracoes) {
+		for(Geracoes g : listaGeracoes) {
 			itens.add(new SelectItem(g.getGerCod(), g.getGerDescricao()));
 		}
 		return itens.toArray(new SelectItem[itens.size()]);
@@ -353,21 +347,6 @@ public class CelulaBean {
 	 */
 	public void setLogradouro(Logradouro logradouro) {
 		this.logradouro = logradouro;
-	}
-	
-	/**
-	 * @param listaDiscipulos
-	 *            the listaDiscipulos to set
-	 */
-	public void setListaDiscipulos(DualListModel<Discipulos> listaDiscipulos) {
-		this.listaDiscipulos = listaDiscipulos;
-	}
-	
-	/**
-	 * @return the listaDiscipulos
-	 */
-	public DualListModel<Discipulos> getListaDiscipulos() {
-		return listaDiscipulos;
 	}
 	
 	public List<Celulas> getListaCelulas() {

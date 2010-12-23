@@ -22,9 +22,6 @@ public class GeracaoBean {
 	// Objetos Daos
 	private  GeracaoDao geracaoDao = new GeracaoDaoImp();
 
-	
-
-	
 	// ComboBox Estado Civil
 	public SelectItem[] getGeracaoCombo() {
 		List<Geracoes> lg = geracaoDao.listarGeracoes();
