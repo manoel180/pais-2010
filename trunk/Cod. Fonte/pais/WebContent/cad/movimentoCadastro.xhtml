@@ -41,8 +41,8 @@
 					<p:dataTable
 					id="dtCelula" 
 					var="cel" 
-					selection="#{celulaBean.celulaSelecionada}"
-					value="#{celulaBean.listaCelulas}" 
+					selection="#{movimentacaoBean.celulaSelecionada}"
+					value="#{movimentacaoBean.listaCelulas}" 
 					paginator="true"
 					firstPageLinkLabel="&lt;&lt; Primeiro"
 					lastPageLinkLabel="Ultimo &gt;&gt;"
@@ -82,25 +82,12 @@
 					<p:column style="width:10px 0px">
 						<f:facet name="header">
 						<center>
-							<h:outputText value="&nbsp;EDITAR" styleClass="Fonte_12" />
-						</center>
-						</f:facet>
-						<p:commandLink title="Editar Célula" action="#{celulaBean.prepararEdicao}" ajax="false">  
-                        <center>
-                        <p:graphicImage value="/img/editar.png"/>   
-                        </center>
-                        <f:setPropertyActionListener value="#{cel}" target="#{celulaBean.celulaSelecionada}" />
-                        </p:commandLink>
-					</p:column>
-					<p:column style="width:10px 0px">
-						<f:facet name="header">
-						<center>
-							<h:outputText value="&nbsp;EXCLUIR" styleClass="Fonte_12" />
+							<h:outputText value="&nbsp;FAZER REPASSE" styleClass="Fonte_12" />
 					    </center>
 						</f:facet>
 						<p:commandLink title="Excluir Célula" update="pnlCelulaExcluir" oncomplete="celulaExcluir.show()">  
                         <center>
-                        <p:graphicImage value="/img/deletar.png"/>     
+                        <p:graphicImage value="/img/dinheiro.png"/>     
                         </center>
                         <f:setPropertyActionListener value="#{cel}" target="#{celulaBean.celulaSelecionada}" />
                         </p:commandLink>
@@ -115,7 +102,7 @@
                             <center>
                             <p:graphicImage value="/img/detalhe.png"/>
                             </center> 
-                            <f:setPropertyActionListener value="#{cel}" target="#{celulaBean.celulaSelecionada}" />    
+                            <f:setPropertyActionListener value="#{cel}" target="#{movimentacaoBean.celulaSelecionada}" />    
                         </p:commandLink> 
 			        </p:column>
 				</p:dataTable>
