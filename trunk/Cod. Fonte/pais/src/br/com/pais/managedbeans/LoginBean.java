@@ -10,13 +10,17 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.component.dialog.Dialog;
 import org.primefaces.component.focus.Focus;
 import org.primefaces.model.StreamedContent;
 
 import br.com.pais.dao.DiscipuloDao;
+import br.com.pais.dao.MensagemDao;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
+import br.com.pais.dao.impl.MensagemDaoImp;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Funcaoeclesiasticas;
+import br.com.pais.entities.Mensagem;
 import br.com.pais.exception.GenericException;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.mensagens.MessageManagerImpl;
@@ -73,7 +77,8 @@ public class LoginBean {
 					le3Exibir = !ListaEquipe3.isEmpty();
 					le4Exibir = !ListaEquipe4.isEmpty();
 					cadCelulas = discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()).size()>=3;
-					return "/index.mir";
+				       
+					return "/principal.mir";
 				} else {
 					throw new GenericException("usuario.invalido_detail");
 				}
@@ -93,15 +98,13 @@ public class LoginBean {
 			//focus.setFor("cpfMask");
 			editar = true;
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			FacesMessage message = new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, "erro",
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "erro",
 					"CPF ou SENHA inválida");
 			facesContext.addMessage(null, message);
 			// MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR,
 			// "erro", "usuario.invalido_detail");
 			return "/login.mir";
 		}
-
 	}
 
 	public String sairAplicacao() {
@@ -125,7 +128,6 @@ public class LoginBean {
 				/* ev.getComponent().getId(); */
 				editar = false;
 				focus.setFor("senhaSecret");
-
 			} else {
 				cpf = "";
 				focus.setFor("cpfMask");

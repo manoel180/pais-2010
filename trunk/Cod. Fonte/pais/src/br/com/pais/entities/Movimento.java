@@ -2,12 +2,15 @@ package br.com.pais.entities;
 
 // Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -50,6 +53,7 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "movCod", unique = true, nullable = false)
 	public int getMovCod() {
 		return this.movCod;
