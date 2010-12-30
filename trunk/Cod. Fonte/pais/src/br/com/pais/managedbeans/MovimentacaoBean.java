@@ -3,6 +3,10 @@ package br.com.pais.managedbeans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.dao.MovimentoDao;
 import br.com.pais.dao.impl.CelulaDaoImp;
@@ -16,7 +20,7 @@ public class MovimentacaoBean {
 	
 	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 	private Movimento movimento = new Movimento();
-	
+
 	private Celulas celulaSelecionada;
 	
 	//List
@@ -26,10 +30,29 @@ public class MovimentacaoBean {
 	private MovimentoDao movimentoDao = new MovimentoDaoImp();
 	private CelulaDao celulaDao = new CelulaDaoImp();
 	
-	public String listarCelulasMovimento(){
+	public String listarCelulasMovimento(){		
 		listaCelulas = new ArrayList<Celulas>();
         listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
-		return "/cad/movimentoCadastro.mir";
+		return "/cad/movimentoListar.mir";
+	}
+	
+	public String prepararCadastro(){
+		movimento = new Movimento();
+		return "/cad/movimentoCadastro";
+	}
+	
+	public String salvarMovimento() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		movimento.setCelulas(celulaSelecionada);
+		movimento.setBases(null);
+		if (movimentoDao.salvar(movimento) == (true)) {
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Movimento cadastrado!"));
+			listaCelulas = new ArrayList<Celulas>();
+	        listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+		} else {
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
+		}
+		return "/cad/movimentoListar.mir";
 	}
 	
 	public ApplicationSecurityManager getDiscipuloSessao() {
