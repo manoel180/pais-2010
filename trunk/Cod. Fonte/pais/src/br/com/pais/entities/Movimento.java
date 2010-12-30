@@ -4,8 +4,10 @@ package br.com.pais.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,8 +33,8 @@ public class Movimento implements java.io.Serializable {
 	private Bases bases;
 	private Date movData;
 	private String movTipo;
-	private Byte movValor;
-	private Set<Repasse> repasses = new HashSet<Repasse>(0);
+	private Double movValor;
+	private List<Repasse> repasses = new ArrayList<Repasse>();
 
 	public Movimento() {
 	}
@@ -42,7 +44,7 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	public Movimento(int movCod, Celulas celulas, Bases bases, Date movData,
-			String movTipo, Byte movValor, Set<Repasse> repasses) {
+			String movTipo, Double movValor, List<Repasse> repasses) {
 		this.movCod = movCod;
 		this.celulas = celulas;
 		this.bases = bases;
@@ -102,21 +104,21 @@ public class Movimento implements java.io.Serializable {
 		this.movTipo = movTipo;
 	}
 
-	@Column(name = "movValor", precision = 2, scale = 0)
-	public Byte getMovValor() {
+	@Column(name = "movValor")
+	public Double getMovValor() {
 		return this.movValor;
 	}
 
-	public void setMovValor(Byte movValor) {
+	public void setMovValor(Double movValor) {
 		this.movValor = movValor;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
-	public Set<Repasse> getRepasses() {
+	public List<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(Set<Repasse> repasses) {
+	public void setRepasses(List<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 
