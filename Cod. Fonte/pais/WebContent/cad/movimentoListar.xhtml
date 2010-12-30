@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+<ui:define name="menu-vc-esta">
+<table width="620" border="0" align="left"  cellpadding="0" background="/pais/img/barra_linha.png"
+				cellspacing="0">
+				<tr>
+					<td  align="left" 
+						scope="col">
+						<span class="Fonte_12_Logado"></span>  
+						<h:outputLabel  value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11"/>
+						</td>
+		<td>
+ <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden">  
+     <p:menuitem value="home" url="/index.mir" />  
+      <p:menuitem value="FINANCEIRO"/>  
+       <p:menuitem value="FAZER REPASSE" action="#{movimentacaoBean.listarCelulasMovimento}" ajax="false" />    
+ </p:breadCrumb> 
+
+</td>
+				</tr>
+			 </table> 
+</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+    
+		<h:form prependId="false">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		
+			<p:tabView orientation="top">
+				<p:tab id="tabListarCelula" title="Células Cadastradas">
+					<p:dataTable
+					id="dtCelula" 
+					var="cel" 
+					value="#{movimentacaoBean.listaCelulas}" 
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhuma célula encontrada"
+					paginatorPosition="bottom">
+
+					<p:column id="dtNome" 
+					    filterStyleClass="formularios" resizable="true"
+						sortBy="#{cel.celNome}">
+						<f:facet name="header">
+							<h:outputText value="&nbsp;NOME DA CÉLULA" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.celNome}"/>
+					</p:column>
+					<p:column id="dtDia"
+						filterStyleClass="formularios" resizable="true"
+						sortBy="#{cel.celDiaReuniao}">
+						<f:facet name="header">
+							<h:outputText value="&nbsp;DIA DA SEMANA" styleClass="Fonte_12" />
+						</f:facet>
+						<h:outputText value="#{cel.celDiaReuniao}" styleClass="Fonte_13"/>
+					</p:column>
+					<p:column id="dtHora"
+						filterStyleClass="formularios" resizable="true"
+						sortBy="#{cel.celHorarioReuniao}">
+						<f:facet name="header">
+							<h:outputText value="&nbsp;HORA" styleClass="Fonte_12" />
+						</f:facet>
+						<h:outputText value="#{cel.celHorarioReuniao}" styleClass="Fonte_13"/>
+					</p:column>
+					<p:column style="width:10px 0px">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;FAZER REPASSE" styleClass="Fonte_12" />
+					    </center>
+						</f:facet> 
+						<p:commandLink title="Fazer Repasse" action="#{movimentacaoBean.prepararCadastro}" ajax="false">  
+                        <center>
+                        <p:graphicImage value="/img/dinheiro.png"/>     
+                        </center>
+                        <f:setPropertyActionListener value="#{cel}" target="#{movimentacaoBean.celulaSelecionada}" />
+                        </p:commandLink>
+					</p:column>
+					<p:column style="width:10px 0px">
+					    <f:facet name="header">
+					    <center>
+							<h:outputText value="&nbsp;DETALHES" styleClass="Fonte_12" />
+						</center>
+						</f:facet>
+						<p:commandLink title="Detalhe Célula" update="pnlCelulaDetalhe" oncomplete="celulaDetalhe.show()">  
+                            <center>
+                            <p:graphicImage value="/img/detalhe.png"/>
+                            </center> 
+                            <f:setPropertyActionListener value="#{cel}" target="#{movimentacaoBean.celulaSelecionada}" />    
+                        </p:commandLink> 
+			        </p:column>
+				</p:dataTable> 
+			    
+			    <p:dialog header="DETALHES DA CÉLULA" widgetVar="celulaDetalhe" resizable="false"  
+                          modal="true" width="450" showEffect="slide" hideEffect="slide"> 
+                <p:outputPanel id="pnlCelulaDetalhe"> 
+                    
+                    <p:panel> 
+				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				        <p:graphicImage value="#{movimentacaoBean.discipuloSessao.discipulos.disfoto}" width="41" height="40"/>
+				        <h:outputText value="#{movimentacaoBean.discipuloSessao.discipulos.disnome}" styleClass="Texto_cpf_login"/>  
+				        </h:panelGrid>
+				    </p:panel>
+				    
+                    <p:panel>
+			        <h:panelGrid columns="2" columnClasses="coluna1, coluna2"> 
+			            <h:outputText value="Nome da célula:" styleClass="formulariosObrigatorio"/>  
+			            <h:outputText value="#{movimentacaoBean.celulaSelecionada.celNome}" styleClass="Texto_cpf_login"/>  
+			            <h:outputText value="Dia da semana:" styleClass="formulariosObrigatorio"/>  
+			            <h:outputText value="#{movimentacaoBean.celulaSelecionada.celDiaReuniao}" styleClass="Texto_cpf_login"/>  
+			            <h:outputText value="Horário:" styleClass="formulariosObrigatorio"/>  
+			            <h:outputText value="#{movimentacaoBean.celulaSelecionada.celHorarioReuniao}" styleClass="Texto_cpf_login"/> 
+			        </h:panelGrid>  
+			        <br/>
+			        <h:panelGrid columns="4" columnClasses="coluna1, coluna2, coluna1, coluna2">
+						<h:outputText value="CEP:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.logradouro.cep}" styleClass="Texto_cpf_login"/>
+						
+						<h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.logradouro.logTipoLogradouro}" styleClass="Texto_cpf_login"/>
+
+						<h:outputText value="Endereço:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.logradouro.logNo}" styleClass="Texto_cpf_login" cellspacing="5px"/>
+						
+						<h:outputText value="Número:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.celNuEndereco}" styleClass="Texto_cpf_login"/>
+					
+					    <h:outputText value="Complemento:" styleClass="formulariosObrigatorio" />
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.celEndComplemento}" styleClass="Texto_cpf_login"/>
+						
+						<h:outputText value="Bairro:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.logradouro.bairro.baiNo}" styleClass="Texto_cpf_login"/>
+						
+						<h:outputText value="Cidade:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.logradouro.bairro.localidade.locNo}" styleClass="Texto_cpf_login"/>
+						
+						<h:outputText value="Estado:" styleClass="formulariosObrigatorio"/>
+						<h:outputText value="#{movimentacaoBean.celulaSelecionada.logradouro.bairro.localidade.estado.ufeNo}" styleClass="Texto_cpf_login"/>
+					</h:panelGrid>
+			        </p:panel>
+			        
+			        <p:panel header="CONTATOS"> 
+				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+							<h:outputText value="Tel. Fixo:" styleClass="formulariosObrigatorio"/>
+							<h:outputText value="#{movimentacaoBean.celulaSelecionada.celTelFixo}" styleClass="Texto_cpf_login"/>
+							<h:outputText value="Tel. Celular:" styleClass="formulariosObrigatorio"/>
+							<h:outputText value="#{movimentacaoBean.celulaSelecionada.celTelCelular}" styleClass="Texto_cpf_login"/>
+						</h:panelGrid>
+			        </p:panel>
+						
+				</p:outputPanel>
+			    </p:dialog>
+			    
+				</p:tab>
+			</p:tabView>
+			
+			</h:form>
+	</ui:define>
+</ui:composition>
