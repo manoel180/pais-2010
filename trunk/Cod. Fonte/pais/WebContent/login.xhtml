@@ -13,6 +13,14 @@
 			href="#{request.contextPath}/css/redmond/skin.css" />
 		<link rel="stylesheet" type="text/css"
 			href="#{request.contextPath}/css/css.css" />
+			
+<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
+
+<script>
+jQuery(function($){
+	  jQuery("#maskCPF").mask("999.999.999-99");
+});
+</script>
 	</h:head>
 
 
@@ -47,13 +55,11 @@
 	</p:dialog>
 
 	<div id="pgCentralizado">
-	<center><p:outputPanel id="panel" rendered="true"
-		styleClass="fundo">
-		<mj:focus for="form1:cpfMask" />
-		<h:form id="form1">
-
+	<center>
+	<p:outputPanel id="panel" rendered="true" styleClass="fundo">
+		<mj:focus for="maskCPF" />
+		<h:form id="form1" prependId="false">
 			<h:graphicImage value="/img/logo.png" width="380" height="145" />
-
 			<p:growl id="msg" sticky="true" showDetail="true" showSummary="true" />
 			<p:focus />
 
@@ -61,21 +67,15 @@
 				border="0" cellpadding="0" cellspacing="0" width="471" height="57">
 				<tr>
 					<td scope="col" align="center" valign="middle" width="471">
-					<h:outputLabel
-						value="SEU CPF:" styleClass="Texto_cpf_login" for="cpfMask" /> <span />
-					<p:inputMask id="cpfMask" autocomplete="off" mask="999.999.999-99"
-						size="15" maxlength="14" value="#{loginBean.cpf}"
-						styleClass="formularios" required="true">
-					</p:inputMask> <h:outputLabel value="SENHA:" styleClass="Texto_cpf_login"
-						for="senhaSecret" /> <span /> <h:inputSecret id="senhaSecret"
-						value="#{loginBean.senha}" styleClass="formularios" maxlength="14"
-						required="true" size="15">
-
-					</h:inputSecret> <span /><span /><span /><span /><span /> <h:commandButton
-						image="/img/boot_entrar.png" style="vertical-align:bottom;"
-						action="#{loginBean.logar}">
-
-					</h:commandButton></td>
+					<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login" for="cpfMask" /> <span/>
+					<h:inputText id="maskCPF" value="#{loginBean.cpf}" styleClass="formularios"
+							     size="15" required="true" requiredMessage="Informe o CPF!"/>
+					<h:outputLabel value="SENHA:" styleClass="Texto_cpf_login" for="senhaSecret" /> <span/> 
+					<h:inputSecret id="senhaSecret" value="#{loginBean.senha}" styleClass="formularios" 
+					               maxlength="14" size="15" required="true" requiredMessage="Informe a Senha!"/> 
+					<span /><span /><span /><span /><span /> 
+					<h:commandButton image="/img/boot_entrar.png" style="vertical-align:bottom;" action="#{loginBean.logar}"/>
+				    </td>
 				</tr>
 
 			</table>

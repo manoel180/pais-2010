@@ -70,14 +70,17 @@ jQuery(function($){
 						    <h:selectOneMenu tabindex="2" value="#{movimentacaoBean.movimento.movTipo}"
 								requiredMessage="Tipo do Movimento é obrigatório!"
 								styleClass="formularios" required="true">
-								<f:selectItem itemValue="Dizimo" itemLabel="Dizimo"/>
-								<f:selectItem itemValue="Primicia" itemLabel="Primicia"/>
-								<f:selectItem itemValue="Oferta" itemLabel="Oferta"/>
+								<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
+								<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
+								<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
+								<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
+								<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
+								<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
 							</h:selectOneMenu>
 							<h:outputText value="Valor R$:" styleClass="formulariosObrigatorio"/>
 							<h:inputText id="movValor" tabindex="3" value="#{movimentacaoBean.movimento.movValor}" styleClass="formularios"
 							 required="true" requiredMessage="Valor é Obrigatório!">
-							<f:convertNumber pattern="##,###,###,###.##" locale="pt,BR"/>
+							<f:convertNumber type="currency" maxFractionDigits="2" pattern="##,###,###,###.##" locale="pt,BR"/>
 							</h:inputText> 
 						</h:panelGrid>
 			            </p:panel>
