@@ -32,6 +32,7 @@ public class MensagemBean {
 	private Geracoes geracoes = new Geracoes();
 	private Mensagem mensagem = new Mensagem();
 	
+	
 	private Mensagem mensagemSelecionada;
 
 	//List
@@ -109,9 +110,9 @@ public class MensagemBean {
 
 	public void listarM12PorGeracao(AjaxBehaviorEvent event) {		
 		listaDiscipulos = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
+		listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getGeracoes().getGerCod()));
 		
-		if(celulas.getCelGeracao()==0)dtM12  = false;
+		if(celulas.getGeracoes().getGerCod()==0)dtM12  = false;
 		else dtM12 = true;
 	}
 	
@@ -148,7 +149,7 @@ public class MensagemBean {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if(DiscipuloSelecionados.length == 0)
 		{
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Mensagem não enviada selecione algum discipulo!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Mensagem nï¿½o enviada selecione algum discipulo!"));
 		}
 		else
 		{
@@ -165,7 +166,7 @@ public class MensagemBean {
 				new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
 			}
 			listaDiscipulos = new ArrayList<Discipulos>();
-			listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
+			listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getGeracoes().getGerCod()));
 			
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "SUCESSO!!!","Mensagem Enviada com Sucesso!"));
 		}
