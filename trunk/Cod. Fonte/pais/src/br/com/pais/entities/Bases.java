@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.Date;
 import java.util.HashSet;
@@ -35,7 +35,7 @@ public class Bases implements java.io.Serializable {
 	private Condicaobase condicaobase;
 	private Tipobases tipobases;
 	private Date basHorReuniao;
-	private String basDtReuniao;
+	private String basDiaReuniao;
 	private Date basDtAbertura;
 	private String basNuEndereco;
 	private String basEndComplemento;
@@ -43,6 +43,7 @@ public class Bases implements java.io.Serializable {
 	private String basTelCelular;
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
+	private Set<Fotosbases> fotosbaseses = new HashSet<Fotosbases>(0);
 
 	public Bases() {
 	}
@@ -56,9 +57,10 @@ public class Bases implements java.io.Serializable {
 			Discipulos discipulosByBasDisCod, Logradouro logradouro,
 			Statusbase statusbase, Discipulos discipulosByLiderAcaoSocial,
 			Condicaobase condicaobase, Tipobases tipobases, Date basHorReuniao,
-			String basDtReuniao, Date basDtAbertura, String basNuEndereco,
+			String basDiaReuniao, Date basDtAbertura, String basNuEndereco,
 			String basEndComplemento, String basTelFixo, String basTelCelular,
-			Set<Celulas> celulases, Set<Movimento> movimentos) {
+			Set<Celulas> celulases, Set<Movimento> movimentos,
+			Set<Fotosbases> fotosbaseses) {
 		this.discipulosByLiderGovJusto = discipulosByLiderGovJusto;
 		this.discipulosByBasDisCod = discipulosByBasDisCod;
 		this.logradouro = logradouro;
@@ -67,7 +69,7 @@ public class Bases implements java.io.Serializable {
 		this.condicaobase = condicaobase;
 		this.tipobases = tipobases;
 		this.basHorReuniao = basHorReuniao;
-		this.basDtReuniao = basDtReuniao;
+		this.basDiaReuniao = basDiaReuniao;
 		this.basDtAbertura = basDtAbertura;
 		this.basNuEndereco = basNuEndereco;
 		this.basEndComplemento = basEndComplemento;
@@ -75,6 +77,7 @@ public class Bases implements java.io.Serializable {
 		this.basTelCelular = basTelCelular;
 		this.celulases = celulases;
 		this.movimentos = movimentos;
+		this.fotosbaseses = fotosbaseses;
 	}
 
 	@Id
@@ -170,13 +173,13 @@ public class Bases implements java.io.Serializable {
 		this.basHorReuniao = basHorReuniao;
 	}
 
-	@Column(name = "basDtReuniao", length = 13)
-	public String getBasDtReuniao() {
-		return this.basDtReuniao;
+	@Column(name = "basDiaReuniao", length = 13)
+	public String getBasDiaReuniao() {
+		return this.basDiaReuniao;
 	}
 
-	public void setBasDtReuniao(String basDtReuniao) {
-		this.basDtReuniao = basDtReuniao;
+	public void setBasDiaReuniao(String basDiaReuniao) {
+		this.basDiaReuniao = basDiaReuniao;
 	}
 
 	@Temporal(TemporalType.DATE)
@@ -241,6 +244,15 @@ public class Bases implements java.io.Serializable {
 
 	public void setMovimentos(Set<Movimento> movimentos) {
 		this.movimentos = movimentos;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bases")
+	public Set<Fotosbases> getFotosbaseses() {
+		return this.fotosbaseses;
+	}
+
+	public void setFotosbaseses(Set<Fotosbases> fotosbaseses) {
+		this.fotosbaseses = fotosbaseses;
 	}
 
 }

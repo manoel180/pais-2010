@@ -1,14 +1,11 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
-
-import static javax.persistence.GenerationType.IDENTITY;
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,7 +25,6 @@ public class Mensagem implements java.io.Serializable {
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-	private String mensLida;
 
 	public Mensagem() {
 	}
@@ -43,7 +39,6 @@ public class Mensagem implements java.io.Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "mensCod", unique = true, nullable = false)
 	public int getMensCod() {
 		return this.mensCod;
@@ -81,15 +76,6 @@ public class Mensagem implements java.io.Serializable {
 
 	public void setMensTexto(String mensTexto) {
 		this.mensTexto = mensTexto;
-	}
-	
-	@Column(name = "mensLida", nullable = false)
-	public String getMensLida() {
-		return mensLida;
-	}
-
-	public void setMensLida(String mensLida) {
-		this.mensLida = mensLida;
 	}
 
 	@Temporal(TemporalType.DATE)

@@ -1,11 +1,9 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,17 +53,90 @@ public class Discipulos implements java.io.Serializable {
 	private String disTelCelular;
 	private String disTelComercial;
 	private char disSexo;
-	private List<Repasse> repasses = new ArrayList<Repasse>();
-	private List<Encontros> encontroses = new ArrayList<Encontros>();
-	private List<Formacaoeclesiasticas> formacaoeclesiasticases = new ArrayList<Formacaoeclesiasticas>();
-	private List<Celulas> celulases = new ArrayList<Celulas>();
+	private Set<Repasse> repasses = new HashSet<Repasse>(0);
+	private Set<Formacaoeclesiasticas> formacaoeclesiasticases = new HashSet<Formacaoeclesiasticas>(
+			0);
+	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Celulas> celulases_1 = new HashSet<Celulas>(0);
 	private Set<Bases> basesesForLiderGovJusto = new HashSet<Bases>(0);
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
+	private Set<Encontros> encontroses = new HashSet<Encontros>(0);
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
-	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(0);
+	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
+			0);
 	private Set<Mensagem> mensagemsForMensDisCod = new HashSet<Mensagem>(0);
+
+	public Discipulos() {
+	}
+
+	public Discipulos(Estadocivil estadocivil, Logradouro logradouro,
+			Funcaoeclesiasticas funcaoeclesiasticas,
+			Formacaoacademica formacaoacademica, String disnome, String dismae,
+			char dism12, String disCpf, char disSexo) {
+		this.estadocivil = estadocivil;
+		this.logradouro = logradouro;
+		this.funcaoeclesiasticas = funcaoeclesiasticas;
+		this.formacaoacademica = formacaoacademica;
+		this.disnome = disnome;
+		this.dismae = dismae;
+		this.dism12 = dism12;
+		this.disCpf = disCpf;
+		this.disSexo = disSexo;
+	}
+
+	public Discipulos(Estadocivil estadocivil, Logradouro logradouro,
+			Discipulos discipulos, Funcaoeclesiasticas funcaoeclesiasticas,
+			Formacaoacademica formacaoacademica, Geracoes geracoes,
+			String disfoto, String disemail, String disnome, String dispai,
+			String disconjuge, String dismae, Date disdatanascimento,
+			char dism12, String disSenha, String disCpf, String disRg,
+			String disTitEleitor, Integer disEndNumero,
+			String disEndComplemento, String disTelFixo, String disTelCelular,
+			String disTelComercial, char disSexo, Set<Repasse> repasses,
+			Set<Formacaoeclesiasticas> formacaoeclesiasticases,
+			Set<Celulas> celulases, Set<Celulas> celulases_1,
+			Set<Bases> basesesForLiderGovJusto, Set<Bases> basesesForBasDisCod,
+			Set<Bases> basesesForLiderAcaoSocial, Set<Encontros> encontroses,
+			Set<Discipulos> discipuloses,
+			Set<Mensagem> mensagemsForMensDisCodRecebe,
+			Set<Mensagem> mensagemsForMensDisCod) {
+		this.estadocivil = estadocivil;
+		this.logradouro = logradouro;
+		this.discipulos = discipulos;
+		this.funcaoeclesiasticas = funcaoeclesiasticas;
+		this.formacaoacademica = formacaoacademica;
+		this.geracoes = geracoes;
+		this.disfoto = disfoto;
+		this.disemail = disemail;
+		this.disnome = disnome;
+		this.dispai = dispai;
+		this.disconjuge = disconjuge;
+		this.dismae = dismae;
+		this.disdatanascimento = disdatanascimento;
+		this.dism12 = dism12;
+		this.disSenha = disSenha;
+		this.disCpf = disCpf;
+		this.disRg = disRg;
+		this.disTitEleitor = disTitEleitor;
+		this.disEndNumero = disEndNumero;
+		this.disEndComplemento = disEndComplemento;
+		this.disTelFixo = disTelFixo;
+		this.disTelCelular = disTelCelular;
+		this.disTelComercial = disTelComercial;
+		this.disSexo = disSexo;
+		this.repasses = repasses;
+		this.formacaoeclesiasticases = formacaoeclesiasticases;
+		this.celulases = celulases;
+		this.celulases_1 = celulases_1;
+		this.basesesForLiderGovJusto = basesesForLiderGovJusto;
+		this.basesesForBasDisCod = basesesForBasDisCod;
+		this.basesesForLiderAcaoSocial = basesesForLiderAcaoSocial;
+		this.encontroses = encontroses;
+		this.discipuloses = discipuloses;
+		this.mensagemsForMensDisCodRecebe = mensagemsForMensDisCodRecebe;
+		this.mensagemsForMensDisCod = mensagemsForMensDisCod;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -129,7 +200,7 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "disGeracao", nullable = false)
+	@JoinColumn(name = "disGeracao")
 	public Geracoes getGeracoes() {
 		return this.geracoes;
 	}
@@ -158,15 +229,11 @@ public class Discipulos implements java.io.Serializable {
 
 	@Column(name = "disnome", nullable = false, length = 60)
 	public String getDisnome() {
-		if(this.disnome != null) {
-			return this.disnome.toUpperCase();
-		}else {
-			return this.disnome;
-		}
+		return this.disnome;
 	}
 
 	public void setDisnome(String disnome) {
-		this.disnome = disnome.toUpperCase();
+		this.disnome = disnome;
 	}
 
 	@Column(name = "dispai", length = 60)
@@ -306,31 +373,32 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulos")
-	public List<Repasse> getRepasses() {
+	public Set<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(List<Repasse> repasses) {
+	public void setRepasses(Set<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "foreclesiasticasdiscipulos", catalog = "wwwpais_sistema", joinColumns = { @JoinColumn(name = "disCod", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "forEcCod", nullable = false, updatable = false) })
-	public List<Formacaoeclesiasticas> getFormacaoeclesiasticases() {
+	public Set<Formacaoeclesiasticas> getFormacaoeclesiasticases() {
 		return this.formacaoeclesiasticases;
 	}
 
-	public void setFormacaoeclesiasticases(List<Formacaoeclesiasticas> formacaoeclesiasticases) {
+	public void setFormacaoeclesiasticases(
+			Set<Formacaoeclesiasticas> formacaoeclesiasticases) {
 		this.formacaoeclesiasticases = formacaoeclesiasticases;
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "discipuloscelulas", catalog = "wwwpais_sistema", uniqueConstraints = @UniqueConstraint(columnNames = "discipulos"), joinColumns = { @JoinColumn(name = "discipulos", unique = true, nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "celulas", nullable = false, updatable = false) })
-	public List<Celulas> getCelulases() {
+	public Set<Celulas> getCelulases() {
 		return this.celulases;
 	}
 
-	public void setCelulases(List<Celulas> celulases) {
+	public void setCelulases(Set<Celulas> celulases) {
 		this.celulases = celulases;
 	}
 
@@ -373,11 +441,11 @@ public class Discipulos implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "participa", catalog = "wwwpais_sistema", joinColumns = { @JoinColumn(name = "disCod", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "EncCod", nullable = false, updatable = false) })
-	public List<Encontros> getEncontroses() {
+	public Set<Encontros> getEncontroses() {
 		return this.encontroses;
 	}
 
-	public void setEncontroses(List<Encontros> encontroses) {
+	public void setEncontroses(Set<Encontros> encontroses) {
 		this.encontroses = encontroses;
 	}
 
