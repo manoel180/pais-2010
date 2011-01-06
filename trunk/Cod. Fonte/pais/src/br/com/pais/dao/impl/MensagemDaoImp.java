@@ -32,7 +32,7 @@ public class MensagemDaoImp extends DaoGenericoImp<Mensagem, Integer> implements
 	public List<Mensagem> listarCaixaEntrada(Discipulos discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo order by mensData DESC");
+					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo order by mensData DESC, mensCod DESC");
 			query.setParameter("discipulo", discipulo);
 			return query.getResultList();
 		} catch (NoResultException nre) {

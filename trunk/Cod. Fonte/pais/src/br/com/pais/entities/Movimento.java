@@ -34,6 +34,8 @@ public class Movimento implements java.io.Serializable {
 	private Date movData;
 	private String movTipo;
 	private Double movValor;
+	private String movRecebido;
+
 	private List<Repasse> repasses = new ArrayList<Repasse>();
 
 	public Movimento() {
@@ -44,13 +46,14 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	public Movimento(int movCod, Celulas celulas, Bases bases, Date movData,
-			String movTipo, Double movValor, List<Repasse> repasses) {
+			String movTipo, Double movValor, String movRecebido, List<Repasse> repasses) {
 		this.movCod = movCod;
 		this.celulas = celulas;
 		this.bases = bases;
 		this.movData = movData;
 		this.movTipo = movTipo;
 		this.movValor = movValor;
+		this.movRecebido = movRecebido;
 		this.repasses = repasses;
 	}
 
@@ -111,6 +114,15 @@ public class Movimento implements java.io.Serializable {
 
 	public void setMovValor(Double movValor) {
 		this.movValor = movValor;
+	}
+	
+	@Column(name = "movRecebido")
+	public String getMovRecebido() {
+		return movRecebido;
+	}
+
+	public void setMovRecebido(String movRecebido) {
+		this.movRecebido = movRecebido;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")

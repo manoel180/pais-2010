@@ -30,7 +30,7 @@ public class MovimentacaoBean {
 	private MovimentoDao movimentoDao = new MovimentoDaoImp();
 	private CelulaDao celulaDao = new CelulaDaoImp();
 	
-	public String listarCelulasMovimento(){		
+	public String prepararMovimento(){		
 		listaCelulas = new ArrayList<Celulas>();
         listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		return "/cad/movimentoListar.mir";
@@ -44,6 +44,7 @@ public class MovimentacaoBean {
 	public String salvarMovimento() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		movimento.setCelulas(celulaSelecionada);
+		movimento.setMovRecebido("N");
 		movimento.setBases(null);
 		if (movimentoDao.salvar(movimento) == (true)) {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Movimento cadastrado!"));

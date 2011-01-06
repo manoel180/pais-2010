@@ -55,7 +55,7 @@ public class Discipulos implements java.io.Serializable {
 	private String disTelCelular;
 	private String disTelComercial;
 	private char disSexo;
-	private Set<Repasse> repasses = new HashSet<Repasse>(0);
+	private List<Repasse> repasses = new ArrayList<Repasse>();
 	private List<Encontros> encontroses = new ArrayList<Encontros>();
 	private List<Formacaoeclesiasticas> formacaoeclesiasticases = new ArrayList<Formacaoeclesiasticas>();
 	private List<Celulas> celulases = new ArrayList<Celulas>();
@@ -306,11 +306,11 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulos")
-	public Set<Repasse> getRepasses() {
+	public List<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(Set<Repasse> repasses) {
+	public void setRepasses(List<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 
