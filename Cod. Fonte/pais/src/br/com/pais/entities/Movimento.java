@@ -1,18 +1,13 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -33,10 +28,8 @@ public class Movimento implements java.io.Serializable {
 	private Bases bases;
 	private Date movData;
 	private String movTipo;
-	private Double movValor;
-	private String movRecebido;
-
-	private List<Repasse> repasses = new ArrayList<Repasse>();
+	private Byte movValor;
+	private Set<Repasse> repasses = new HashSet<Repasse>(0);
 
 	public Movimento() {
 	}
@@ -46,19 +39,17 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	public Movimento(int movCod, Celulas celulas, Bases bases, Date movData,
-			String movTipo, Double movValor, String movRecebido, List<Repasse> repasses) {
+			String movTipo, Byte movValor, Set<Repasse> repasses) {
 		this.movCod = movCod;
 		this.celulas = celulas;
 		this.bases = bases;
 		this.movData = movData;
 		this.movTipo = movTipo;
 		this.movValor = movValor;
-		this.movRecebido = movRecebido;
 		this.repasses = repasses;
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "movCod", unique = true, nullable = false)
 	public int getMovCod() {
 		return this.movCod;
@@ -107,30 +98,21 @@ public class Movimento implements java.io.Serializable {
 		this.movTipo = movTipo;
 	}
 
-	@Column(name = "movValor")
-	public Double getMovValor() {
+	@Column(name = "movValor", precision = 2, scale = 0)
+	public Byte getMovValor() {
 		return this.movValor;
 	}
 
-	public void setMovValor(Double movValor) {
+	public void setMovValor(Byte movValor) {
 		this.movValor = movValor;
-	}
-	
-	@Column(name = "movRecebido")
-	public String getMovRecebido() {
-		return movRecebido;
-	}
-
-	public void setMovRecebido(String movRecebido) {
-		this.movRecebido = movRecebido;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
-	public List<Repasse> getRepasses() {
+	public Set<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(List<Repasse> repasses) {
+	public void setRepasses(Set<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 

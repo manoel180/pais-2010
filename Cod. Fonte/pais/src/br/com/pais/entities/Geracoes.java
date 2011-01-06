@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +24,7 @@ public class Geracoes implements java.io.Serializable {
 	private Integer gerCod;
 	private String gerDescricao;
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 
 	public Geracoes() {
 	}
@@ -32,9 +33,11 @@ public class Geracoes implements java.io.Serializable {
 		this.gerDescricao = gerDescricao;
 	}
 
-	public Geracoes(String gerDescricao, Set<Discipulos> discipuloses) {
+	public Geracoes(String gerDescricao, Set<Discipulos> discipuloses,
+			Set<Celulas> celulases) {
 		this.gerDescricao = gerDescricao;
 		this.discipuloses = discipuloses;
+		this.celulases = celulases;
 	}
 
 	@Id
@@ -64,6 +67,15 @@ public class Geracoes implements java.io.Serializable {
 
 	public void setDiscipuloses(Set<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "geracoes")
+	public Set<Celulas> getCelulases() {
+		return this.celulases;
+	}
+
+	public void setCelulases(Set<Celulas> celulases) {
+		this.celulases = celulases;
 	}
 
 }

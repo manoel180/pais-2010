@@ -1,11 +1,9 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,10 +29,10 @@ import javax.persistence.UniqueConstraint;
 public class Celulas implements java.io.Serializable {
 
 	private Integer celCod;
-	private Integer celGeracao;
 	private Discipulos discipulos;
 	private Bases bases;
 	private Logradouro logradouro;
+	private Geracoes geracoes;
 	private String celNome;
 	private Date celHorarioReuniao;
 	private String celDiaReuniao;
@@ -43,28 +41,30 @@ public class Celulas implements java.io.Serializable {
 	private String celStatus;
 	private String celTelFixo;
 	private String celTelCelular;
-	private List<Discipulos> discipuloses = new ArrayList<Discipulos>();
-	private List<Movimento> movimentos = new ArrayList<Movimento>();
+	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
 
 	public Celulas() {
 	}
 
 	public Celulas(Discipulos discipulos, Logradouro logradouro,
-			String celNuEndereco) {
+			Geracoes geracoes, String celNuEndereco) {
 		this.discipulos = discipulos;
 		this.logradouro = logradouro;
+		this.geracoes = geracoes;
 		this.celNuEndereco = celNuEndereco;
 	}
 
-	public Celulas(Integer celGeracao, Discipulos discipulos, Bases bases, Logradouro logradouro,
-			String celNome, Date celHorarioReuniao, String celDiaReuniao,
-			String celNuEndereco, String celEndComplemento, String celStatus,
-			String celTelFixo, String celTelCelular,
-			List<Discipulos> discipuloses, List<Movimento> movimentos) {
-		this.celGeracao = celGeracao;
+	public Celulas(Discipulos discipulos, Bases bases, Logradouro logradouro,
+			Geracoes geracoes, String celNome, Date celHorarioReuniao,
+			String celDiaReuniao, String celNuEndereco,
+			String celEndComplemento, String celStatus, String celTelFixo,
+			String celTelCelular, Set<Discipulos> discipuloses,
+			Set<Movimento> movimentos) {
 		this.discipulos = discipulos;
 		this.bases = bases;
 		this.logradouro = logradouro;
+		this.geracoes = geracoes;
 		this.celNome = celNome;
 		this.celHorarioReuniao = celHorarioReuniao;
 		this.celDiaReuniao = celDiaReuniao;
@@ -86,15 +86,6 @@ public class Celulas implements java.io.Serializable {
 
 	public void setCelCod(Integer celCod) {
 		this.celCod = celCod;
-	}
-	
-	@Column(name = "celGeracao", unique = true, nullable = false)
-	public Integer getCelGeracao() {
-		return celGeracao;
-	}
-
-	public void setCelGeracao(Integer celGeracao) {
-		this.celGeracao = celGeracao;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -125,6 +116,16 @@ public class Celulas implements java.io.Serializable {
 
 	public void setLogradouro(Logradouro logradouro) {
 		this.logradouro = logradouro;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "celGeracao", nullable = false)
+	public Geracoes getGeracoes() {
+		return this.geracoes;
+	}
+
+	public void setGeracoes(Geracoes geracoes) {
+		this.geracoes = geracoes;
 	}
 
 	@Column(name = "celNome", length = 45)
@@ -202,20 +203,20 @@ public class Celulas implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "discipuloscelulas", catalog = "wwwpais_sistema", uniqueConstraints = @UniqueConstraint(columnNames = "discipulos"), joinColumns = { @JoinColumn(name = "celulas", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "discipulos", unique = true, nullable = false, updatable = false) })
-	public List<Discipulos> getDiscipuloses() {
+	public Set<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
 
-	public void setDiscipuloses(List<Discipulos> discipuloses) {
+	public void setDiscipuloses(Set<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "celulas")
-	public List<Movimento> getMovimentos() {
+	public Set<Movimento> getMovimentos() {
 		return this.movimentos;
 	}
 
-	public void setMovimentos(List<Movimento> movimentos) {
+	public void setMovimentos(Set<Movimento> movimentos) {
 		this.movimentos = movimentos;
 	}
 
