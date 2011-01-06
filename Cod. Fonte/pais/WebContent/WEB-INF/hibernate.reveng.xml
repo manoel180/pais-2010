@@ -2,9 +2,6 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-	<table-filter match-name="discipuloscelulas"
-		match-catalog="wwwpais_sistema">
-	</table-filter>
 	<table-filter match-name="bairro" match-catalog="wwwpais_sistema"></table-filter>
 	<table-filter match-name="bases" match-catalog="wwwpais_sistema"></table-filter>
 	<table-filter match-name="celulas"
@@ -33,6 +30,9 @@
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="formacaoeclesiasticas"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="fotosbases"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="funcaoeclesiasticas"
