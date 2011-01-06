@@ -78,7 +78,7 @@ public class CelulaBean {
 	    for (Geracoes ger : listaGeracoes) {
 	    	
 	    	for(Celulas cel : listaCelulas){
-	    		if(cel.getCelGeracao().equals(ger.getGerCod())){
+	    		if(cel.getGeracoes().getGerCod().equals(ger.getGerCod())){
 	    			listGerTemp.remove(ger);
 	    		}
 	    	}
@@ -97,7 +97,7 @@ public class CelulaBean {
 	
 	public void listarM12PorGeracao(AjaxBehaviorEvent event) {		
 		listaM12 = new ArrayList<Discipulos>();
-	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
+	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getGeracoes().getGerCod()));
 	    
 	    dtDisAdicionados = new ArrayList<Discipulos>();
 	}
@@ -173,7 +173,7 @@ public class CelulaBean {
 	    celulas.setLogradouro(celulaSelecionada.getLogradouro());
 	    
 	    listaM12 = new ArrayList<Discipulos>();
-	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getCelGeracao()));
+	    listaM12.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getGeracoes().getGerCod()));
 	    
 	    dtDisAdicionados = new ArrayList<Discipulos>();
 	    dtDisAdicionados.addAll(celulas.getDiscipuloses());
@@ -210,11 +210,11 @@ public class CelulaBean {
 		celulas.setDiscipuloses(dtDisAdicionados);
 		
 		if (celulaDao.salvar(celulas) == (true)) {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula cadastrada!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Cï¿½lula cadastrada!"));
 			listaCelulas = new ArrayList<Celulas>();
 	    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		} else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Cï¿½lula nï¿½o cadastrada!"));
 		}
 		
 		return "/cad/celulasListar.mir";
@@ -227,7 +227,7 @@ public class CelulaBean {
 		listaCelulas = new ArrayList<Celulas>();
     	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
     	
-    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula excluida!"));
+    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Cï¿½lula excluida!"));
 	}
 	
 	public String alterar() {
@@ -239,7 +239,7 @@ public class CelulaBean {
 		celulas.setDiscipuloses(dtDisAdicionados);
 		celulaDao.atualizar(celulas);
 		
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula editada!"));
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Cï¿½lula editada!"));
 		listaCelulas = new ArrayList<Celulas>();
     	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		

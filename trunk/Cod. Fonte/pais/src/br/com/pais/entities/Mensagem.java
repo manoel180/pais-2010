@@ -25,7 +25,7 @@ public class Mensagem implements java.io.Serializable {
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-
+	private String mensLida;
 	public Mensagem() {
 	}
 
@@ -86,6 +86,15 @@ public class Mensagem implements java.io.Serializable {
 
 	public void setMensData(Date mensData) {
 		this.mensData = mensData;
+	}
+	
+	@Column(name = "mensLida", nullable = false)
+	public String getMensLida() {
+		return this.mensLida;
+	}
+
+	public void setMensLida(String mensLida) {
+		this.mensLida = mensLida;
 	}
 
 }

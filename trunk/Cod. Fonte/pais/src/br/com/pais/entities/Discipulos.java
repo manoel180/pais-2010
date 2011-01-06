@@ -2,14 +2,18 @@ package br.com.pais.entities;
 
 // Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -54,14 +58,13 @@ public class Discipulos implements java.io.Serializable {
 	private String disTelComercial;
 	private char disSexo;
 	private Set<Repasse> repasses = new HashSet<Repasse>(0);
-	private Set<Formacaoeclesiasticas> formacaoeclesiasticases = new HashSet<Formacaoeclesiasticas>(
-			0);
+	private List<Formacaoeclesiasticas> formacaoeclesiasticases = new ArrayList<Formacaoeclesiasticas>();
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Celulas> celulases_1 = new HashSet<Celulas>(0);
 	private Set<Bases> basesesForLiderGovJusto = new HashSet<Bases>(0);
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
-	private Set<Encontros> encontroses = new HashSet<Encontros>(0);
+	private List<Encontros> encontroses = new ArrayList<Encontros>();
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
 	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
 			0);
@@ -94,10 +97,10 @@ public class Discipulos implements java.io.Serializable {
 			String disTitEleitor, Integer disEndNumero,
 			String disEndComplemento, String disTelFixo, String disTelCelular,
 			String disTelComercial, char disSexo, Set<Repasse> repasses,
-			Set<Formacaoeclesiasticas> formacaoeclesiasticases,
+			List<Formacaoeclesiasticas> formacaoeclesiasticases,
 			Set<Celulas> celulases, Set<Celulas> celulases_1,
 			Set<Bases> basesesForLiderGovJusto, Set<Bases> basesesForBasDisCod,
-			Set<Bases> basesesForLiderAcaoSocial, Set<Encontros> encontroses,
+			Set<Bases> basesesForLiderAcaoSocial, List<Encontros> encontroses,
 			Set<Discipulos> discipuloses,
 			Set<Mensagem> mensagemsForMensDisCodRecebe,
 			Set<Mensagem> mensagemsForMensDisCod) {
@@ -383,12 +386,12 @@ public class Discipulos implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "foreclesiasticasdiscipulos", catalog = "wwwpais_sistema", joinColumns = { @JoinColumn(name = "disCod", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "forEcCod", nullable = false, updatable = false) })
-	public Set<Formacaoeclesiasticas> getFormacaoeclesiasticases() {
+	public List<Formacaoeclesiasticas> getFormacaoeclesiasticases() {
 		return this.formacaoeclesiasticases;
 	}
 
 	public void setFormacaoeclesiasticases(
-			Set<Formacaoeclesiasticas> formacaoeclesiasticases) {
+			List<Formacaoeclesiasticas> formacaoeclesiasticases) {
 		this.formacaoeclesiasticases = formacaoeclesiasticases;
 	}
 
@@ -441,11 +444,11 @@ public class Discipulos implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "participa", catalog = "wwwpais_sistema", joinColumns = { @JoinColumn(name = "disCod", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "EncCod", nullable = false, updatable = false) })
-	public Set<Encontros> getEncontroses() {
+	public List<Encontros> getEncontroses() {
 		return this.encontroses;
 	}
 
-	public void setEncontroses(Set<Encontros> encontroses) {
+	public void setEncontroses(List<Encontros> encontroses) {
 		this.encontroses = encontroses;
 	}
 
