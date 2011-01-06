@@ -44,7 +44,7 @@ public class Celulas implements java.io.Serializable {
 	private String celTelFixo;
 	private String celTelCelular;
 	private List<Discipulos> discipuloses = new ArrayList<Discipulos>();
-	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
+	private List<Movimento> movimentos = new ArrayList<Movimento>();
 
 	public Celulas() {
 	}
@@ -60,7 +60,7 @@ public class Celulas implements java.io.Serializable {
 			String celNome, Date celHorarioReuniao, String celDiaReuniao,
 			String celNuEndereco, String celEndComplemento, String celStatus,
 			String celTelFixo, String celTelCelular,
-			List<Discipulos> discipuloses, Set<Movimento> movimentos) {
+			List<Discipulos> discipuloses, List<Movimento> movimentos) {
 		this.celGeracao = celGeracao;
 		this.discipulos = discipulos;
 		this.bases = bases;
@@ -211,11 +211,11 @@ public class Celulas implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "celulas")
-	public Set<Movimento> getMovimentos() {
+	public List<Movimento> getMovimentos() {
 		return this.movimentos;
 	}
 
-	public void setMovimentos(Set<Movimento> movimentos) {
+	public void setMovimentos(List<Movimento> movimentos) {
 		this.movimentos = movimentos;
 	}
 

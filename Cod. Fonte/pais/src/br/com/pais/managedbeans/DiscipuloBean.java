@@ -305,10 +305,10 @@ public class DiscipuloBean {
 					}
 				}// for end
 
-				new SendEMail().sendSimpleMailEnviarSenha(
-						funcaoeclesiasticas.getFunDescricao(),
-						discipulos.getDisnome(), discipulos.getDisemail(),
-						discipulos.getDisSenha(), discipulos.getDisCpf());
+				//new SendEMail().sendSimpleMailEnviarSenha(
+				//		funcaoeclesiasticas.getFunDescricao(),
+				//		discipulos.getDisnome(), discipulos.getDisemail(),
+				//		discipulos.getDisSenha(), discipulos.getDisCpf());
 			} 
 		} else {
 			context.addMessage(null, new FacesMessage(
