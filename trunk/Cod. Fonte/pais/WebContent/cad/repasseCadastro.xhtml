@@ -41,7 +41,7 @@
 					<h:selectOneMenu id="selGeracao" value="#{repasseBean.comboGeracao}" styleClass="formularios">
 						<f:selectItem itemValue="0" itemLabel="Selecione"/>
 						<f:selectItems value="#{repasseBean.geracaoCombo}"/>
-						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracao}" execute="selGeracao selTipo movDataInicio movDataFim"  
+						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo movDataInicio movDataFim"  
 						render="pnlMensagens"/>
 					</h:selectOneMenu>
 					<h:outputLabel value="" />
@@ -56,7 +56,7 @@
 						<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
 						<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
 						<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
-						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracao}" execute="selGeracao selTipo movDataInicio movDataFim"  
+						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo movDataInicio movDataFim"  
 				        render="pnlMensagens"/>
 					</h:selectOneMenu>
 						
@@ -65,7 +65,7 @@
 				                    inputStyleClass="formularios" navigator="true" showOn="button" 
 				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
 								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
-								    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarInicio}"/>
+								    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarInicioNaoRecebidos}"/>
 	                <h:outputLabel value="" />
 	                <h:outputLabel value="" />
 				    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
@@ -73,7 +73,7 @@
 				                    inputStyleClass="formularios" navigator="true" showOn="button" 
 				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
 								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
-                                    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarFim}"/>
+                                    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarFimNaoRecebidos}"/>
 				</h:panelGrid>
 				<br/>
 				   
@@ -121,10 +121,10 @@
 						<f:facet name="header">
 							<h:outputText value="&nbsp;VALOR R$" styleClass="Fonte_12"/>
 						</f:facet>
-						<h:outputText styleClass="Fonte_13" value="#{repasseBean.total}">
+						<h:outputText styleClass="Fonte_13" value="#{repasseBean.totalNaoRecebido}">
 						<f:convertNumber type="currency" pattern="#,##0.00" minFractionDigits="2"  />
 						</h:outputText>
-					</p:column> 
+					</p:column>
 					
 					<p:column>
 						<f:facet name="header">
