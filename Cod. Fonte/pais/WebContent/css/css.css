@@ -88,13 +88,15 @@ font-size: 12px !important;
 	border: none !important;}
 
 body{
-	background-image: url("#{request.contextPath}/img/fundo.jpg");
-	background-color: #E7EFF2;
+	background-color: #D1DEE4;
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
 	background-repeat: repeat-x;
+	size: auto;
+	margin: 0;
+	padding: 0;
 }
 
 img{
