@@ -151,7 +151,7 @@
 				<p:tab id="tbdiscipulos" title="Discípulos">
 				
 				    <h:outputLabel value="Geração:" styleClass="Texto_cpf_login" for="geracao"/>
-					<h:selectOneMenu id="geracao" value="#{celulaBean.celulas.celGeracao}" styleClass="formularios">
+					<h:selectOneMenu id="geracao" value="#{celulaBean.celulas.geracoes.gerCod}" styleClass="formularios">
 						<f:selectItem itemValue="0" itemLabel="Selecione"/>
 						<f:selectItems value="#{celulaBean.geracaoCombo}"/>
 						<f:ajax render="outPanelDiscipulos" execute="@this" event="change" 
