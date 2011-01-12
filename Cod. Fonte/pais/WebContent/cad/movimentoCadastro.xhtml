@@ -80,21 +80,36 @@ jQuery(function($){
 							<h:outputText value="Valor R$:" styleClass="formulariosObrigatorio"/>
 							<h:inputText id="movValor" tabindex="3" value="#{movimentacaoBean.movimento.movValor}" styleClass="formularios"
 							 required="true" requiredMessage="Valor é Obrigatório!">
-							<f:convertNumber type="currency" maxFractionDigits="2" pattern="##,###,###,###.##" locale="pt,BR"/>
+							 <f:convertNumber type="currency" pattern="#,##0.00" minFractionDigits="2"/>
 							</h:inputText> 
 						</h:panelGrid>
 			            </p:panel>
 				</p:tab>
 			</p:tabView>
 			<br/>
-			
-			<h:commandButton value="Salvar" styleClass="formularios" tabindex="4"
-			action="#{movimentacaoBean.salvarMovimento}">
-			</h:commandButton>
+			<p:commandButton value="Cadastrar" styleClass="formularios"
+			                 update="outPnlRepasse"
+			                 oncomplete="repasseDialog.show()"
+			                 actionListener="#{movimentacaoBean.limparRepasseDialog}" /> 
 			&nbsp;
-			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="5"
-			action="#{celulaBean.prepararListarCelula}">
-			</h:commandButton>
+			<p:commandButton value="Cancelar" styleClass="formularios" 
+			action="#{movimentacaoBean.prepararCadastro}" ajax="false"/>
+			
+			<p:dialog header="DADOS DO REPASSE" widgetVar="repasseDialog" resizable="false"
+		              modal="true" width="600" showEffect="explode" hideEffect="explode">
+		    <p:outputPanel id="outPnlRepasse">
+		            <h:panelGrid columns="1">
+			        <h:outputText value="Local do Repasse" styleClass="formulariosObrigatorio"/>  
+			        <h:inputTextarea rows="10" cols="75" value="#{movimentacaoBean.repasse.resLocal}" styleClass="formularios2"/>
+			        </h:panelGrid>
+		            <h:panelGrid columns="2" cellpadding="2">
+		                <p:commandButton value="Confirmar" styleClass="formularios" 
+		                action="#{movimentacaoBean.salvarMovimento}" ajax="false"/>
+		                <p:commandButton value="Cancelar" styleClass="formularios" 
+		                onclick="repasseDialog.hide()" />
+		            </h:panelGrid>  
+		    </p:outputPanel>
+		    </p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>
