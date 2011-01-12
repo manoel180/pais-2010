@@ -31,15 +31,14 @@
 }
 
 .ui-menubar {
-	width: 940px !important;
+	width: 960px !important;
 	height: 30px;
 	position: fixed;
 	border: none !important;
-	background: url("#{request.contextPath}/img/fundo_menu_alfa.png")
-		no-repeat !important;
+	background: url("#{request.contextPath}/img/fundo_menu_alfa.png")no-repeat !important;
 }
 
-.ui-menubar>.bd>ul {
+.ui-menubar .bd-ul {
 	border: none !important;
 	height: 30px;
 	background: transparent;
@@ -643,8 +642,8 @@ Fim do panel equipe
 /*
 	fim layout
 */
-body {
-	background-color: #02234C;
+body{
+	background-color: #D1DEE4;
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
