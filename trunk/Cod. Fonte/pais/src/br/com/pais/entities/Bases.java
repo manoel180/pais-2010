@@ -192,7 +192,7 @@ public class Bases implements java.io.Serializable {
 		this.basDtAbertura = basDtAbertura;
 	}
 
-	@Column(name = "basNuEndereco", unique = true, length = 5)
+	@Column(name = "basNuEndereco",length = 5)
 	public String getBasNuEndereco() {
 		return this.basNuEndereco;
 	}
