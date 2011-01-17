@@ -22,7 +22,8 @@ public class Fotosbases implements java.io.Serializable {
 	private Integer codFoto;
 	private Bases bases;
 	private String foto;
-
+	private String legenda;
+	
 	public Fotosbases() {
 	}
 
@@ -61,4 +62,21 @@ public class Fotosbases implements java.io.Serializable {
 		this.foto = foto;
 	}
 
+	/**
+	 * @return the legenda
+	 */
+	@Column(name = "legenda", length = 100)
+	public String getLegenda() {
+		return legenda;
+	}
+
+	/**
+	 * @param legenda the legenda to set
+	 */
+	public void setLegenda(String legenda) {
+		this.legenda = legenda;
+	}
+
+	
+	
 }
