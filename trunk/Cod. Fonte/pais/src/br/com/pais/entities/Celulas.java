@@ -1,19 +1,15 @@
 package br.com.pais.entities;
 
-// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
+// Generated 17/01/2011 11:25:41 by Hibernate Tools 3.4.0.Beta1
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -45,7 +41,7 @@ public class Celulas implements java.io.Serializable {
 	private String celStatus;
 	private String celTelFixo;
 	private String celTelCelular;
-	private List<Discipulos> discipuloses = new ArrayList<Discipulos>();
+	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
 	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
 
 	public Celulas() {
@@ -63,7 +59,7 @@ public class Celulas implements java.io.Serializable {
 			Geracoes geracoes, String celNome, Date celHorarioReuniao,
 			String celDiaReuniao, String celNuEndereco,
 			String celEndComplemento, String celStatus, String celTelFixo,
-			String celTelCelular, List<Discipulos> discipuloses,
+			String celTelCelular, Set<Discipulos> discipuloses,
 			Set<Movimento> movimentos) {
 		this.discipulos = discipulos;
 		this.bases = bases;
@@ -207,11 +203,11 @@ public class Celulas implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "discipuloscelulas", catalog = "wwwpais_sistema", uniqueConstraints = @UniqueConstraint(columnNames = "discipulos"), joinColumns = { @JoinColumn(name = "celulas", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "discipulos", unique = true, nullable = false, updatable = false) })
-	public List<Discipulos> getDiscipuloses() {
+	public Set<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
 
-	public void setDiscipuloses(List<Discipulos> discipuloses) {
+	public void setDiscipuloses(Set<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
 	}
 
