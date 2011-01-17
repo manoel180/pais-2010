@@ -1,13 +1,13 @@
 package br.com.pais.entities;
 
-// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
+// Generated 17/01/2011 11:25:41 by Hibernate Tools 3.4.0.Beta1
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,37 +19,46 @@ import javax.persistence.Table;
 @Table(name = "fotosbases", catalog = "wwwpais_sistema")
 public class Fotosbases implements java.io.Serializable {
 
-	private FotosbasesId id;
+	private Integer codFoto;
 	private Bases bases;
+	private String foto;
 
 	public Fotosbases() {
 	}
 
-	public Fotosbases(FotosbasesId id, Bases bases) {
-		this.id = id;
+	public Fotosbases(Bases bases, String foto) {
 		this.bases = bases;
+		this.foto = foto;
 	}
 
-	@EmbeddedId
-	@AttributeOverrides({
-			@AttributeOverride(name = "basCod", column = @Column(name = "basCod", nullable = false)),
-			@AttributeOverride(name = "foto", column = @Column(name = "foto", nullable = false, length = 100)) })
-	public FotosbasesId getId() {
-		return this.id;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "codFoto", unique = true, nullable = false)
+	public Integer getCodFoto() {
+		return this.codFoto;
 	}
 
-	public void setId(FotosbasesId id) {
-		this.id = id;
+	public void setCodFoto(Integer codFoto) {
+		this.codFoto = codFoto;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "basCod", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "basCod", nullable = false)
 	public Bases getBases() {
 		return this.bases;
 	}
 
 	public void setBases(Bases bases) {
 		this.bases = bases;
+	}
+
+	@Column(name = "foto", nullable = false, length = 100)
+	public String getFoto() {
+		return this.foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
 
 }
