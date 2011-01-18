@@ -7,18 +7,6 @@
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
 	template="/index.xhtml">
-	
-<ui:define name="javascript">
-<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
-<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskMoney.0.2.js"></script>
-
-<script>
-jQuery(function($){
-	  jQuery("#movData").mask("99/99/9999");
-	  $("#movValor").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:true});
-});
-</script>
-</ui:define>
 
 <ui:define name="menu-vc-esta">
 
@@ -34,7 +22,8 @@ jQuery(function($){
  <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden"  >  
      <p:menuitem value="home" url="/index.mir" />  
       <p:menuitem value="FINANCEIRO"/>  
-       <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararReceberRepasse}" ajax="false" />    
+       <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararReceberRepasse}" ajax="false">
+       </p:menuitem>    
  </p:breadCrumb> 
 
 </td>
@@ -90,7 +79,16 @@ jQuery(function($){
 						<f:facet name="header">
 							<h:outputText value="&nbsp;DATA" styleClass="Fonte_12"/>
 						</f:facet>
-						<h:outputText styleClass="Fonte_13" value="#{mov.movData}"/>
+						<h:outputText styleClass="Fonte_13" value="#{mov.movData}">
+						  <f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;PROTOCOLO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{mov.movProtocolo}"/>
 					</p:column> 
 					
 					<p:column>
@@ -102,25 +100,10 @@ jQuery(function($){
 						</h:outputText>
 					</p:column>
 					
-					<f:facet name="footer">  
-			            <p:column>
-			            <h:outputText value="" />
-					    </p:column> 
-					    <p:column>
-			            <h:outputText value="" />
-					    </p:column>
-					    <p:column>
-			            <h:outputText value="" />
-					    </p:column>
-					    <p:column>
-			            <h:outputText value="" />
-					    </p:column>
-					    <p:column>
-			            <h:outputText value="" />
-					    </p:column> 
-					    <p:column>
-			            <h:outputText value="500,00" />
-					    </p:column> 
+					<f:facet name="footer">
+					<h:panelGrid columns="1" columnClasses="coluna1">
+					   <h:outputText value="Valor Total: #{repasseBean.totalStringNaoRecebido}"/>
+					</h:panelGrid>
 			        </f:facet>
 					
 				    </p:dataTable>
@@ -128,13 +111,30 @@ jQuery(function($){
 			</p:tabView>
 			<br/>
 			
-			<h:commandButton value="Salvar" styleClass="formularios" tabindex="4"
-			action="#{movimentacaoBean.salvarMovimento}">
-			</h:commandButton>
+			<p:commandButton value="Confirmar Recebimento" styleClass="formularios"
+			                 update="outPnlRepasse"
+			                 oncomplete="repasseDialog.show()"
+			                 actionListener="#{repasseBean.limparRepasseDialog}" /> 
 			&nbsp;
-			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="5"
-			action="#{celulaBean.prepararListarCelula}">
-			</h:commandButton>
+			<p:commandButton value="Cancelar" styleClass="formularios" 
+			action="#{repasseBean.prepararRepasse()}" ajax="false"/>
+			
+			<p:dialog header="DADOS DO REPASSE" widgetVar="repasseDialog" resizable="false"
+		              modal="true" width="600" showEffect="explode" hideEffect="explode">
+		    <p:outputPanel id="outPnlRepasse">
+		            <h:panelGrid columns="1">
+			        <h:outputText value="Local do Repasse" styleClass="formulariosObrigatorio"/>  
+			        <h:inputTextarea rows="10" cols="75" value="#{repasseBean.repasse.resLocal}" styleClass="formularios2"/>
+			        </h:panelGrid>
+		            <h:panelGrid columns="2" cellpadding="2">
+		                <p:commandButton value="Confirmar" styleClass="formularios" 
+		                action="#{repasseBean.SalvarRepasse}" ajax="false"/>
+		                <p:commandButton value="Cancelar" styleClass="formularios" 
+		                onclick="repasseDialog.hide()" />
+		            </h:panelGrid>  
+		    </p:outputPanel>
+		    </p:dialog>
+			
 		</h:form>
 	</ui:define>
 </ui:composition>
