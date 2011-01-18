@@ -1,0 +1,279 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+	<ui:define name="menu-vc-esta">
+
+		<table width="620" border="0" align="left" cellpadding="0"
+			background="/pais/img/barra_linha.png" cellspacing="0">
+			<tr>
+				<td align="left" scope="col"><span class="Fonte_12_Logado"></span>
+				<h:outputLabel value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11" /></td>
+				<td><p:breadCrumb
+					style="width: 520px; height: 19px; background: transparent; border: hidden">
+					<p:menuitem value="home" url="/principal.mir" />
+					<p:menuitem value="CADASTRO" />
+					<p:menuitem value="CADASTRO DE BASES"
+						action="#{basesBean.prepararBases}" ajax="false" />
+				</p:breadCrumb></td>
+
+			</tr>
+		</table>
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<br />
+		<h:form id="form1" prependId="false">
+			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+
+			<p:focus />
+			<p:tabView orientation="top">
+				<p:tab id="tabDadosPessoais" title="Dados Bases">
+
+					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+
+						<h:outputLabel value="Nome:" styleClass="formulariosObrigatorio" />
+
+						<h:inputText styleClass="formularios2" maxlength="60" size="40"
+							required="true" autocomplete="off" id="nomeTxt"
+							value="#{loginBean.discipuloSessao.discipulos.disnome}"
+							requiredMessage="Nome é obrigatório" readonly="true">
+						</h:inputText>
+
+						<h:outputLabel value="Dia Reunião:"
+							styleClass="formulariosObrigatorio" />
+						<h:selectOneMenu value="#{basesBean.bases.basDiaReuniao}"
+							styleClass="formularios2">
+							<f:selectItem itemLabel="Domingo" itemValue="Domingo" />
+							<f:selectItem itemLabel="Segunda" itemValue="Segunda" />
+							<f:selectItem itemLabel="Terça" itemValue="Terça" />
+							<f:selectItem itemLabel="Quarta" itemValue="Quarta" />
+							<f:selectItem itemLabel="Quinta" itemValue="Quinta" />
+							<f:selectItem itemLabel="Sexta" itemValue="Sexta" />
+							<f:selectItem itemLabel="Sábado" itemValue="Sábado" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Hora da Reunião:"
+							styleClass="formulariosObrigatorio" />
+						<p:inputMask mask="99:99" id="hrReuniao"
+							value="#{basesBean.bases.basHorReuniao}" size="8"
+							styleClass="formularios2" required="true"
+							requiredMessage="Hora da Reunião é obrigatória">
+							<f:convertDateTime type="time" pattern="HH:mm" dateStyle="short"
+								locale="pt,BR" timeZone="GMT-4" />
+						</p:inputMask>
+
+
+						<h:outputLabel value="Data da Abertura:"
+							styleClass="formulariosObrigatorio" />
+						<p:calendar inputStyleClass="formularios2" popupIcon="true"
+							styleClass="formularios2" required="true"
+							value="#{basesBean.bases.basDtAbertura}" navigator="true"
+							yearRange="100" locale="pt_BR" pattern="dd/MM/yyyy"
+							requiredMessage="Data da Abertura é obrigatório"
+							showButtonPanel="true" selectOtherMonths="true" />
+
+						<h:outputLabel value="Tipo:" styleClass="formulariosObrigatorio" />
+						<h:selectOneMenu id="tpBase"
+							requiredMessage="Tipo da Base é obrigatório"
+							value="#{basesBean.tipobases.tpbCod}" styleClass="formularios2"
+							required="true">
+							<f:selectItems itemLabel="#{tipoBases.tpbDescricao}"
+								itemValue="#{tipoBases.tpbCod}"
+								value="#{basesBean.listtipobases}" var="tipoBases" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Líder Governo do Justo:"
+							styleClass="formulariosObrigatorio" />
+						<h:selectOneMenu id="ldGovernoJusto"
+							requiredMessage="Líder Governo do Justo é obrigatório"
+							value="#{basesBean.liderGovernoJusto.disCod}"
+							styleClass="formularios2" required="true">
+							<f:selectItems value="#{basesBean.listDiscipulos}" var="liderGJ"
+								itemValue="#{liderGJ.disCod}" itemLabel="#{liderGJ.disnome}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Líder Ação Social:"
+							styleClass="formulariosObrigatorio" />
+						<h:selectOneMenu id="ldAcaoSocial"
+							value="#{basesBean.liderAcaoSocial.disCod}"
+							requiredMessage="Líder Ação Social é obrigatório"
+							styleClass="formularios2" required="true">
+							<f:selectItems value="#{basesBean.listDiscipulos}" var="liderAS"
+								itemValue="#{liderAS.disCod}" itemLabel="#{liderAS.disnome}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Status:" styleClass="formulariosObrigatorio" />
+						<h:selectOneMenu id="status"
+							value="#{basesBean.statusbase.stBasCod}"
+							requiredMessage="Status é obrigatório" styleClass="formularios2"
+							required="true">
+							<f:selectItems value="#{basesBean.listStatusbases}"
+								var="statusBases" itemLabel="#{statusBases.stBasDescricao}"
+								itemValue="#{statusBases.stBasCod}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Condição"
+							styleClass="formulariosObrigatorio" />
+						<h:selectOneMenu id="condicao"
+							value="#{basesBean.condicaobase.conBasCod}"
+							requiredMessage="Condição é obrigatória"
+							styleClass="formularios2" required="true">
+							<f:selectItems value="#{basesBean.listCondicaobases}"
+								var="condBase" itemValue="#{condBase.conBasCod}"
+								itemLabel="#{condBase.conBasDescricao}" />
+						</h:selectOneMenu>
+					</h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			<br />
+
+
+			<p:tabView id="tabView" activeIndex="3" effect="opacity"
+				contentTransition="true">
+
+
+				<p:tab id="tbendereco" title="Endereço">
+
+
+					<h:panelGrid columns="4" id="pnlEndereco"
+						columnClasses="coluna1, coluna2, coluna1, coluna2">
+						<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio"
+							for="cep" />
+
+						<h:inputText id="cep" size="20" tabindex="11"
+							requiredMessage="CEP é obrigatório"
+							value="#{basesBean.logradouro.cep}" maxlength="8"
+							styleClass="formularios2" required="true">
+							<p:watermark value="Somente Números" for="cep" />
+							<f:ajax render="tipo end cidade bairro estado num complemento"
+								execute="@this" event="change" listener="#{basesBean.buscarCEP}" />
+						</h:inputText>
+						<h:outputText />
+						<h:outputLink
+							value="http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuEndereco"
+							target="_blank">
+							<h:graphicImage value="/img/busca_cep.jpg" />
+						</h:outputLink>
+
+						<h:outputLabel value="Tipo:" styleClass="formulariosObrigatorio"
+							for="tipo" />
+						<h:inputText id="tipo" styleClass="formularios2" required="true"
+							value="#{basesBean.logradouro.logTipoLogradouro}" size="20"
+							readonly="true" />
+						<h:outputLabel value="Endereço:"
+							styleClass="formulariosObrigatorio" for="end" />
+						<h:inputText id="end" value="#{basesBean.logradouro.logNo}"
+							required="true" styleClass="formularios2" size="30"
+							readonly="true" />
+						<h:outputLabel value="Número:" styleClass="Texto_cpf_login"
+							for="num" />
+						<p:inputMask mask="?9999" id="num" maxlength="4" tabindex="12"
+							size="4" styleClass="formularios2"
+							value="#{basesBean.bases.basNuEndereco}">
+						</p:inputMask>
+						<h:outputLabel value="Complemento:" styleClass="Texto_cpf_login"
+							for="complemento" />
+						<h:inputText id="complemento" maxlength="10" size="4"
+							styleClass="formularios2" tabindex="13"
+							value="#{basesBean.bases.basEndComplemento}" />
+						<h:outputLabel value="Bairro:" styleClass="formulariosObrigatorio"
+							for="bairro" />
+						<h:inputText id="bairro" styleClass="formularios2" required="true"
+							value="#{basesBean.logradouro.bairro.baiNo}" readonly="true" />
+						<h:outputLabel value="Cidade:" styleClass="formulariosObrigatorio"
+							for="cidade" />
+						<h:inputText id="cidade" styleClass="formularios2" required="true"
+							value="#{basesBean.logradouro.bairro.localidade.locNo}"
+							readonly="true" />
+						<h:outputLabel value="Estado:" styleClass="formulariosObrigatorio"
+							for="estado" />
+						<h:inputText id="estado" styleClass="formularios2" required="true"
+							value="#{basesBean.logradouro.bairro.localidade.estado.ufeNo}"
+							readonly="true" />
+					</h:panelGrid>
+
+
+				</p:tab>
+
+				<p:tab id="tbcontatos" title="Contatos">
+
+					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+
+
+
+
+						<h:outputLabel value="Tel. Fixo:" styleClass="Texto_cpf_login"
+							for="telTxt" />
+						<p:inputMask mask="(99) 9999-9999" id="telTxt" tabindex="15"
+							value="#{basesBean.bases.basTelFixo}" autocomplete="off"
+							styleClass="formularios2" />
+
+						<h:outputLabel value="Tel. Celular:" styleClass="Texto_cpf_login"
+							for="telTxt2" />
+						<p:inputMask mask="(99) 9999-9999" id="telTxt2" tabindex="16"
+							value="#{basesBean.bases.basTelCelular}" autocomplete="off"
+							styleClass="formularios2" />
+					</h:panelGrid>
+
+				</p:tab>
+
+
+				<p:tab id="tbfotos" title="Fotos da base">
+				
+					 <p:galleria id="fotos2" effectSpeed="1000">  
+     					<ui:repeat value="#{basesBean.listFotosbases}" var="fotos">					
+								<p:graphicImage value="#{fotos.imagem}"  />
+						</ui:repeat>
+					</p:galleria>
+						
+					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+
+						<h:outputLabel value="Legenda:" />
+						<h:inputText value="#{basesBean.fotosbases.legenda}" />
+
+						<p:graphicImage id="foto" value="#{basesBean.fotosbases.imagem}" width="120"
+							height="116" cache="false" />
+
+						<br />
+
+						<p:fileUpload sizeLimit="1048576" image="/img/but_enviar.jpg"
+							width="68" customUI="true" auto="true" widgetVar="uploader"
+							fileUploadListener="#{basesBean.handleFileUpload}"
+							allowTypes="*.jpg;*.png;*.gif;" description="Imagens"
+							id="uploader" update="foto idarquivo" />
+						<h:outputText value="Arquivo selecionado: "
+							styleClass="Texto_cpf_login" />
+						<h:outputText id="idarquivo"
+							value="#{basesBean.nomeArquivoSelecionado}"
+							styleClass="Texto_cpf_login" />
+
+						<p:commandButton  value="Adicionar"
+							ajax="false" actionListener="#{basesBean.adicionarfoto}"
+							update="fotos2"  />
+
+					</h:panelGrid>
+
+						
+				</p:tab>
+			</p:tabView>
+
+			<br />
+
+			<h:commandButton value="Salvar..." styleClass="formularios"
+				tabindex="25" actionListener="#{basesBean.salvar}"></h:commandButton>
+			
+		</h:form>
+
+	</ui:define>
+
+
+
+</ui:composition>

@@ -51,7 +51,7 @@
 			<p:tabView orientation="top">
 				<p:tab id="tabListarDiscipulos" title="Discipulos">
 				    <h:outputLabel value="Geração:" styleClass="Texto_cpf_login" for="geracao"/>
-					<h:selectOneMenu id="selGeracao" value="#{mensagemBean.celulas.celGeracao}" styleClass="formularios">
+					<h:selectOneMenu id="selGeracao" value="#{mensagemBean.celulas.geracoes.gerCod}" styleClass="formularios">
 						<f:selectItem itemValue="0" itemLabel="Selecione"/>
 						<f:selectItems value="#{mensagemBean.geracaoCombo}"/>
 						<f:ajax event="change" listener="#{mensagemBean.listarM12PorGeracao}" execute="selGeracao"  

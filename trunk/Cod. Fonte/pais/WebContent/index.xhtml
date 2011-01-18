@@ -10,111 +10,12 @@
 <f:view contentType="text/html">
 	<h:head>  
 	<ui:insert name="javascript" />
-	
-		<link rel="stylesheet" type="text/css"
-			href="#{request.contextPath}/css/css.css" />
-		<link type="text/css" rel="stylesheet"
-			href="#{request.contextPath}/css/redmond/skin.css" />
-		<link rel="stylesheet" type="text/css"
-			href="#{request.contextPath}/css/menu2.css" />
-		<link rel="stylesheet" type="text/css"
+			
+	<link type="text/css" rel="stylesheet"
+			href="#{request.contextPath}/css/theme/skin.css" />
+			<link type="text/css" rel="stylesheet"
 			href="#{request.contextPath}/css/css_forms.css" />
 
-		<style type="text/css">
-.ui-widget {
-	font-size: 12px !important;
-	font-family: Trebuchet MS !important;
-	border: none !important;
-	background: none;
-}
-
-.ui-widget-content {
-	font-size: 12px !important;
-	font-family: Trebuchet MS !important;
-	border: none !important;
-	background: #D9E4E9;
-	
-	color: #07335F;
-}
-
-.ui-state-default {
-	font-size: 12px !important;
-	font-family: Trebuchet MS !important;
-	border: none !important;
-	background: #D9E4E9;
-	color: #07335F;
-}
-
-.ui-tabs {
-	font-size: 12px !important;
-	font-family: Trebuchet MS !important;
-	border: none !important;
-	background: #D9E4E9 !important;
-}
-
-.ui-picklist-item {
-	font-size: 13px !important;
-	background: none !important;
-	border: none !important;
-}
-
-.ui-widget-header {
-	font-size: 12px !important;
-	font-family: Trebuchet MS !important;
-	border: none !important;
-	background: url("#{request.contextPath}/img/fundo_equipes.png") repeat-x
-		!important;
-}
-
-.ui-tabs-nav {
-	font-size: 12px !important;
-	font-family: Trebuchet MS !important;
-	border: none !important;
-	background: url("#{request.contextPath}/img/fundo_equipes.png") repeat-x
-		!important;
-}
-
-.ui-menubar {
-	width: 960px !important;
-	height: 30px;
-	position: fixed;
-	border: none !important;
-	background: url("#{request.contextPath}/img/fundo_menu_alfa.png")
-		no-repeat !important;
-}
-
-.ui-menubar .bd-ul {
-	border: none !important;
-	height: 30px;
-	background: transparent;
-}
-
-.ui-menubar-item .ui-menubar-item-label {
-	font-family: Trebuchet MS;
-	font-size: 13px;
-	list-style-type: none;
-	border: none;
-	font: normal;
-	color: #07335F;
-	cursor: pointer;
-}
-
-.ui-menu .ui-menu-item .ui-menu-item-label {
-	font-family: Trebuchet MS;
-	font-size: 13px;
-	list-style-type: none;
-	border: none;
-	font: normal;
-	color: #07335F;
-	cursor: pointer;
-}
-
-.themeMenu {
-	overflow: auto;
-	width: 960px;
-}
-/* Menu */
-</style>
 </h:head>
 <body>
 	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#E8EFF3">
@@ -123,7 +24,7 @@
 			<table width="100%" border="0" align="center" cellpadding="0"
 				cellspacing="0">
 				<tr>
-					<td height="214" align="center" style="background-image:url(/pais/img/fundo_topo.png)" scope="col">
+					<td height="214" align="center" class="fundo" scope="col">
 					<table width="960" border="0" align="center" cellpadding="0"
 						cellspacing="0">
 						<tr>
@@ -188,17 +89,13 @@
 								<tr>
 									<th scope="col">&nbsp;</th>
 								</tr>
-
+								<tr>
+								<td height="21" align="center" scope="col">
+								</td>
+								</tr>
 								<tr>
 									<td height="30" align="center" scope="col">
-									<table width="960" border="0" align="center" cellpadding="0"
-										cellspacing="0">
-										<tr>
-											<td height="30" align="center" scope="col">
-											<ui:include src="layout/menu-superior.xhtml" />
-											</td>
-										</tr>
-									</table>
+										<ui:include src="layout/menu-superior.xhtml" />
 									</td>
 								</tr>
 							</table>
@@ -211,8 +108,8 @@
 					<td height="4" align="center" scope="col">
 					<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 						<tr>
-							<td height="3" align="center" style="background-image:url(/pais/img/barra_fundo_rodape.png)" scope="col">
-                            <img src="/pais/img/barra_fundo_rodape.png" width="3" height="3" />
+							<td height="3" align="center" scope="col">
+                            
                             </td>
 						</tr>
 					</table>
@@ -233,7 +130,7 @@
 									<td width="960" rowspan="2" valign="top" bgcolor="#E8EFF3" scope="col">
 									<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 										<tr>
-											<td height="29" align="left" scope="col">
+											<td height="30" align="left" scope="col">
 											<h:form>
 												<ui:insert name="menu-vc-esta" />
 											</h:form>
