@@ -50,7 +50,7 @@
 ----------------------------------*/
 /* Overlays */
 .ui-widget-overlay {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -1219,25 +1219,27 @@
  *
  * http://docs.jquery.com/UI/Menu#theming
  */
- .ui-menubar > .bd > ul {
-background: transparent;	
-border: none !important;
-height: 960px;
-margin: 0 0 0 -80px	;
+.ui-menubar > .bd > ul{
+    position: relative;
+	background: transparent;	
+	border: none !important;
+	margin-bottom: 0;
+	margin-left: -80px;
+	margin-right: 0;
+	margin-top: 0;
 	left: 12%;
-	/*margin: -480px 0 0 -480px;
-	*/position: relative;
-	top: 60%;
-	width: 100%;
-
+	/*margin: -480px 0 0 -480px;*/
 }
+
 .ui-menubar{
-	/*width: 960px;
-	*/text-align: left;
+	text-align: left;
 	padding: 0 !important; 
 	vertical-align: text-bottom !important; 
+	width: 960px !important;
+	height: 30px !important;
+	position: fixed;
+	border: none !important;
 	background: url("/pais/img/Fundo_menu.png") no-repeat !important;
-	height: 26px  !important;
 	/*font-size: 13px !important;
 	color: blue !important;
 	width: 960px !important;
@@ -1245,7 +1247,8 @@ margin: 0 0 0 -80px	;
 	position: fixed;
 	border: none !important;
 	background: transparent !important;
-*/}
+    */
+}
 
 .ui-menubar .bd-ul {
 	border: none !important;
