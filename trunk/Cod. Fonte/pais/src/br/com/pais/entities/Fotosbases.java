@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Transient;
+
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,6 +25,7 @@ public class Fotosbases implements java.io.Serializable {
 	private Bases bases;
 	private String foto;
 	private String legenda;
+	private byte[] imagem;
 	
 	public Fotosbases() {
 	}
@@ -75,6 +78,23 @@ public class Fotosbases implements java.io.Serializable {
 	 */
 	public void setLegenda(String legenda) {
 		this.legenda = legenda;
+	}
+
+	
+
+	/**
+	 * @return the imagem
+	 */
+	@Transient
+	public byte[] getImagem() {
+		return imagem;
+	}
+
+	/**
+	 * @param imagem the imagem to set
+	 */
+	public void setImagem(byte[] imagem) {
+		this.imagem = imagem;
 	}
 
 	

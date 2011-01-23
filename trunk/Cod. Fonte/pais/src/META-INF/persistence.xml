@@ -1,55 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
-    <persistence-unit name="pais">
+<persistence version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<persistence-unit name="pais">
 
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
 		<properties>
-			<property name="hibernate.archive.autodetection"
-				value="class, hbm" />
+			<property name="hibernate.archive.autodetection" value="class, hbm" />
 
-			<!--Configuracoes de dialeto e conexao-->
-			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.MySQLInnoDBDialect" />
-			<property name="hibernate.connection.driver_class"
-				value="com.mysql.jdbc.Driver" />
+			<!--Configuracoes de dialeto e conexao -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect" />
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
 			<property name="hibernate.connection.url"
 				value="jdbc:mysql://localhost/wwwpais_sistema?autoReconnect=true" />
-			<property name="hibernate.connection.username"
-				value="wwwpais_suporte" />
-			<property name="hibernate.connection.password"
-				value="06112218" />
+			<property name="hibernate.connection.username" value="wwwpais_suporte" />
+			<property name="hibernate.connection.password" value="06112218" />
 
-			<!--Configuracoes de Debug-->
+			<!--Configuracoes de Debug -->
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="use_sql_comments" value="true" />
-			
-            <!--Configuração do segundo nível de cache-->
-            <!--<property name="hibernate.cache.provider_class" 
-                      value="net.sf.ehcache.hibernate.EhCacheProvider" />
-            
-            <property name="hibernate.cache.provider_configuration"
-                      value="/ehcache.xml" />
-            
-            <property name="hibernate.cache.use_minimal_puts"
-                      value="false" />
-            <property name="hibernate.cache.use_query_cache"
-                      value="true" />
-            <property name="hibernate.cache.use_second_level_cache"
-                      value="true" />
-            <property name="hibernate.cache.use_structured_entries"
-                      value="true" />
-            
-            
 
-            --><!--Configuração do pool de c3p0--><!--           
-            <property name="hibernate.c3p0.min_size" value="5" />
-            <property name="hibernate.c3p0.max_size" value="20" />
-            <property name="hibernate.c3p0.timeout" value="300" />
-            <property name="hibernate.c3p0.max_statements" value="50" /> 
-            <property name="hibernate.c3p0.idle_test_period" value="3000"/>                      
-            
+
+			<!-- Configuração do c3p0 
+			<property name="hibernate.c3p0.max_size" value="10"/>
+			<property name="hibernate.c3p0.min_size" value="2"/>
+			<property name="hibernate.c3p0.timeout" value="500000"/>
+			<property name="hibernate.c3p0.max_statements" value="10"/>
+			<property name="hibernate.c3p0.idle_test_period" value="3000"/>
+			<property name="hibernate.c3p0.acquire_increment" value="2"/>
 
 
 		--></properties>
