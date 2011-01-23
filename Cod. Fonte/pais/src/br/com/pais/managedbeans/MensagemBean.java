@@ -88,7 +88,7 @@ public class MensagemBean {
 	}
 	
 	public String atualizarStatusMensagem(){
-		mensagemSelecionada.setMensLida("S");
+		mensagemSelecionada.setMensLida('S');
 		mensagemDao.atualizar(mensagemSelecionada);
 		
 		responder = false;
@@ -160,7 +160,7 @@ public class MensagemBean {
 				mensagem.setMensData(pegaDataAtual());
 				mensagem.setDiscipulosByMensDisCod(discipuloSessao.getDiscipulos());
 				mensagem.setDiscipulosByMensDisCodRecebe(dis);
-				mensagem.setMensLida("N");
+				mensagem.setMensLida('N');
 				mensagemDao.salvar(mensagem);
 				
 				new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
@@ -181,7 +181,7 @@ public class MensagemBean {
 			mensagem.setMensData(pegaDataAtual());
 			mensagem.setDiscipulosByMensDisCod(discipuloSessao.getDiscipulos());
 			mensagem.setDiscipulosByMensDisCodRecebe(dis);
-			mensagem.setMensLida("N");
+			mensagem.setMensLida('N');
 			mensagemDao.salvar(mensagem);
 			
 			new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
@@ -194,7 +194,7 @@ public class MensagemBean {
 			mensagem.setMensData(pegaDataAtual());
 			mensagem.setDiscipulosByMensDisCod(mensagemSelecionada.getDiscipulosByMensDisCodRecebe());
 			mensagem.setDiscipulosByMensDisCodRecebe(mensagemSelecionada.getDiscipulosByMensDisCod());
-			mensagem.setMensLida("N");
+			mensagem.setMensLida('N');
 			mensagemDao.salvar(mensagem);
 			
 			//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());

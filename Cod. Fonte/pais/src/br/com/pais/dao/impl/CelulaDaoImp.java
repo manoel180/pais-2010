@@ -26,5 +26,19 @@ public class CelulaDaoImp extends DaoGenericoImp<Celulas, Integer> implements Ce
 			getEntityManager().close();
 		}
 	}
+	
+	public List<Celulas> listarCelulasSemBasePorZona(int zona){
+		try {
 
+			Query query = getEntityManager().createQuery(
+					"select celulas from Celulas as celulas " +
+					"where celulas.bases.basCod is null and celulas.zona =" +zona );
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
 }

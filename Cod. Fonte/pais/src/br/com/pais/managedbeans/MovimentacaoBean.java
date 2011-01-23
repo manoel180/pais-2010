@@ -44,14 +44,14 @@ public class MovimentacaoBean {
 	public String salvarMovimento() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		movimento.setCelulas(celulaSelecionada);
-		movimento.setMovRecebido("N");
+		movimento.setMovRecebido('N');
 		movimento.setBases(null);
 		if (movimentoDao.salvar(movimento) == (true)) {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Movimento cadastrado!"));
 			listaCelulas = new ArrayList<Celulas>();
 	        listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		} else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Cï¿½lula nï¿½o cadastrada!"));
 		}
 		return "/cad/movimentoListar.mir";
 	}

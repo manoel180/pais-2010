@@ -53,6 +53,7 @@ public class LoginBean {
 	private boolean le2Exibir = false;
 	private boolean le3Exibir = false;
 	private boolean le4Exibir = false;
+	private boolean cadBases = false;
 	private boolean cadCelulas = false;
 
 	public String logar() {
@@ -76,6 +77,7 @@ public class LoginBean {
 					le2Exibir = !ListaEquipe2.isEmpty();
 					le3Exibir = !ListaEquipe3.isEmpty();
 					le4Exibir = !ListaEquipe4.isEmpty();
+					cadBases = discipulos.getFuncaoeclesiasticas().getFunCod()>=6;
 					cadCelulas = discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()).size()>=3;
 				       
 					return "/principal.mir";
@@ -396,6 +398,20 @@ public class LoginBean {
 	 */
 	public void setCadCelulas(boolean cadCelulas) {
 		this.cadCelulas = cadCelulas;
+	}
+
+	/**
+	 * @return the cadBases
+	 */
+	public boolean isCadBases() {
+		return cadBases;
+	}
+
+	/**
+	 * @param cadBases the cadBases to set
+	 */
+	public void setCadBases(boolean cadBases) {
+		this.cadBases = cadBases;
 	}
 
 }

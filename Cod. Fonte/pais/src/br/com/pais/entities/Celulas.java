@@ -1,15 +1,18 @@
 package br.com.pais.entities;
 
-// Generated 17/01/2011 11:25:41 by Hibernate Tools 3.4.0.Beta1
+// Generated 23/01/2011 05:07:33 by Hibernate Tools 3.4.0.Beta1
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -32,6 +35,7 @@ public class Celulas implements java.io.Serializable {
 	private Discipulos discipulos;
 	private Bases bases;
 	private Logradouro logradouro;
+	private Zona zona;
 	private Geracoes geracoes;
 	private String celNome;
 	private Date celHorarioReuniao;
@@ -41,41 +45,8 @@ public class Celulas implements java.io.Serializable {
 	private String celStatus;
 	private String celTelFixo;
 	private String celTelCelular;
-	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private List<Discipulos> discipuloses;
 	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
-
-	public Celulas() {
-	}
-
-	public Celulas(Discipulos discipulos, Logradouro logradouro,
-			Geracoes geracoes, String celNuEndereco) {
-		this.discipulos = discipulos;
-		this.logradouro = logradouro;
-		this.geracoes = geracoes;
-		this.celNuEndereco = celNuEndereco;
-	}
-
-	public Celulas(Discipulos discipulos, Bases bases, Logradouro logradouro,
-			Geracoes geracoes, String celNome, Date celHorarioReuniao,
-			String celDiaReuniao, String celNuEndereco,
-			String celEndComplemento, String celStatus, String celTelFixo,
-			String celTelCelular, Set<Discipulos> discipuloses,
-			Set<Movimento> movimentos) {
-		this.discipulos = discipulos;
-		this.bases = bases;
-		this.logradouro = logradouro;
-		this.geracoes = geracoes;
-		this.celNome = celNome;
-		this.celHorarioReuniao = celHorarioReuniao;
-		this.celDiaReuniao = celDiaReuniao;
-		this.celNuEndereco = celNuEndereco;
-		this.celEndComplemento = celEndComplemento;
-		this.celStatus = celStatus;
-		this.celTelFixo = celTelFixo;
-		this.celTelCelular = celTelCelular;
-		this.discipuloses = discipuloses;
-		this.movimentos = movimentos;
-	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -116,6 +87,16 @@ public class Celulas implements java.io.Serializable {
 
 	public void setLogradouro(Logradouro logradouro) {
 		this.logradouro = logradouro;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "celZona", nullable = false)
+	public Zona getZona() {
+		return this.zona;
+	}
+
+	public void setZona(Zona zona) {
+		this.zona = zona;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -203,11 +184,11 @@ public class Celulas implements java.io.Serializable {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "discipuloscelulas", catalog = "wwwpais_sistema", uniqueConstraints = @UniqueConstraint(columnNames = "discipulos"), joinColumns = { @JoinColumn(name = "celulas", nullable = false, updatable = false) }, inverseJoinColumns = { @JoinColumn(name = "discipulos", unique = true, nullable = false, updatable = false) })
-	public Set<Discipulos> getDiscipuloses() {
+	public List<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
 
-	public void setDiscipuloses(Set<Discipulos> discipuloses) {
+	public void setDiscipuloses(List<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
 	}
 
