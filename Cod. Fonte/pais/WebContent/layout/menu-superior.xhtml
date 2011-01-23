@@ -27,7 +27,7 @@
             </p:submenu>
             <p:submenu label="Bases" rendered="#{loginBean.cadBases}">  
                 <p:menuitem value="Nova Base" action="#{basesBean.prepararBases}" rendered="#{loginBean.cadBases}" ajax="false"/>
-                
+                <p:menuitem value="Listar Base" action="#{basesBean.prepararListarBases}" rendered="#{loginBean.cadBases}" ajax="false"/>
             </p:submenu>
 		</p:submenu>
 		

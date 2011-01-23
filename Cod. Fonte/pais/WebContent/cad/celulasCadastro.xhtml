@@ -78,6 +78,14 @@
 				<p:tab id="tbendereco" title="Endereço da Célula">
 						<h:panelGrid columns="4" id="pnlEndereco" 
 						columnClasses="coluna1, coluna2, coluna1, coluna2">
+						<h:outputLabel value="Zona:" styleClass="formulariosObrigatorio"/>
+						<h:selectOneMenu id="zona" value="#{celulaBean.zona.idzona}"
+							requiredMessage="Zona é obrigatória" styleClass="formularios2" required="true">
+							<f:selectItems value="#{celulaBean.listZonas}"
+								var="zona" itemValue="#{zona.idzona}"
+								itemLabel="#{zona.descricao}" />
+						</h:selectOneMenu>
+						<h:outputLabel  /><h:outputLabel  />
 							<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio" for="cep" />
 							<h:inputText id="cep" size="20" tabindex="11"
 										requiredMessage="CEP é obrigatório"
@@ -151,7 +159,7 @@
 				<p:tab id="tbdiscipulos" title="Discípulos">
 				
 				    <h:outputLabel value="Geração:" styleClass="Texto_cpf_login" for="geracao"/>
-					<h:selectOneMenu id="geracao" value="#{celulaBean.celulas.geracoes.gerCod}" styleClass="formularios">
+					<h:selectOneMenu id="geracao" value="#{celulaBean.geracoes.gerCod}" styleClass="formularios">
 						<f:selectItem itemValue="0" itemLabel="Selecione"/>
 						<f:selectItems value="#{celulaBean.geracaoCombo}"/>
 						<f:ajax render="outPanelDiscipulos" execute="@this" event="change" 
