@@ -65,4 +65,5 @@
 	<table-filter match-name="tipobases"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
+	<table-filter match-name="zona" match-catalog="wwwpais_sistema"></table-filter>
 </hibernate-reverse-engineering>
