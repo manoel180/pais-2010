@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="FINANCEIRO"/>  
+         <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararRepasse}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form prependId="false">
+		<p:outputPanel id="pnlMensagens">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		
+			<p:tabView orientation="" style="margin-top:18px;">
+				<p:tab id="tabListarDiscipulos" title="Movimentos">
+				<h:panelGrid columns="6" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2">
+				    <h:outputLabel value="Geração:" styleClass="formulariosObrigatorio"/>
+					<h:selectOneMenu id="selGeracao" value="#{repasseBean.comboGeracao}" styleClass="formularios">
+						<f:selectItem itemValue="0" itemLabel="Selecione"/>
+						<f:selectItems value="#{repasseBean.geracaoCombo}"/>
+						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo movDataInicio movDataFim"  
+						render="pnlMensagens"/>
+					</h:selectOneMenu>
+					<h:outputLabel value="" />
+					<h:outputLabel value="" />
+					<h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
+				    <h:selectOneMenu id="selTipo" value="#{repasseBean.movimento.movTipo}"
+						styleClass="formularios">
+						<f:selectItem itemValue="" itemLabel="Selecione"/>
+						<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
+						<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
+						<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
+						<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
+						<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
+						<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
+						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo movDataInicio movDataFim"  
+				        render="pnlMensagens"/>
+					</h:selectOneMenu>
+						
+					<h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
+							<p:calendar id="movDataInicio" value="#{repasseBean.primeiroDiaCorrente}" size="12"
+				                    inputStyleClass="formularios" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+								    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarInicioNaoRecebidos}"/>
+	                <h:outputLabel value="" />
+	                <h:outputLabel value="" />
+				    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
+							<p:calendar id="movDataFim" value="#{repasseBean.ultimoDiaCorrente}" size="12"
+				                    inputStyleClass="formularios" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+                                    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarFimNaoRecebidos}"/>
+				</h:panelGrid>
+				<br/>
+				   
+				   <p:dataTable
+					id="dtDiscipulos" 
+					var="mov" 
+					value="#{repasseBean.listaMovimentos}"
+					rendered="#{repasseBean.dtM12}"
+					width="100%"
+					emptyMessage="Nenhum Repasse encontrado">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;SELECIONE OS DÍSCIPULOS PARA FAZER O REPASSE" styleClass="Fonte_12"/>
+					</f:facet>
+						
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;FOTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<p:graphicImage value="#{mov.celulas.discipulos.disfoto}" width="41" height="40"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;NOME" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{mov.celulas.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{mov.celulas.discipulos.geracoes.gerDescricao}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;TIPO DE MOVIMENTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{mov.movTipo}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;VALOR R$" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{repasseBean.totalNaoRecebido}">
+						<f:convertNumber type="currency" pattern="#,##0.00" minFractionDigits="2"  />
+						</h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;LISTAR REPASSE" styleClass="Fonte_12" />
+					    </center>
+						</f:facet> 
+						<p:commandLink title="Listar Repasse" action="#{repasseBean.prepararReceberRepasse}" ajax="false">  
+                        <center>
+                        <p:graphicImage value="/img/listar_repasse.png"/>     
+                        </center>
+                        <f:setPropertyActionListener value="#{mov}" target="#{repasseBean.movimento}" />
+                        </p:commandLink>
+					</p:column> 
+				    </p:dataTable>
+				</p:tab>
+			</p:tabView>
+			
+			</p:outputPanel>
+			</h:form>
+	</ui:define>
+</ui:composition>
