@@ -8,26 +8,22 @@
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
 	template="/index.xhtml">
 
-<ui:define name="menu-vc-esta">
-<table width="620" border="0" align="left"  cellpadding="0" background="/pais/img/barra_linha.png"
-				cellspacing="0">
-				<tr>
-					<td  align="left" 
-						scope="col">
-						<span class="Fonte_12_Logado"></span>  
-						<h:outputLabel  value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11"/>
-						</td>
-		<td>
- <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden">  
-     <p:menuitem value="home" url="/index.mir" />  
-      <p:menuitem value="FINANCEIRO"/>  
-       <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararRepasse}" ajax="false" />    
- </p:breadCrumb> 
-
-</td>
-				</tr>
-			 </table> 
-</ui:define>
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="FINANCEIRO"/>  
+         <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararRepasse}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
 
 	<ui:define name="conteudo">
 		<h:form prependId="false">
