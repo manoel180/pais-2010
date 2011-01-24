@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 23/01/2011 05:07:33 by Hibernate Tools 3.4.0.Beta1
+// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -25,7 +25,7 @@ public class Repasse implements java.io.Serializable {
 	private RepasseId id;
 	private Movimento movimento;
 	private Discipulos discipulos;
-	private byte resValor;
+	private Double resValor;
 	private Date resData;
 	private String resLocal;
 
@@ -33,16 +33,7 @@ public class Repasse implements java.io.Serializable {
 	}
 
 	public Repasse(RepasseId id, Movimento movimento, Discipulos discipulos,
-			byte resValor, Date resData) {
-		this.id = id;
-		this.movimento = movimento;
-		this.discipulos = discipulos;
-		this.resValor = resValor;
-		this.resData = resData;
-	}
-
-	public Repasse(RepasseId id, Movimento movimento, Discipulos discipulos,
-			byte resValor, Date resData, String resLocal) {
+			Double resValor, Date resData, String resLocal) {
 		this.id = id;
 		this.movimento = movimento;
 		this.discipulos = discipulos;
@@ -83,12 +74,12 @@ public class Repasse implements java.io.Serializable {
 		this.discipulos = discipulos;
 	}
 
-	@Column(name = "resValor", nullable = false, precision = 2, scale = 0)
-	public byte getResValor() {
+	@Column(name = "resValor", nullable = false)
+	public Double getResValor() {
 		return this.resValor;
 	}
 
-	public void setResValor(byte resValor) {
+	public void setResValor(Double resValor) {
 		this.resValor = resValor;
 	}
 

@@ -1,13 +1,18 @@
 package br.com.pais.entities;
 
-// Generated 23/01/2011 05:07:33 by Hibernate Tools 3.4.0.Beta1
+// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,9 +32,14 @@ public class Movimento implements java.io.Serializable {
 	private Celulas celulas;
 	private Bases bases;
 	private Date movData;
+	private Date movHora;
 	private String movTipo;
-	private Byte movValor;
-	private Set<Repasse> repasses = new HashSet<Repasse>(0);
+	private Double movValor;
+	private String movRecebido;
+	private String movProtocolo;
+	private String movProtocoloPai;
+
+	private List<Repasse> repasses = new ArrayList<Repasse>();
 
 	public Movimento() {
 	}
@@ -38,18 +48,25 @@ public class Movimento implements java.io.Serializable {
 		this.movCod = movCod;
 	}
 
-	public Movimento(int movCod, Celulas celulas, Bases bases, Date movData,
-			String movTipo, Byte movValor, Set<Repasse> repasses) {
+	public Movimento(int movCod, Celulas celulas, Bases bases, Date movData, Date movHora,
+			String movTipo, Double movValor, String movRecebido, String movProtocolo,
+			String movProtocoloPai,
+			List<Repasse> repasses) {
 		this.movCod = movCod;
 		this.celulas = celulas;
 		this.bases = bases;
 		this.movData = movData;
+		this.movHora = movHora;
 		this.movTipo = movTipo;
 		this.movValor = movValor;
+		this.movRecebido = movRecebido;
+		this.movProtocolo = movProtocolo;
+		this.movProtocoloPai = movProtocoloPai;
 		this.repasses = repasses;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "movCod", unique = true, nullable = false)
 	public int getMovCod() {
 		return this.movCod;
@@ -88,6 +105,16 @@ public class Movimento implements java.io.Serializable {
 	public void setMovData(Date movData) {
 		this.movData = movData;
 	}
+	
+	@Temporal(TemporalType.TIME)
+	@Column(name = "movHora")
+	public Date getMovHora() {
+		return movHora;
+	}
+	
+	public void setMovHora(Date movHora) {
+		this.movHora = movHora;
+	}
 
 	@Column(name = "movTipo", length = 60)
 	public String getMovTipo() {
@@ -98,21 +125,48 @@ public class Movimento implements java.io.Serializable {
 		this.movTipo = movTipo;
 	}
 
-	@Column(name = "movValor", precision = 2, scale = 0)
-	public Byte getMovValor() {
+	@Column(name = "movValor")
+	public Double getMovValor() {
 		return this.movValor;
 	}
 
-	public void setMovValor(Byte movValor) {
+	public void setMovValor(Double movValor) {
 		this.movValor = movValor;
+	}
+	
+	@Column(name = "movRecebido")
+	public String getMovRecebido() {
+		return movRecebido;
+	}
+
+	public void setMovRecebido(String movRecebido) {
+		this.movRecebido = movRecebido;
+	}
+	
+	@Column(name = "movProtocolo")
+	public String getMovProtocolo() {
+		return movProtocolo;
+	}
+
+	public void setMovProtocolo(String movProtocolo) {
+		this.movProtocolo = movProtocolo;
+	}
+	
+	@Column(name = "movProtocoloPai")
+	public String getMovProtocoloPai() {
+		return movProtocoloPai;
+	}
+
+	public void setMovProtocoloPai(String movProtocoloPai) {
+		this.movProtocoloPai = movProtocoloPai;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
-	public Set<Repasse> getRepasses() {
+	public List<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(Set<Repasse> repasses) {
+	public void setRepasses(List<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 

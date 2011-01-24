@@ -1,15 +1,13 @@
 package br.com.pais.entities;
 
-// Generated 17/01/2011 11:25:41 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Transient;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,33 +19,31 @@ import javax.persistence.Table;
 @Table(name = "fotosbases", catalog = "wwwpais_sistema")
 public class Fotosbases implements java.io.Serializable {
 
-	private Integer codFoto;
+	private FotosbasesId id;
 	private Bases bases;
-	private String foto;
-	private String legenda;
-	private byte[] imagem;
-	
+
 	public Fotosbases() {
 	}
 
-	public Fotosbases(Bases bases, String foto) {
+	public Fotosbases(FotosbasesId id, Bases bases) {
+		this.id = id;
 		this.bases = bases;
-		this.foto = foto;
 	}
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "codFoto", unique = true, nullable = false)
-	public Integer getCodFoto() {
-		return this.codFoto;
+	@EmbeddedId
+	@AttributeOverrides({
+			@AttributeOverride(name = "basCod", column = @Column(name = "basCod", nullable = false)),
+			@AttributeOverride(name = "foto", column = @Column(name = "foto", nullable = false, length = 100)) })
+	public FotosbasesId getId() {
+		return this.id;
 	}
 
-	public void setCodFoto(Integer codFoto) {
-		this.codFoto = codFoto;
+	public void setId(FotosbasesId id) {
+		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "basCod", nullable = false)
+	@JoinColumn(name = "basCod", nullable = false, insertable = false, updatable = false)
 	public Bases getBases() {
 		return this.bases;
 	}
@@ -56,47 +52,4 @@ public class Fotosbases implements java.io.Serializable {
 		this.bases = bases;
 	}
 
-	@Column(name = "foto", nullable = false, length = 100)
-	public String getFoto() {
-		return this.foto;
-	}
-
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
-
-	/**
-	 * @return the legenda
-	 */
-	@Column(name = "legenda", length = 100)
-	public String getLegenda() {
-		return legenda;
-	}
-
-	/**
-	 * @param legenda the legenda to set
-	 */
-	public void setLegenda(String legenda) {
-		this.legenda = legenda;
-	}
-
-	
-
-	/**
-	 * @return the imagem
-	 */
-	@Transient
-	public byte[] getImagem() {
-		return imagem;
-	}
-
-	/**
-	 * @param imagem the imagem to set
-	 */
-	public void setImagem(byte[] imagem) {
-		this.imagem = imagem;
-	}
-
-	
-	
 }
