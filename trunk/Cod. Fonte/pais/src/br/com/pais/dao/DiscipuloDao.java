@@ -10,6 +10,8 @@ public interface DiscipuloDao extends DaoGenerico<Discipulos, Integer> {
 
 	List<Discipulos> listarM12(int discipulador, int geracao);
 	
+	List<Discipulos> listarM12Mensagem(int discipulador, int geracao);
+	
 	List<Discipulos> listarM12Cadastrados(int celula);
 	
 	List<Discipulos> listarM12NaoCadastrados(int discipulador, int geracao);
@@ -17,4 +19,8 @@ public interface DiscipuloDao extends DaoGenerico<Discipulos, Integer> {
 	List<Discipulos> listarDiscipulos(int discipulador);
 
 	List<Discipulos> listarLideresCelulas(int discipulador);
+	
+	List<Discipulos> listarDiscipulador(int discipulo);
+	
+	List<Discipulos> listarDiscipulosLiderPraCima(int discipulador);
 }
