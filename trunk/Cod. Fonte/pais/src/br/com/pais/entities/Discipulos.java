@@ -1,9 +1,10 @@
 package br.com.pais.entities;
 
-// Generated 23/01/2011 05:07:33 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -57,17 +58,88 @@ public class Discipulos implements java.io.Serializable {
 	private String disTelComercial;
 	private char disSexo;
 	private Set<Repasse> repasses = new HashSet<Repasse>(0);
-	private List<Formacaoeclesiasticas> formacaoeclesiasticases;
+	private List<Formacaoeclesiasticas> formacaoeclesiasticases = new ArrayList<Formacaoeclesiasticas>();
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Celulas> celulases_1 = new HashSet<Celulas>(0);
 	private Set<Bases> basesesForLiderGovJusto = new HashSet<Bases>(0);
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
-	private List<Encontros> encontroses;
+	private List<Encontros> encontroses = new ArrayList<Encontros>();
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
 	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
 			0);
 	private Set<Mensagem> mensagemsForMensDisCod = new HashSet<Mensagem>(0);
+
+	public Discipulos() {
+	}
+
+	public Discipulos(Estadocivil estadocivil, Logradouro logradouro,
+			Funcaoeclesiasticas funcaoeclesiasticas,
+			Formacaoacademica formacaoacademica, String disnome, String dismae,
+			char dism12, String disCpf, char disSexo) {
+		this.estadocivil = estadocivil;
+		this.logradouro = logradouro;
+		this.funcaoeclesiasticas = funcaoeclesiasticas;
+		this.formacaoacademica = formacaoacademica;
+		this.disnome = disnome;
+		this.dismae = dismae;
+		this.dism12 = dism12;
+		this.disCpf = disCpf;
+		this.disSexo = disSexo;
+	}
+
+	public Discipulos(Estadocivil estadocivil, Logradouro logradouro,
+			Discipulos discipulos, Funcaoeclesiasticas funcaoeclesiasticas,
+			Formacaoacademica formacaoacademica, Geracoes geracoes,
+			String disfoto, String disemail, String disnome, String dispai,
+			String disconjuge, String dismae, Date disdatanascimento,
+			char dism12, String disSenha, String disCpf, String disRg,
+			String disTitEleitor, Integer disEndNumero,
+			String disEndComplemento, String disTelFixo, String disTelCelular,
+			String disTelComercial, char disSexo, Set<Repasse> repasses,
+			List<Formacaoeclesiasticas> formacaoeclesiasticases,
+			Set<Celulas> celulases, Set<Celulas> celulases_1,
+			Set<Bases> basesesForLiderGovJusto, Set<Bases> basesesForBasDisCod,
+			Set<Bases> basesesForLiderAcaoSocial, List<Encontros> encontroses,
+			Set<Discipulos> discipuloses,
+			Set<Mensagem> mensagemsForMensDisCodRecebe,
+			Set<Mensagem> mensagemsForMensDisCod) {
+		this.estadocivil = estadocivil;
+		this.logradouro = logradouro;
+		this.discipulos = discipulos;
+		this.funcaoeclesiasticas = funcaoeclesiasticas;
+		this.formacaoacademica = formacaoacademica;
+		this.geracoes = geracoes;
+		this.disfoto = disfoto;
+		this.disemail = disemail;
+		this.disnome = disnome;
+		this.dispai = dispai;
+		this.disconjuge = disconjuge;
+		this.dismae = dismae;
+		this.disdatanascimento = disdatanascimento;
+		this.dism12 = dism12;
+		this.disSenha = disSenha;
+		this.disCpf = disCpf;
+		this.disRg = disRg;
+		this.disTitEleitor = disTitEleitor;
+		this.disEndNumero = disEndNumero;
+		this.disEndComplemento = disEndComplemento;
+		this.disTelFixo = disTelFixo;
+		this.disTelCelular = disTelCelular;
+		this.disTelComercial = disTelComercial;
+		this.disSexo = disSexo;
+		this.repasses = repasses;
+		this.formacaoeclesiasticases = formacaoeclesiasticases;
+		this.celulases = celulases;
+		this.celulases_1 = celulases_1;
+		this.basesesForLiderGovJusto = basesesForLiderGovJusto;
+		this.basesesForBasDisCod = basesesForBasDisCod;
+		this.basesesForLiderAcaoSocial = basesesForLiderAcaoSocial;
+		this.encontroses = encontroses;
+		this.discipuloses = discipuloses;
+		this.mensagemsForMensDisCodRecebe = mensagemsForMensDisCodRecebe;
+		this.mensagemsForMensDisCod = mensagemsForMensDisCod;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

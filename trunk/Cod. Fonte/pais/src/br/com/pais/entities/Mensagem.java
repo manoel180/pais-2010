@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 23/01/2011 05:07:33 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -25,20 +25,17 @@ public class Mensagem implements java.io.Serializable {
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-	private char mensLida;
-
+	private String mensLida;
 	public Mensagem() {
 	}
 
 	public Mensagem(int mensCod, Discipulos discipulosByMensDisCodRecebe,
-			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
-			char mensLida) {
+			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData) {
 		this.mensCod = mensCod;
 		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
 		this.discipulosByMensDisCod = discipulosByMensDisCod;
 		this.mensTexto = mensTexto;
 		this.mensData = mensData;
-		this.mensLida = mensLida;
 	}
 
 	@Id
@@ -90,13 +87,13 @@ public class Mensagem implements java.io.Serializable {
 	public void setMensData(Date mensData) {
 		this.mensData = mensData;
 	}
-
-	@Column(name = "mensLida", nullable = false, length = 1)
-	public char getMensLida() {
+	
+	@Column(name = "mensLida", nullable = false)
+	public String getMensLida() {
 		return this.mensLida;
 	}
 
-	public void setMensLida(char mensLida) {
+	public void setMensLida(String mensLida) {
 		this.mensLida = mensLida;
 	}
 
