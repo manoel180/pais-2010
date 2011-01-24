@@ -7,11 +7,10 @@ import javax.persistence.Query;
 
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.entities.Celulas;
-import br.com.pais.entities.Discipulos;
-import br.com.pais.entities.Geracoes;
 
 public class CelulaDaoImp extends DaoGenericoImp<Celulas, Integer> implements CelulaDao{
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Celulas> listarCelulas(int discipulador) {
 		try {
@@ -26,13 +25,16 @@ public class CelulaDaoImp extends DaoGenericoImp<Celulas, Integer> implements Ce
 			getEntityManager().close();
 		}
 	}
-	
-	public List<Celulas> listarCelulasSemBasePorZona(int zona){
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Celulas> listarCelulasGeracao(int discipulador, int geracao) {
 		try {
 
 			Query query = getEntityManager().createQuery(
-					"select celulas from Celulas as celulas " +
-					"where celulas.bases.basCod is null and celulas.zona =" +zona );
+					"From Celulas c where" +
+					" c.discipulos.disCod = "+ discipulador +
+					" and c.geracoes.gerCod = "+ geracao +"");
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
@@ -41,4 +43,5 @@ public class CelulaDaoImp extends DaoGenericoImp<Celulas, Integer> implements Ce
 			getEntityManager().close();
 		}
 	}
+
 }
