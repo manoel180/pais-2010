@@ -11,7 +11,44 @@
 ----------------------------------*/
 /*
  required comment for clearfix to work in Opera \
-*/* html .ui-helper-clearfix {
+*/
+
+ .ui-datatable{
+	position: static !important;
+	border-color: transparent !important;
+	background: transparent;
+	text-align: left;
+	margin: 0 inherit;
+	border-spacing: 0 0 !important;
+	height: 100%;
+	margin-left: 0;
+	margin-right: 0;
+ 	  }
+ 
+.ui-datatable .ui-datatable-data,.ui-datatable-data-empty {
+	
+	border-color: transparent !important;
+	background: transparent;
+	text-align: left;
+	margin: 0;
+	border-spacing: 0 0 !important;
+	height: 100%;
+	margin-left: 0;
+	margin-right: 0; 
+}
+
+.ui-datatable-even {
+	border-color: transparent !important;
+	background: transparent !important;
+}
+.ui-datatable-odd{
+		border-color: transparent !important;
+	background: transparent !important;
+}
+
+
+
+* html .ui-helper-clearfix {
 	height: 1%;
 }
 
@@ -27,7 +64,7 @@
 	left: 0;
 	position: absolute;
 	opacity: 0;
-	filter: Alpha(Opacity = 0);
+	filter: Alpha(Opacity =   0);
 }
 
 /* Interaction Cues
@@ -89,7 +126,8 @@
 
 .ui-widget-content {
 	border: 1px solid #d9e4e9;
-	background: #d9e4e9 url(images/ui-bg_gloss-wave_70_d9e4e9_500x100.png)	50% top repeat-x;
+	background: #d9e4e9 url(images/ui-bg_gloss-wave_70_d9e4e9_500x100.png)
+		50% top repeat-x;
 	color: #222222;
 }
 
@@ -97,13 +135,12 @@
 	color: #222222;
 }
 
-.ui-widget-header {
-	/*Customizado para o Pais*/
+.ui-widget-header { /*Customizado para o Pais*/
 	font-size: 12px;
 	font-family: Trebuchet MS;
 	border: none !important;
 	background: url("/pais/img/fundo_equipes.png") repeat-x !important;
-	}
+}
 
 .ui-widget-header a {
 	color: #222222;
@@ -119,7 +156,8 @@
 	color: #07335f;
 }
 
-*/.ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited
+*/
+.ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited
 	{
 	color: #07335f;
 	text-decoration: none;
@@ -198,14 +236,14 @@
 .ui-priority-secondary,.ui-widget-content .ui-priority-secondary,.ui-widget-header .ui-priority-secondary
 	{
 	opacity: .7;
-	filter: Alpha(Opacity = 70);
+	filter: Alpha(Opacity =   70);
 	font-weight: normal;
 }
 
 .ui-state-disabled,.ui-widget-content .ui-state-disabled,.ui-widget-header .ui-state-disabled
 	{
 	opacity: .35;
-	filter: Alpha(Opacity = 35);	
+	filter: Alpha(Opacity =   35);
 }
 
 /* Icons
@@ -1017,7 +1055,7 @@
 	background: #81a6b9 url(images/ui-bg_flat_0_81a6b9_40x100.png) 50% 50%
 		repeat-x;
 	opacity: .30;
-	filter: Alpha(Opacity = 30);
+	filter: Alpha(Opacity =   30);
 }
 
 .ui-widget-shadow {
@@ -1026,7 +1064,7 @@
 	background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50%
 		repeat-x;
 	opacity: .30;
-	filter: Alpha(Opacity = 30);
+	filter: Alpha(Opacity =   30);
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	border-radius: 8px;
@@ -1219,9 +1257,9 @@
  *
  * http://docs.jquery.com/UI/Menu#theming
  */
-.ui-menubar > .bd > ul{
-    position: relative;
-	background: transparent;	
+.ui-menubar>.bd>ul {
+	position: relative;
+	background: transparent;
 	border: none !important;
 	margin-bottom: 0;
 	margin-left: -80px;
@@ -1231,10 +1269,10 @@
 	/*margin: -480px 0 0 -480px;*/
 }
 
-.ui-menubar{
+.ui-menubar {
 	text-align: left;
-	padding: 0 !important; 
-	vertical-align: text-bottom !important; 
+	padding: 0 !important;
+	vertical-align: text-bottom !important;
 	width: 960px !important;
 	height: 30px !important;
 	position: fixed;
@@ -1252,7 +1290,7 @@
 
 .ui-menubar .bd-ul {
 	border: none !important;
-	height: 30px ;
+	height: 30px;
 	background: transparent !important;
 }
 
@@ -1267,7 +1305,6 @@
 }
 
 .ui-menu {
-	
 	list-style: none;
 	padding: 1px;
 	margin: 0;
@@ -1281,7 +1318,7 @@
 
 .ui-menu .ui-menu-item {
 	margin: 0;
-	padding: 2px 2px ;
+	padding: 2px 2px;
 	zoom: 1;
 	float: left;
 	clear: left;
@@ -1296,11 +1333,10 @@
 	zoom: 1;
 }
 
-
 .ui-menu .ui-menu-item a.ui-state-hover,.ui-menu .ui-menu-item a.ui-state-active
-	{
-	/*font-weight: normal;
-	*/margin: -1px;
+	{ /*font-weight: normal;
+	*/
+	margin: -1px;
 	font-size: 20px;
 }
 
@@ -1589,10 +1625,11 @@ button.ui-button::-moz-focus-inner {
 	padding: .2em;
 	zoom: 1;
 }
-	
-	/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+
+/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 .ui-tabs .ui-tabs-nav {
-	background: url("/pais/img/fundo_equipes.png") repeat-x;/* Customizado para o pais */
+	background: url("/pais/img/fundo_equipes.png") repeat-x;
+	/* Customizado para o pais */
 	margin: 0;
 	padding: .2em .2em 0;
 }
@@ -1628,8 +1665,8 @@ button.ui-button::-moz-focus-inner {
 	{
 	cursor: pointer;
 }
-	
-	/* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
+
+/* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
 .ui-tabs .ui-tabs-panel {
 	display: block;
 	border-width: 0;
@@ -1765,7 +1802,7 @@ button.ui-button::-moz-focus-inner {
 
 .ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
 	float: left;
-}/*
+}  /*
 
  with multiple calendars */
 .ui-datepicker.ui-datepicker-multi {
@@ -1808,7 +1845,7 @@ button.ui-button::-moz-focus-inner {
 .ui-datepicker-row-break {
 	clear: both;
 	width: 100%;
-}/*
+}  /*
 
  RTL support */
 .ui-datepicker-rtl {
@@ -1861,19 +1898,23 @@ button.ui-button::-moz-focus-inner {
 	border-right-width: 0;
 	border-left-width: 1px;
 }
-
- /*IE6 IFRAME FIX (taken from datepicker 1.5.3 */
+.ui-picklist-item{
+	font-size: 13px !important;
+	background: none ;
+	border: none !important;
+}
+/*IE6 IFRAME FIX (taken from datepicker 1.5.3 */
 .ui-datepicker-cover {
-	display: none; 
-	display : block; 
-	position: absolute; 
-	z-index: -1; 
-	filter: mask(); 
-	top: -4px; 
-	left: -4px; 
-	width: 200px; 
+	display: none;
+	display: block;
+	position: absolute;
+	z-index: -1;
+	filter: mask();
+	top: -4px;
+	left: -4px;
+	width: 200px;
 	height: 200px;
-} /*
+}  /*
  * jQuery UI Progressbar 1.8.7
  *
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
