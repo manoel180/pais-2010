@@ -6,13 +6,11 @@
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-
 <h:form>
-	
 <p:menubar autoSubmenuDisplay="true">
 		<p:submenu>
  			<f:facet name="label">
-				<p:menuitem action="#{mensagemBean.prepararListarMensagem}" value="PRINCIPAL" ajax="false" />
+				<p:menuitem action="#{mensagemBean.prepararListarMensagem}" value="&nbsp;PRINCIPAL&nbsp;" ajax="false" />
 			</f:facet>
 		</p:submenu>
 
@@ -20,48 +18,44 @@
 			<p:menuitem value="Discípulo" action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
 			<p:submenu>  
                 <f:facet name="label">  
-                    <p:menuitem value="Célula"/>  
+                    <p:menuitem value="&nbsp;Célula &nbsp;"/>  
                 </f:facet>  
-                <p:menuitem value="Nova Célula" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
-                <p:menuitem value="Listar Célula" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
-            </p:submenu>
-            <p:submenu label="Bases" rendered="#{loginBean.cadBases}">  
-                <p:menuitem value="Nova Base" action="#{basesBean.prepararBases}" rendered="#{loginBean.cadBases}" ajax="false"/>
-                <p:menuitem value="Listar Base" action="#{basesBean.prepararListarBases}" rendered="#{loginBean.cadBases}" ajax="false"/>
+                <p:menuitem value="&nbsp;Nova Célula &nbsp;" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+                <p:menuitem value="&nbsp;Listar Célula &nbsp;" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
             </p:submenu>
 		</p:submenu>
 		
-		<p:submenu  label="FINANCEIRO"  align="left" >
-		    <p:menuitem value="Fazer Repasse"  action="#{movimentacaoBean.prepararMovimento}" ajax="false"/>
-			<p:menuitem value="Receber Repasse" action="#{repasseBean.prepararRepasse}" ajax="false" />
-			<p:submenu>  
+		<p:submenu  label="FINANCEIRO"  align="left">
+		    <p:menuitem value="&nbsp;Fazer Repasse &nbsp;" action="#{movimentacaoBean.prepararMovimento}" rendered="#{loginBean.menuFazerRepasse}" ajax="false"/>
+			<p:menuitem value="&nbsp;Receber Repasse &nbsp;" action="#{repasseBean.prepararRepasse}"  rendered="#{loginBean.menuReceberRepasse}" ajax="false" />
+			<p:submenu rendered="#{loginBean.menuFazerRepasse}">  
                 <f:facet name="label">  
-                    <p:menuitem value="Listar Repasses"/>  
+                    <p:menuitem value="&nbsp;Listar Repasses &nbsp;"/>  
                 </f:facet>  
-                <p:menuitem value="Recebidos" action="#{repasseBean.prepararListarRepasseRecebidos}" ajax="false"/>
-                <p:menuitem value="Enviados" action="#{repasseBean.prepararListarRepasseEnviados}" ajax="false"/>
+                <p:menuitem value="Recebidos" action="#{repasseBean.prepararListarRepasseRecebidos}" rendered="#{loginBean.menuListarRecebidos}" ajax="false"/>
+                <p:menuitem value="Enviados" action="#{repasseBean.prepararListarRepasseEnviados}" rendered="#{loginBean.menuListarEnviados}" ajax="false"/>
             </p:submenu>
 		</p:submenu>
+		
 		<p:submenu label="RELATÓRIOS"  >
-			<p:menuitem value="Listar Repasse" ajax="false" />
-					
 		</p:submenu>
+		
 		<p:submenu label="EVENTOS" >
-				<p:menuitem value="Encontros" ajax="false" />
-				<p:menuitem value="Congressos" ajax="false" />
-				<p:menuitem value="Celebrações" ajax="false" />
-				<p:menuitem value="Batismos nas Águas" ajax="false" />
+				<p:menuitem value="&nbsp;Encontros&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Congressos&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Celebrações&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Batismos nas Águas&nbsp;" ajax="false" />
 		</p:submenu>
 
 		<p:submenu label="ESCOLA DE LÍDERES" >
-			<p:menuitem value="Abrir Escola" ajax="false" />
-			<p:menuitem value="Lançar Notas" ajax="false" />
+			<p:menuitem value="&nbsp; Abrir Escola&nbsp;" ajax="false" />
+			<p:menuitem value="&nbsp; Lançar Notas&nbsp;" ajax="false" />
 		</p:submenu>
 		
 		<p:submenu label="MENSAGENS">
-			<p:menuitem action="#{mensagemBean.prepararMensagem}" value="Enviar Mensagem" ajax="false" />
-			<p:menuitem action="#{mensagemBean.caixaEntrada}" value="Caixa Entrada" ajax="false" />
-			<p:menuitem action="#{mensagemBean.caixaSaida}" value="Caixa Saída" ajax="false" />
+			<p:menuitem action="#{mensagemBean.prepararMensagem}" value="&nbsp;Enviar Mensagem&nbsp;" ajax="false" />
+			<p:menuitem action="#{mensagemBean.caixaEntrada}" value="&nbsp;Caixa Entrada&nbsp;" ajax="false" />
+			<p:menuitem action="#{mensagemBean.caixaSaida}" value="&nbsp;Caixa Saída&nbsp;" ajax="false" />
 		</p:submenu>
 		
 		<p:submenu>
@@ -70,8 +64,6 @@
 			</f:facet>
 		</p:submenu>
 	</p:menubar>
-
+	
 </h:form>
-
-
 </html>
