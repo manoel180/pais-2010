@@ -8,28 +8,22 @@
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
 	template="/index.xhtml">
 
-<ui:define name="menu-vc-esta">
-
-<table width="620" border="0" align="left"  cellpadding="0" background="/pais/img/barra_linha.png"
-				cellspacing="0">
-				<tr>
-					<td  align="left" 
-						scope="col">
-						<span class="Fonte_12_Logado"></span>  
-						<h:outputLabel  value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11"/>
-						</td>
-		<td>
- <p:breadCrumb style="width: 520px; height: 19px; background: transparent; border: hidden"  >  
-     <p:menuitem value="home" url="/index.mir" />  
-      <p:menuitem value="FINANCEIRO"/>  
-       <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararReceberRepasse}" ajax="false">
-       </p:menuitem>    
- </p:breadCrumb> 
-
-</td>
-				</tr>
-			 </table> 
-</ui:define>
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="FINANCEIRO"/>  
+         <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararReceberRepasse}" ajax="false"/>
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
 
 	<ui:define name="conteudo">
 		<br />
@@ -128,13 +122,68 @@
 			        </h:panelGrid>
 		            <h:panelGrid columns="2" cellpadding="2">
 		                <p:commandButton value="Confirmar" styleClass="formularios" 
-		                action="#{repasseBean.SalvarRepasse}" ajax="false"/>
+		                oncomplete="repasseDialog.hide(); imprimirDialog.show();"
+		                actionListener="#{repasseBean.SalvarRepasse}"
+		                update="outPnlImprimir"/>
 		                <p:commandButton value="Cancelar" styleClass="formularios" 
 		                onclick="repasseDialog.hide()" />
 		            </h:panelGrid>  
 		    </p:outputPanel>
 		    </p:dialog>
 			
+			<p:dialog header="DADOS DO REPASSE GERADO" widgetVar="imprimirDialog" resizable="false"
+		    closable="false" modal="true" width="700" showEffect="slide" hideEffect="slide">
+		    <p:outputPanel id="outPnlImprimir">
+		            <p:panel> 
+				        <h:panelGrid columns="14" columnClasses="coluna1,coluna2,coluna2">
+				        <h:outputText value="Discipulo:" styleClass="formulariosObrigatorio"/> 
+				        <p:graphicImage value="#{repasseBean.protocolo.fotoDiscipulo}" width="41" height="40"/>
+				        <h:outputText value="#{repasseBean.protocolo.discipulo}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/>
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value="Discipulador:" styleClass="formulariosObrigatorio"/> 
+				        <p:graphicImage value="#{repasseBean.protocolo.fotoDiscipulador}" width="41" height="40"/>
+				        <h:outputText value="#{repasseBean.protocolo.discipulador}" styleClass="Texto_cpf_login"/>  
+				        </h:panelGrid>
+				    </p:panel>
+				    <hr/>
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				        <h:outputText value="Tipo de Movimento:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{repasseBean.protocolo.tipo}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Período:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{repasseBean.protocolo.inicio} á #{repasseBean.protocolo.fim}" styleClass="Texto_cpf_login"/> 
+				        <h:outputText value="Valor:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{repasseBean.protocolo.valor}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Local do Repasse:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{repasseBean.protocolo.local}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Data do Repasse:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{repasseBean.protocolo.data}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Protocolo Gerado:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{repasseBean.protocolo.protocolo}" styleClass="Texto_cpf_login"/>
+				    </h:panelGrid>
+				    <br/>
+		            <h:panelGrid columns="4" cellpadding="2">
+		            <h:commandLink action="#{repasseBean.imprimirProtocolo}" target="_blank">  
+                        <center>
+                        <p:graphicImage value="/img/but_imprimir.png"/>     
+                        </center>  
+                    </h:commandLink>
+                    <h:outputText value=""/> 
+				    <h:outputText value=""/>
+                    <h:commandLink action="#{repasseBean.prepararListarRepasseRecebidos}">  
+                        <center>
+                        <p:graphicImage value="/img/but_fechar.png"/>     
+                        </center>  
+                    </h:commandLink>
+		            </h:panelGrid>
+		    </p:outputPanel>
+		    </p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>
