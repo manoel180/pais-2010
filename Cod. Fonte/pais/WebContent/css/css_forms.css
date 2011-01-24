@@ -1,4 +1,3 @@
-
 body {
 	background-color: #D1DEE4;
 	margin-left: 0px;
@@ -9,6 +8,10 @@ body {
 	size: auto;
 	margin: 0;
 	padding: 0;
+}
+
+img{
+    border: none;
 }
 
 #pgCentralizado {
@@ -24,6 +27,11 @@ body {
 	background:url("/pais/img/fundo_topo.png") no-repeat ;
 }
 
+.panelGridEditor{
+	height:500px; 
+	background-color: #D1DEE4;
+	text-align: center;
+}
 
 .coluna1 {
 	text-align: right;
