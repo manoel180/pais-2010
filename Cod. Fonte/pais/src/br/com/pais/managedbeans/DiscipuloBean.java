@@ -14,6 +14,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.component.behavior.ajax.AjaxBehavior;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DualListModel;
@@ -42,6 +43,7 @@ import br.com.pais.entities.Logradouro;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.exception.ValidarTEException;
 import br.com.pais.util.ApplicationSecurityManager;
+import br.com.pais.util.SendEMail;
 import br.com.pais.util.ValidarCPF;
 import br.com.pais.util.ValidarTituloEleitor;
 

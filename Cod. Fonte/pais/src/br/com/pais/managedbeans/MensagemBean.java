@@ -1,15 +1,23 @@
 package br.com.pais.managedbeans;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
+
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.GeracaoDao;
@@ -31,8 +39,8 @@ public class MensagemBean {
 	private Celulas celulas = new Celulas();
 	private Geracoes geracoes = new Geracoes();
 	private Mensagem mensagem = new Mensagem();
-	
-	
+	private Discipulos discipulador;
+
 	private Mensagem mensagemSelecionada;
 
 	//List
@@ -54,6 +62,34 @@ public class MensagemBean {
 	//discipulosSelecionados Grid
 	private Discipulos[] DiscipuloSelecionados;
 	
+	//FileUpload
+	private String nomeArquivoSelecionado;
+	private StreamedContent imagem;
+	byte[] conteudo;
+	
+
+	public String handleFileUpload(FileUploadEvent event) {
+
+		try {
+			setNomeArquivoSelecionado(event.getFile().getFileName());
+			imagem = new DefaultStreamedContent(event.getFile().getInputstream());
+
+			// Para pegar direto o caminho da imagem
+			FacesContext faces = FacesContext.getCurrentInstance();
+			HttpServletRequest request = (HttpServletRequest) faces.getExternalContext().getRequest();
+			String path = request.getSession().getServletContext().getRealPath("/fotos");
+
+			conteudo = event.getFile().getContents();
+
+			String caminho = path + "\\" + discipulos.getDisCpf() + ".jpg";
+			
+		} catch (IOException ex) {
+			Logger.getLogger(FileUploadController.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+		return nomeArquivoSelecionado;
+	}
+	
 	public SelectItem[] getGeracaoCombo() {
 		listaGeracoes = new ArrayList<Geracoes>();
 		listaGeracoes.addAll(geracaoDao.listarGeracoes());
@@ -70,10 +106,13 @@ public class MensagemBean {
 		geracoes = new Geracoes();
 		discipulos = new Discipulos();
 		mensagem = new Mensagem();
-		
+				
 		dtM12 = false;
 		listaDiscipulos = new ArrayList<Discipulos>();
+		listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
 		
+		discipulador = listaDiscipulos.get(0);
+
 		return "/cad/mensagensCadastro.mir";
 	}
 	
@@ -88,7 +127,7 @@ public class MensagemBean {
 	}
 	
 	public String atualizarStatusMensagem(){
-		mensagemSelecionada.setMensLida('S');
+		mensagemSelecionada.setMensLida("S");
 		mensagemDao.atualizar(mensagemSelecionada);
 		
 		responder = false;
@@ -110,9 +149,9 @@ public class MensagemBean {
 
 	public void listarM12PorGeracao(AjaxBehaviorEvent event) {		
 		listaDiscipulos = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getGeracoes().getGerCod()));
+		listaDiscipulos.addAll(discipuloDao.listarM12Mensagem(discipuloSessao.getDiscipulos().getDisCod(), geracoes.getGerCod()));
 		
-		if(celulas.getGeracoes().getGerCod()==0)dtM12  = false;
+		if(geracoes.getGerCod() == 0 || listaDiscipulos.size() == 0)dtM12  = false;
 		else dtM12 = true;
 	}
 	
@@ -139,17 +178,24 @@ public class MensagemBean {
 	}
 	
 	public void enviarMensagem(ActionEvent event) throws Exception{
+		FacesContext context = FacesContext.getCurrentInstance();
 		String mensTexto = mensagem.getMensTexto();
 		
+		if(mensTexto == "")
+		{
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Não è possivel enviar mensagem em branco!"));
+		}
+		else{
 		if(EnviarMensagemSelecionados == true)EnviarSelecionados(mensTexto);
 		else EnviarTodos(mensTexto);
+		}
 	}
 	
 	public void EnviarSelecionados(String mensTexto) throws Exception{
 		FacesContext context = FacesContext.getCurrentInstance();
 		if(DiscipuloSelecionados.length == 0)
 		{
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Mensagem nï¿½o enviada selecione algum discipulo!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Mensagem não enviada selecione algum discipulo!"));
 		}
 		else
 		{
@@ -160,13 +206,13 @@ public class MensagemBean {
 				mensagem.setMensData(pegaDataAtual());
 				mensagem.setDiscipulosByMensDisCod(discipuloSessao.getDiscipulos());
 				mensagem.setDiscipulosByMensDisCodRecebe(dis);
-				mensagem.setMensLida('N');
+				mensagem.setMensLida("N");
 				mensagemDao.salvar(mensagem);
 				
-				new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
+				//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
 			}
 			listaDiscipulos = new ArrayList<Discipulos>();
-			listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), celulas.getGeracoes().getGerCod()));
+			listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), geracoes.getGerCod()));
 			
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "SUCESSO!!!","Mensagem Enviada com Sucesso!"));
 		}
@@ -174,6 +220,7 @@ public class MensagemBean {
 	
 	public void EnviarTodos(String mensTexto) throws Exception{
 		FacesContext context = FacesContext.getCurrentInstance();
+	
 		for(Discipulos dis : listaDiscipulos)
 		{
 			mensagem = new Mensagem();	
@@ -181,10 +228,10 @@ public class MensagemBean {
 			mensagem.setMensData(pegaDataAtual());
 			mensagem.setDiscipulosByMensDisCod(discipuloSessao.getDiscipulos());
 			mensagem.setDiscipulosByMensDisCodRecebe(dis);
-			mensagem.setMensLida('N');
+			mensagem.setMensLida("N");
 			mensagemDao.salvar(mensagem);
 			
-			new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
+			//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
 		}
 		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "SUCESSO!!!","Mensagem Enviada com Sucesso!"));
 	}
@@ -194,7 +241,7 @@ public class MensagemBean {
 			mensagem.setMensData(pegaDataAtual());
 			mensagem.setDiscipulosByMensDisCod(mensagemSelecionada.getDiscipulosByMensDisCodRecebe());
 			mensagem.setDiscipulosByMensDisCodRecebe(mensagemSelecionada.getDiscipulosByMensDisCod());
-			mensagem.setMensLida('N');
+			mensagem.setMensLida("N");
 			mensagemDao.salvar(mensagem);
 			
 			//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
@@ -313,6 +360,14 @@ public class MensagemBean {
 		this.responder = responder;
 	}
 	
+	public Discipulos getDiscipulador() {
+		return discipulador;
+	}
+	
+	public void setDiscipulador(Discipulos discipulador) {
+		this.discipulador = discipulador;
+	}
+	
 	public int getQtdMensagem() {
 		listaRecebidas = new ArrayList<Mensagem>();
         listaRecebidas.addAll(mensagemDao.listarMensagensRecebidas(discipuloSessao.getDiscipulos()));
@@ -322,6 +377,30 @@ public class MensagemBean {
 
 	public void setQtdMensagem(int qtdMensagem) {
 		this.qtdMensagem = qtdMensagem;
+	}
+	
+	public String getNomeArquivoSelecionado() {
+		return nomeArquivoSelecionado;
+	}
+	
+	public void setNomeArquivoSelecionado(String nomeArquivoSelecionado) {
+		this.nomeArquivoSelecionado = nomeArquivoSelecionado;
+	}
+	
+	public StreamedContent getImagem() {
+		return imagem;
+	}
+	
+	public void setImagem(StreamedContent imagem) {
+		this.imagem = imagem;
+	}
+	
+	public byte[] getConteudo() {
+		return conteudo;
+	}
+	
+	public void setConteudo(byte[] conteudo) {
+		this.conteudo = conteudo;
 	}
 	
 }
