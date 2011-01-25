@@ -1,18 +1,16 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,31 +26,24 @@ import javax.persistence.TemporalType;
 @Table(name = "movimento", catalog = "wwwpais_sistema")
 public class Movimento implements java.io.Serializable {
 
-	private int movCod;
+	private Integer movCod;
 	private Celulas celulas;
 	private Bases bases;
 	private Date movData;
 	private Date movHora;
 	private String movTipo;
 	private Double movValor;
-	private String movRecebido;
+	private Character movRecebido;
 	private String movProtocolo;
 	private String movProtocoloPai;
-
-	private List<Repasse> repasses = new ArrayList<Repasse>();
+	private Set<Repasse> repasses = new HashSet<Repasse>(0);
 
 	public Movimento() {
 	}
 
-	public Movimento(int movCod) {
-		this.movCod = movCod;
-	}
-
-	public Movimento(int movCod, Celulas celulas, Bases bases, Date movData, Date movHora,
-			String movTipo, Double movValor, String movRecebido, String movProtocolo,
-			String movProtocoloPai,
-			List<Repasse> repasses) {
-		this.movCod = movCod;
+	public Movimento(Celulas celulas, Bases bases, Date movData, Date movHora,
+			String movTipo, Double movValor, Character movRecebido,
+			String movProtocolo, String movProtocoloPai, Set<Repasse> repasses) {
 		this.celulas = celulas;
 		this.bases = bases;
 		this.movData = movData;
@@ -68,11 +59,11 @@ public class Movimento implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "movCod", unique = true, nullable = false)
-	public int getMovCod() {
+	public Integer getMovCod() {
 		return this.movCod;
 	}
 
-	public void setMovCod(int movCod) {
+	public void setMovCod(Integer movCod) {
 		this.movCod = movCod;
 	}
 
@@ -105,13 +96,13 @@ public class Movimento implements java.io.Serializable {
 	public void setMovData(Date movData) {
 		this.movData = movData;
 	}
-	
+
 	@Temporal(TemporalType.TIME)
-	@Column(name = "movHora")
+	@Column(name = "movHora", length = 8)
 	public Date getMovHora() {
-		return movHora;
+		return this.movHora;
 	}
-	
+
 	public void setMovHora(Date movHora) {
 		this.movHora = movHora;
 	}
@@ -125,7 +116,7 @@ public class Movimento implements java.io.Serializable {
 		this.movTipo = movTipo;
 	}
 
-	@Column(name = "movValor")
+	@Column(name = "movValor", precision = 10)
 	public Double getMovValor() {
 		return this.movValor;
 	}
@@ -133,28 +124,28 @@ public class Movimento implements java.io.Serializable {
 	public void setMovValor(Double movValor) {
 		this.movValor = movValor;
 	}
-	
-	@Column(name = "movRecebido")
-	public String getMovRecebido() {
-		return movRecebido;
+
+	@Column(name = "movRecebido", length = 1)
+	public Character getMovRecebido() {
+		return this.movRecebido;
 	}
 
-	public void setMovRecebido(String movRecebido) {
+	public void setMovRecebido(Character movRecebido) {
 		this.movRecebido = movRecebido;
 	}
-	
+
 	@Column(name = "movProtocolo")
 	public String getMovProtocolo() {
-		return movProtocolo;
+		return this.movProtocolo;
 	}
 
 	public void setMovProtocolo(String movProtocolo) {
 		this.movProtocolo = movProtocolo;
 	}
-	
+
 	@Column(name = "movProtocoloPai")
 	public String getMovProtocoloPai() {
-		return movProtocoloPai;
+		return this.movProtocoloPai;
 	}
 
 	public void setMovProtocoloPai(String movProtocoloPai) {
@@ -162,11 +153,11 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
-	public List<Repasse> getRepasses() {
+	public Set<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(List<Repasse> repasses) {
+	public void setRepasses(Set<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 

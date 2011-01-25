@@ -1,7 +1,8 @@
 package br.com.pais.entities;
 
-// Generated 24/11/2010 14:37:05 by Hibernate Tools 3.4.0.Beta1
+// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -30,6 +31,15 @@ public class Repasse implements java.io.Serializable {
 	private String resLocal;
 
 	public Repasse() {
+	}
+
+	public Repasse(RepasseId id, Movimento movimento, Discipulos discipulos,
+			Double resValor, Date resData) {
+		this.id = id;
+		this.movimento = movimento;
+		this.discipulos = discipulos;
+		this.resValor = resValor;
+		this.resData = resData;
 	}
 
 	public Repasse(RepasseId id, Movimento movimento, Discipulos discipulos,
@@ -74,7 +84,7 @@ public class Repasse implements java.io.Serializable {
 		this.discipulos = discipulos;
 	}
 
-	@Column(name = "resValor", nullable = false)
+	@Column(name = "resValor", nullable = false, precision = 10)
 	public Double getResValor() {
 		return this.resValor;
 	}

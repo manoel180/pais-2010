@@ -1,10 +1,9 @@
 package br.com.pais.entities;
 
-// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
+// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -58,13 +57,13 @@ public class Discipulos implements java.io.Serializable {
 	private String disTelComercial;
 	private char disSexo;
 	private Set<Repasse> repasses = new HashSet<Repasse>(0);
-	private List<Formacaoeclesiasticas> formacaoeclesiasticases = new ArrayList<Formacaoeclesiasticas>();
+	private List<Formacaoeclesiasticas> formacaoeclesiasticases ;
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Celulas> celulases_1 = new HashSet<Celulas>(0);
 	private Set<Bases> basesesForLiderGovJusto = new HashSet<Bases>(0);
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
-	private List<Encontros> encontroses = new ArrayList<Encontros>();
+	private List<Encontros> encontroses;
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
 	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
 			0);
@@ -232,7 +231,10 @@ public class Discipulos implements java.io.Serializable {
 
 	@Column(name = "disnome", nullable = false, length = 60)
 	public String getDisnome() {
-		return this.disnome;
+		if (this.disnome == null)
+			return this.disnome;
+		else
+			return this.disnome.toUpperCase();
 	}
 
 	public void setDisnome(String disnome) {

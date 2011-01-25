@@ -1,14 +1,19 @@
 package br.com.pais.entities;
 
-// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
+// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,31 +25,47 @@ import javax.persistence.TemporalType;
 @Table(name = "mensagem", catalog = "wwwpais_sistema")
 public class Mensagem implements java.io.Serializable {
 
-	private int mensCod;
+	private Integer mensCod;
 	private Discipulos discipulosByMensDisCodRecebe;
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-	private String mensLida;
+	private char mensLida;
+	private Set<Mensagemanexos> mensagemanexoses = new HashSet<Mensagemanexos>(
+			0);
+
 	public Mensagem() {
 	}
 
-	public Mensagem(int mensCod, Discipulos discipulosByMensDisCodRecebe,
-			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData) {
-		this.mensCod = mensCod;
+	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
+			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
+			char mensLida) {
 		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
 		this.discipulosByMensDisCod = discipulosByMensDisCod;
 		this.mensTexto = mensTexto;
 		this.mensData = mensData;
+		this.mensLida = mensLida;
+	}
+
+	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
+			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
+			char mensLida, Set<Mensagemanexos> mensagemanexoses) {
+		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
+		this.discipulosByMensDisCod = discipulosByMensDisCod;
+		this.mensTexto = mensTexto;
+		this.mensData = mensData;
+		this.mensLida = mensLida;
+		this.mensagemanexoses = mensagemanexoses;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "mensCod", unique = true, nullable = false)
-	public int getMensCod() {
+	public Integer getMensCod() {
 		return this.mensCod;
 	}
 
-	public void setMensCod(int mensCod) {
+	public void setMensCod(Integer mensCod) {
 		this.mensCod = mensCod;
 	}
 
@@ -87,14 +108,23 @@ public class Mensagem implements java.io.Serializable {
 	public void setMensData(Date mensData) {
 		this.mensData = mensData;
 	}
-	
-	@Column(name = "mensLida", nullable = false)
-	public String getMensLida() {
+
+	@Column(name = "mensLida", nullable = false, length = 1)
+	public char getMensLida() {
 		return this.mensLida;
 	}
 
-	public void setMensLida(String mensLida) {
+	public void setMensLida(char mensLida) {
 		this.mensLida = mensLida;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mensagem")
+	public Set<Mensagemanexos> getMensagemanexoses() {
+		return this.mensagemanexoses;
+	}
+
+	public void setMensagemanexoses(Set<Mensagemanexos> mensagemanexoses) {
+		this.mensagemanexoses = mensagemanexoses;
 	}
 
 }

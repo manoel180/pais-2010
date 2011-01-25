@@ -1,10 +1,9 @@
 package br.com.pais.entities;
 
-// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
+// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +35,7 @@ public class Celulas implements java.io.Serializable {
 	private Discipulos discipulos;
 	private Bases bases;
 	private Logradouro logradouro;
+	private Zona zona;
 	private Geracoes geracoes;
 	private String celNome;
 	private Date celHorarioReuniao;
@@ -45,29 +45,32 @@ public class Celulas implements java.io.Serializable {
 	private String celStatus;
 	private String celTelFixo;
 	private String celTelCelular;
-	private List<Discipulos> discipuloses = new ArrayList<Discipulos>();
+	private List<Discipulos> discipuloses;
 	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
 
 	public Celulas() {
 	}
 
-	public Celulas(Discipulos discipulos, Logradouro logradouro,
-			Geracoes geracoes, String celNuEndereco) {
+	public Celulas(Discipulos discipulos, Bases bases, Logradouro logradouro,
+			Zona zona, Geracoes geracoes, String celNuEndereco) {
 		this.discipulos = discipulos;
+		this.bases = bases;
 		this.logradouro = logradouro;
+		this.zona = zona;
 		this.geracoes = geracoes;
 		this.celNuEndereco = celNuEndereco;
 	}
 
 	public Celulas(Discipulos discipulos, Bases bases, Logradouro logradouro,
-			Geracoes geracoes, String celNome, Date celHorarioReuniao,
-			String celDiaReuniao, String celNuEndereco,
+			Zona zona, Geracoes geracoes, String celNome,
+			Date celHorarioReuniao, String celDiaReuniao, String celNuEndereco,
 			String celEndComplemento, String celStatus, String celTelFixo,
 			String celTelCelular, List<Discipulos> discipuloses,
 			Set<Movimento> movimentos) {
 		this.discipulos = discipulos;
 		this.bases = bases;
 		this.logradouro = logradouro;
+		this.zona = zona;
 		this.geracoes = geracoes;
 		this.celNome = celNome;
 		this.celHorarioReuniao = celHorarioReuniao;
@@ -103,7 +106,7 @@ public class Celulas implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "basCod")
+	@JoinColumn(name = "celBase")
 	public Bases getBases() {
 		return this.bases;
 	}
@@ -120,6 +123,16 @@ public class Celulas implements java.io.Serializable {
 
 	public void setLogradouro(Logradouro logradouro) {
 		this.logradouro = logradouro;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "celZona", nullable = false)
+	public Zona getZona() {
+		return this.zona;
+	}
+
+	public void setZona(Zona zona) {
+		this.zona = zona;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -160,7 +173,7 @@ public class Celulas implements java.io.Serializable {
 		this.celDiaReuniao = celDiaReuniao;
 	}
 
-	@Column(name = "celNuEndereco", nullable = false, length = 5)
+	@Column(name = "celNuEndereco",  length = 5)
 	public String getCelNuEndereco() {
 		return this.celNuEndereco;
 	}

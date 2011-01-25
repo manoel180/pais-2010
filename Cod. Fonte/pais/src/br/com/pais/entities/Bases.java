@@ -1,15 +1,18 @@
 package br.com.pais.entities;
 
-// Generated 06/01/2011 15:01:09 by Hibernate Tools 3.4.0.Beta1
+// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,6 +33,7 @@ public class Bases implements java.io.Serializable {
 	private Discipulos discipulosByLiderGovJusto;
 	private Discipulos discipulosByBasDisCod;
 	private Logradouro logradouro;
+	private Zona zona;
 	private Statusbase statusbase;
 	private Discipulos discipulosByLiderAcaoSocial;
 	private Condicaobase condicaobase;
@@ -41,29 +45,33 @@ public class Bases implements java.io.Serializable {
 	private String basEndComplemento;
 	private String basTelFixo;
 	private String basTelCelular;
-	private Set<Celulas> celulases = new HashSet<Celulas>(0);
+	private Integer basQtdMax;
 	private Set<Movimento> movimentos = new HashSet<Movimento>(0);
-	private Set<Fotosbases> fotosbaseses = new HashSet<Fotosbases>(0);
+	private List<Fotosbases> fotosbaseses ;
+	private List<Celulas> celulases ;
 
 	public Bases() {
 	}
 
-	public Bases(Discipulos discipulosByBasDisCod, Tipobases tipobases) {
+	public Bases(Discipulos discipulosByBasDisCod, Zona zona,
+			Tipobases tipobases) {
 		this.discipulosByBasDisCod = discipulosByBasDisCod;
+		this.zona = zona;
 		this.tipobases = tipobases;
 	}
 
 	public Bases(Discipulos discipulosByLiderGovJusto,
-			Discipulos discipulosByBasDisCod, Logradouro logradouro,
+			Discipulos discipulosByBasDisCod, Logradouro logradouro, Zona zona,
 			Statusbase statusbase, Discipulos discipulosByLiderAcaoSocial,
 			Condicaobase condicaobase, Tipobases tipobases, Date basHorReuniao,
 			String basDiaReuniao, Date basDtAbertura, String basNuEndereco,
 			String basEndComplemento, String basTelFixo, String basTelCelular,
-			Set<Celulas> celulases, Set<Movimento> movimentos,
-			Set<Fotosbases> fotosbaseses) {
+			Integer basQtdMax, Set<Movimento> movimentos,
+			List<Fotosbases> fotosbaseses, List<Celulas> celulases) {
 		this.discipulosByLiderGovJusto = discipulosByLiderGovJusto;
 		this.discipulosByBasDisCod = discipulosByBasDisCod;
 		this.logradouro = logradouro;
+		this.zona = zona;
 		this.statusbase = statusbase;
 		this.discipulosByLiderAcaoSocial = discipulosByLiderAcaoSocial;
 		this.condicaobase = condicaobase;
@@ -75,9 +83,10 @@ public class Bases implements java.io.Serializable {
 		this.basEndComplemento = basEndComplemento;
 		this.basTelFixo = basTelFixo;
 		this.basTelCelular = basTelCelular;
-		this.celulases = celulases;
+		this.basQtdMax = basQtdMax;
 		this.movimentos = movimentos;
 		this.fotosbaseses = fotosbaseses;
+		this.celulases = celulases;
 	}
 
 	@Id
@@ -120,6 +129,16 @@ public class Bases implements java.io.Serializable {
 
 	public void setLogradouro(Logradouro logradouro) {
 		this.logradouro = logradouro;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zona", nullable = false)
+	public Zona getZona() {
+		return this.zona;
+	}
+
+	public void setZona(Zona zona) {
+		this.zona = zona;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -192,7 +211,7 @@ public class Bases implements java.io.Serializable {
 		this.basDtAbertura = basDtAbertura;
 	}
 
-	@Column(name = "basNuEndereco",length = 5)
+	@Column(name = "basNuEndereco", unique = true, length = 5)
 	public String getBasNuEndereco() {
 		return this.basNuEndereco;
 	}
@@ -228,13 +247,13 @@ public class Bases implements java.io.Serializable {
 		this.basTelCelular = basTelCelular;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bases")
-	public Set<Celulas> getCelulases() {
-		return this.celulases;
+	@Column(name = "basQtdMax")
+	public Integer getBasQtdMax() {
+		return this.basQtdMax;
 	}
 
-	public void setCelulases(Set<Celulas> celulases) {
-		this.celulases = celulases;
+	public void setBasQtdMax(Integer basQtdMax) {
+		this.basQtdMax = basQtdMax;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bases")
@@ -247,12 +266,21 @@ public class Bases implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bases")
-	public Set<Fotosbases> getFotosbaseses() {
+	public List<Fotosbases> getFotosbaseses() {
 		return this.fotosbaseses;
 	}
 
-	public void setFotosbaseses(Set<Fotosbases> fotosbaseses) {
+	public void setFotosbaseses(List<Fotosbases> fotosbaseses) {
 		this.fotosbaseses = fotosbaseses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bases")
+	public List<Celulas> getCelulases() {
+		return this.celulases;
+	}
+
+	public void setCelulases(List<Celulas> celulases) {
+		this.celulases = celulases;
 	}
 
 }
