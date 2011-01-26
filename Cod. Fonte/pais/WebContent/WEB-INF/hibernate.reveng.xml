@@ -50,6 +50,9 @@
 	<table-filter match-name="mensagem"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
+	<table-filter match-name="mensagemanexos"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
 	<table-filter match-name="movimento"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
