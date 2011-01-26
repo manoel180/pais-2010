@@ -16,12 +16,14 @@
 
 		<p:submenu label="CADASTRAR" align="left" >
 			<p:menuitem value="Discípulo" action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
-			<p:submenu>  
-                <f:facet name="label">  
-                    <p:menuitem value="&nbsp;Célula &nbsp;"/>  
-                </f:facet>  
+			<p:submenu label="&nbsp;Célula &nbsp;">  
                 <p:menuitem value="&nbsp;Nova Célula &nbsp;" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
                 <p:menuitem value="&nbsp;Listar Célula &nbsp;" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+            </p:submenu>
+            
+            <p:submenu label="&nbsp;Bases &nbsp;" rendered="#{loginBean.menuBases}">  
+                <p:menuitem value="&nbsp;Nova Base &nbsp;" action="#{basesBean.prepararBases}"  ajax="false"/>
+                <p:menuitem value="&nbsp;Listar Bases &nbsp;" action="#{basesBean.prepararListarBases}" ajax="false"/>
             </p:submenu>
 		</p:submenu>
 		
