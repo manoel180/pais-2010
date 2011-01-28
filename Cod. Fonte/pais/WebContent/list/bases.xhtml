@@ -217,14 +217,14 @@
 			        
 			        <p:panel header="FOTOS DA BASE">
 			         
-			        <p:galleria effect="slide" >
+			        <p:galleria id="galeria" effect="slide" widgetVar="gallery">
 			        	
 			        		<ui:repeat value="#{basesBean.bases.fotosbaseses}" var="image">
 			        		
          						<p:graphicImage value="#{image.foto}" title="#{image.legenda}" id="img"/>
          						
          					</ui:repeat>
-         				
+         				 
          			</p:galleria>
          				  
 			        </p:panel>
