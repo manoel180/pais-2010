@@ -74,7 +74,7 @@
 						<p:spinner styleClass="formularios2" size="8" showOn="hover"
 							min="0" required="true" id="qtdMax"
 							value="#{basesBean.bases.basQtdMax}"
-							requiredMessage="Quantidade máxima de pessoas. é obrigatório">
+							requiredMessage="Quantidade máxima de pessoas é obrigatório">
 						</p:spinner>
 
 						<h:outputLabel value="Data da Abertura:"
@@ -291,13 +291,14 @@
 				<p:tab id="tbCelulas" title="Células da base">
 <center><h:panelGrid id="dtcelula" columns="2"
 						columnClasses="coluna1, coluna2">
-					<center><p:pickList
+					<center>
+					<p:pickList
 						value="#{basesBean.listaCelulas}" var="celulas"
 						converter="celulasConverter" styleClass="formulariosObrigatorio"
 						itemLabel="#{celulas.celNome}" tabindex="24"
 						itemValue="#{celulas}" addAllLabel="Adicionar Todos"
 						addLabel="Adicionar" removeAllLabel="Remover Todos"
-						removeLabel="Remover" effect="fade">
+						removeLabel="Remover" effect="fade" >
 
 						<f:facet name="sourceCaption">Células sem Base</f:facet>
 						<f:facet name="targetCaption">Células desta Base</f:facet>
@@ -310,9 +311,12 @@
 
 			<br />
 
-			<h:commandButton value="Salvar..." styleClass="formularios"
-				tabindex="25" actionListener="#{basesBean.salvar}"></h:commandButton>
-
+			<h:commandButton value="Editar" styleClass="formularios"
+				tabindex="25" actionListener="#{basesBean.alterar}"></h:commandButton>
+			&nbsp;
+			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="25"
+			action="#{basesBean.prepararListarBases}">
+			</h:commandButton>
 		</h:form>
 
 	</ui:define>
