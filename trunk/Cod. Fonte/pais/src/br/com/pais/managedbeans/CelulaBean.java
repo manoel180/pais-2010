@@ -18,6 +18,7 @@ import br.com.pais.dao.impl.CelulaDaoImp;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
 import br.com.pais.dao.impl.GeracaoDaoImp;
 import br.com.pais.dao.impl.LogradouroDaoImp;
+import br.com.pais.dao.impl.ZonasDaoImp;
 import br.com.pais.entities.Bairro;
 import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
@@ -25,6 +26,7 @@ import br.com.pais.entities.Estado;
 import br.com.pais.entities.Geracoes;
 import br.com.pais.entities.Localidade;
 import br.com.pais.entities.Logradouro;
+import br.com.pais.entities.Zona;
 import br.com.pais.util.ApplicationSecurityManager;
 
 public class CelulaBean {
@@ -38,13 +40,15 @@ public class CelulaBean {
 	private Localidade cidade = new Localidade();
 	private Bairro bairro = new Bairro();
 	private Logradouro logradouro = new Logradouro();
+	private Zona zona = new Zona();
 	
 	//celulaSelecionada Grid
 	private Celulas celulaSelecionada;
 	private Discipulos[] dtDisSelecionadosAdicionar;
 	private Discipulos[] dtDisSelecionadosRemover;
 	private List<Discipulos> dtDisAdicionados = new ArrayList<Discipulos>();
-
+	private List<Zona> listZonas = new ArrayList<Zona>();
+	
 	// Objetos Daos
 	private LogradouroDao logradouroDao = new LogradouroDaoImp();
 	private DiscipuloDao discipuloDao = new DiscipuloDaoImp(); 
@@ -148,7 +152,8 @@ public class CelulaBean {
 		logradouro = new Logradouro();
 		celulas = new Celulas();
 		geracoes = new Geracoes();
-		
+		zona = new Zona();
+		listZonas = new ZonasDaoImp().todos();
 	    listaM12 = new ArrayList<Discipulos>();
 	    dtDisAdicionados = new ArrayList<Discipulos>();
 				
@@ -159,7 +164,8 @@ public class CelulaBean {
 		logradouro = new Logradouro();
 		celulas = new Celulas();
 		geracoes = new Geracoes();
-		
+		listZonas = new ZonasDaoImp().todos();
+		zona = celulaSelecionada.getZona();
 		logradouro = celulaSelecionada.getLogradouro(); 
 		geracoes = celulaSelecionada.getGeracoes();
 		
@@ -204,13 +210,13 @@ public class CelulaBean {
 		celulas.setGeracoes(geracoes);
 		celulas.setCelStatus(null);
 		celulas.setDiscipuloses(dtDisAdicionados);
-		
+		celulas.setZona(zona);
 		if (celulaDao.salvar(celulas) == (true)) {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula cadastrada!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","CÃ©lula cadastrada!"));
 			listaCelulas = new ArrayList<Celulas>();
 	    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		} else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","CÃ©lula nÃ£o cadastrada!"));
 		}
 		
 		return "/cad/celulasListar.mir";
@@ -223,18 +229,19 @@ public class CelulaBean {
 		listaCelulas = new ArrayList<Celulas>();
     	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
     	
-    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula excluida!"));
+    	context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","CÃ©lula excluida!"));
 	}
 	
 	public String alterar() {
 		FacesContext context = FacesContext.getCurrentInstance();
-		
+		celulas.setZona(zona);
+		celulas.setGeracoes(geracoes);
 		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
 		celulas.setLogradouro(logradouro);
 		celulas.setDiscipuloses(dtDisAdicionados);
 		celulaDao.atualizar(celulas);
 		
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Célula editada!"));
+		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","Cï¿½lula editada!"));
 		listaCelulas = new ArrayList<Celulas>();
     	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
 		
@@ -400,5 +407,33 @@ public class CelulaBean {
 
 	public List<Geracoes> getListaGeracoes() {
 		return listaGeracoes;
+	}
+
+	/**
+	 * @return the zona
+	 */
+	public Zona getZona() {
+		return zona;
+	}
+
+	/**
+	 * @param zona the zona to set
+	 */
+	public void setZona(Zona zona) {
+		this.zona = zona;
+	}
+
+	/**
+	 * @return the listZonas
+	 */
+	public List<Zona> getListZonas() {
+		return listZonas;
+	}
+
+	/**
+	 * @param listZonas the listZonas to set
+	 */
+	public void setListZonas(List<Zona> listZonas) {
+		this.listZonas = listZonas;
 	}
 }
