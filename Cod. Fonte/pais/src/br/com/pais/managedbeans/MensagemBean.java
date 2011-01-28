@@ -127,7 +127,7 @@ public class MensagemBean {
 	}
 	
 	public String atualizarStatusMensagem(){
-		mensagemSelecionada.setMensLida("S");
+		mensagemSelecionada.setMensLida('S');
 		mensagemDao.atualizar(mensagemSelecionada);
 		
 		responder = false;
@@ -183,7 +183,7 @@ public class MensagemBean {
 		
 		if(mensTexto == "")
 		{
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Não è possivel enviar mensagem em branco!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Nï¿½o ï¿½ possivel enviar mensagem em branco!"));
 		}
 		else{
 		if(EnviarMensagemSelecionados == true)EnviarSelecionados(mensTexto);
@@ -195,7 +195,7 @@ public class MensagemBean {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if(DiscipuloSelecionados.length == 0)
 		{
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Mensagem não enviada selecione algum discipulo!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!!!","Mensagem nï¿½o enviada selecione algum discipulo!"));
 		}
 		else
 		{
@@ -206,7 +206,7 @@ public class MensagemBean {
 				mensagem.setMensData(pegaDataAtual());
 				mensagem.setDiscipulosByMensDisCod(discipuloSessao.getDiscipulos());
 				mensagem.setDiscipulosByMensDisCodRecebe(dis);
-				mensagem.setMensLida("N");
+				mensagem.setMensLida('N');
 				mensagemDao.salvar(mensagem);
 				
 				//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
@@ -228,7 +228,7 @@ public class MensagemBean {
 			mensagem.setMensData(pegaDataAtual());
 			mensagem.setDiscipulosByMensDisCod(discipuloSessao.getDiscipulos());
 			mensagem.setDiscipulosByMensDisCodRecebe(dis);
-			mensagem.setMensLida("N");
+			mensagem.setMensLida('N');
 			mensagemDao.salvar(mensagem);
 			
 			//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());
@@ -241,7 +241,7 @@ public class MensagemBean {
 			mensagem.setMensData(pegaDataAtual());
 			mensagem.setDiscipulosByMensDisCod(mensagemSelecionada.getDiscipulosByMensDisCodRecebe());
 			mensagem.setDiscipulosByMensDisCodRecebe(mensagemSelecionada.getDiscipulosByMensDisCod());
-			mensagem.setMensLida("N");
+			mensagem.setMensLida('N');
 			mensagemDao.salvar(mensagem);
 			
 			//new SendEMail().sendSimpleMailEnviarMensagem(discipuloSessao.getDiscipulos().getDisnome(), dis.getDisnome(), dis.getDisemail());

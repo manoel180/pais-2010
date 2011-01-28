@@ -39,12 +39,13 @@ public class LoginBean {
 
 	protected boolean editar = true;
 	private boolean cadCelulas = false;
-	
+	private boolean menuBases = false;
 	//Controle Acesso Menu Financeiro
 	private boolean menuFazerRepasse;
 	private boolean menuReceberRepasse;
 	private boolean menuListarRecebidos;
 	private boolean menuListarEnviados;
+	
 	
 	//List
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
@@ -67,7 +68,7 @@ public class LoginBean {
 				    
 					//Controle Acesso no Menu Financeiro
 					menuFinanceiro();
-					
+					menuBases = discipuloSessao.getDiscipulos().getFuncaoeclesiasticas().getFunCod() >= 3;
 					return "/principal.mir";
 				} else {
 					throw new GenericException("usuario.invalido_detail");
@@ -84,7 +85,7 @@ public class LoginBean {
 			cpf = "";
 			editar = true;
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro","CPF ou SENHA inválida!");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro","CPF ou SENHA invï¿½lida!");
 			facesContext.addMessage(null, message);
 			return "/login.mir";
 		}
@@ -251,5 +252,19 @@ public class LoginBean {
 	}
 	public void setMenuListarEnviados(boolean menuListarEnviados) {
 		this.menuListarEnviados = menuListarEnviados;
+	}
+
+	/**
+	 * @return the menuBases
+	 */
+	public boolean isMenuBases() {
+		return menuBases;
+	}
+
+	/**
+	 * @param menuBases the menuBases to set
+	 */
+	public void setMenuBases(boolean menuBases) {
+		this.menuBases = menuBases;
 	}
 }

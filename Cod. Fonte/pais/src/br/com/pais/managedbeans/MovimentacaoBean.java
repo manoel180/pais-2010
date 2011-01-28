@@ -13,7 +13,6 @@ import java.util.UUID;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.primefaces.event.CloseEvent;
 
@@ -82,7 +81,7 @@ public class MovimentacaoBean {
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 		movimento.setCelulas(celulaSelecionada);
-		movimento.setMovRecebido("N");
+		movimento.setMovRecebido('N');
 		movimento.setBases(null);
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
@@ -96,7 +95,7 @@ public class MovimentacaoBean {
 			repasse.setResValor(movimento.getMovValor());
 			repasseDao.salvar(repasse);
 		}  else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Cï¿½lula nï¿½o cadastrada!"));
 		}
 		preencheProtocoloGerado();
 		

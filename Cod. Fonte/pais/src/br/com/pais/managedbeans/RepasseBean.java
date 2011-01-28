@@ -166,7 +166,7 @@ public class RepasseBean {
 		movimento.setMovHora(data.getTime());
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
-		movimento.setMovRecebido("N");
+		movimento.setMovRecebido('N');
 		movimento.setMovTipo(listaMovimentos.get(0).getMovTipo());
 		movimento.setMovValor(totalNaoRecebido);
 		movimentoDao.salvar(movimento);
@@ -182,11 +182,11 @@ public class RepasseBean {
 		repasseDao.salvar(repasse);
 		
 		String protocoloPai = movimento.getMovProtocolo();
-		//ATUALIZA OS MOVIMENTOS QUE ESTÃO NO GRID DO DISCIPULO DELE
+		//ATUALIZA OS MOVIMENTOS QUE ESTï¿½O NO GRID DO DISCIPULO DELE
 		for(Movimento mov : listaMovimentos){
 			movimento = new Movimento();
 			movimento = mov;
-			movimento.setMovRecebido("S");
+			movimento.setMovRecebido('S');
 			movimento.setMovProtocoloPai(protocoloPai);
 			movimentoDao.atualizar(movimento);
 		}

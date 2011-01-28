@@ -43,10 +43,8 @@ import br.com.pais.entities.Bases;
 import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Condicaobase;
 import br.com.pais.entities.Discipulos;
-import br.com.pais.entities.Encontros;
 import br.com.pais.entities.Estado;
 import br.com.pais.entities.Fotosbases;
-import br.com.pais.entities.Geracoes;
 import br.com.pais.entities.Localidade;
 import br.com.pais.entities.Logradouro;
 import br.com.pais.entities.Statusbase;
@@ -222,16 +220,48 @@ public class BasesBean {
 	public String alterar() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		
-	/*	bases.setDiscipulos(discipuloSessao.getDiscipulos());
-		celulas.setLogradouro(logradouro);
-		celulas.setCelStatus("APROVADO");
-		celulas.setDiscipuloses(dtDisAdicionados);
-		celulaDao.atualizar(celulas);
+		bases.setCondicaobase(condicaobase);
+		bases.setStatusbase(statusbase);
+		bases.setTipobases(tipobases);
+		bases.setZona(zona);
+
+		bases.setDiscipulosByBasDisCod(discipuloSessao.getDiscipulos());
+		bases.setDiscipulosByLiderAcaoSocial(liderAcaoSocial);
+		bases.setDiscipulosByLiderGovJusto(liderGovernoJusto);
+
 		
-		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ERRO!!!","C�lula editada!"));
-		listaCelulas = new ArrayList<Celulas>();
-    	listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
-		*/
+		
+		if (logradouro == null) {
+			logradouro.setCep(null);
+			context.addMessage(null, new FacesMessage("ERRO", " CEP inválido"));
+		} else {
+			bases.setLogradouro(logradouro);
+		}
+		bases.setFotosbaseses(listFotosbases);
+		bases.setCelulases(ListaCelulas.getTarget());
+		basesDao.atualizar(bases);
+			
+	if(ListaCelulas.getTarget().size()== 0){
+		for(Celulas c : ListaCelulas.getSource()) {
+			c.setBases(null);
+			new CelulaDaoImp().atualizar(c);
+		}
+	}else {
+		for(Celulas c : ListaCelulas.getTarget()) {
+			c.setBases(bases);
+			new CelulaDaoImp().atualizar(c);
+		}
+		for(Celulas c : ListaCelulas.getSource()) {
+			c.setBases(null);
+			new CelulaDaoImp().atualizar(c);
+		}
+	}
+		
+	
+		
+		
+		
+	
     	return "/list/bases.mir";
 	}
 	public void excluir(ActionEvent event) {
