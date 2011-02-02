@@ -2,7 +2,6 @@ package br.com.pais.util;
 
 import java.io.IOException;
 
-import javax.el.ELResolver;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -30,7 +29,7 @@ public class CtrPhaseListener implements PhaseListener {
 	         }  
 	           
 	         // Obtem uma referencia para o autenticador na sessão  
-	         ELResolver elResolver = facesContext.getApplication().getELResolver();  
+	      //   ELResolver elResolver = facesContext.getApplication().getELResolver();  
 	       //  LoginHandler login =  (LoginHandler) elResolver.getValue( facesContext.getELContext(), null, "loginHandler" );  
 	           
 	         if ( usuarioSession.getDiscipulos() == null ) {  

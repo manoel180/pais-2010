@@ -50,8 +50,8 @@ import br.com.pais.entities.Logradouro;
 import br.com.pais.entities.Statusbase;
 import br.com.pais.entities.Tipobases;
 import br.com.pais.entities.Zona;
+import br.com.pais.mensagens.MessageManagerImpl;
 import br.com.pais.util.ApplicationSecurityManager;
-
 
 /**
  * @author manoel
@@ -64,6 +64,7 @@ public class BasesBean {
 	private UUID uuid;
 	private Bases bases = new Bases();
 	private List<Fotosbases> listFotosbases = new ArrayList<Fotosbases>();
+	private List<Fotosbases> listFotosbasesExcluir = new ArrayList<Fotosbases>();
 	private Fotosbases fotosbases = new Fotosbases();
 	private Discipulos liderGovernoJusto = new Discipulos();
 	private Discipulos liderAcaoSocial = new Discipulos();
@@ -85,7 +86,7 @@ public class BasesBean {
 	private DualListModel<Celulas> ListaCelulas = new DualListModel<Celulas>();
 	private List<Celulas> source = new ArrayList<Celulas>();
 	private List<Celulas> target = new ArrayList<Celulas>();
-	
+
 	private List<Discipulos> listDiscipulos = new ArrayList<Discipulos>();
 	private List<Tipobases> listtipobases = new ArrayList<Tipobases>();
 	private List<Statusbase> listStatusbases = new ArrayList<Statusbase>();
@@ -119,9 +120,10 @@ public class BasesBean {
 			bases.setBasEndComplemento(null);
 		}
 	}
-	
+
 	public void buscarCelulaZona(AjaxBehaviorEvent event) {
-		source = new CelulaDaoImp().listarCelulasSemBasePorZona(zona.getIdzona());
+		source = new CelulaDaoImp().listarCelulasSemBasePorZona(zona
+				.getIdzona());
 		target = new ArrayList<Celulas>();
 		ListaCelulas = new DualListModel<Celulas>(source, target);
 	}
@@ -136,8 +138,16 @@ public class BasesBean {
 		nomeArquivoSelecionado = "";
 	}
 
-	public void removerfoto(ActionEvent actionEvent) {
-		listFotosbases.remove(fotosbases);
+	public void removerfoto() {
+		if (fotosbases.getCodFoto() == null) {
+			listFotosbases.remove(fotosbases);
+			fotosbases = new Fotosbases();
+		} else {
+			listFotosbasesExcluir.add(fotosbases);
+			listFotosbases.remove(fotosbases);
+			fotosbases = new Fotosbases();
+		}
+
 	}
 
 	public String handleFileUpload(FileUploadEvent event) {
@@ -153,14 +163,14 @@ public class BasesBean {
 		}
 		return nomeArquivoSelecionado;
 	}
-	
-	
+
 	public String prepararBases() {
 		zona = new Zona();
 		zona.setIdzona(1);
 		listFotosbases = new ArrayList<Fotosbases>();
 		source = new ArrayList<Celulas>();
-		source = new CelulaDaoImp().listarCelulasSemBasePorZona(zona.getIdzona());
+		source = new CelulaDaoImp().listarCelulasSemBasePorZona(zona
+				.getIdzona());
 		target = new ArrayList<Celulas>();
 		ListaCelulas = new DualListModel<Celulas>(source, target);
 		fotosbases = new Fotosbases();
@@ -168,7 +178,7 @@ public class BasesBean {
 		liderGovernoJusto = new Discipulos();
 		condicaobase = new Condicaobase();
 		bases = new Bases();
-		
+
 		statusbase = new Statusbase();
 		tipobases = new Tipobases();
 		logradouro = new Logradouro();
@@ -194,8 +204,11 @@ public class BasesBean {
 	}
 
 	public String prepararEdicao() {
+		fotosbases = new Fotosbases();
+		
 		listZonas = zonasDao.todos();
-		listDiscipulos = discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod());
+		listDiscipulos = discipuloDao.listarDiscipulos(discipuloSessao
+				.getDiscipulos().getDisCod());
 		listZonas = zonasDao.todos();
 		listCondicaobases = condicaoBasesDao.todos();
 		listStatusbases = statusBasesDao.todos();
@@ -208,18 +221,18 @@ public class BasesBean {
 		statusbase = bases.getStatusbase();
 		condicaobase = bases.getCondicaobase();
 		listFotosbases = bases.getFotosbaseses();
-		
+
 		target = bases.getCelulases();
-		source = new CelulaDaoImp().listarCelulasSemBasePorZona(zona.getIdzona());
+		source = new CelulaDaoImp().listarCelulasSemBasePorZona(zona
+				.getIdzona());
 		ListaCelulas = new DualListModel<Celulas>(source, target);
-	   				
+
 		return "/editar/bases.mir";
-		
+
 	}
-	
+
 	public String alterar() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		
+
 		bases.setCondicaobase(condicaobase);
 		bases.setStatusbase(statusbase);
 		bases.setTipobases(tipobases);
@@ -229,50 +242,70 @@ public class BasesBean {
 		bases.setDiscipulosByLiderAcaoSocial(liderAcaoSocial);
 		bases.setDiscipulosByLiderGovJusto(liderGovernoJusto);
 
-		
-		
 		if (logradouro == null) {
 			logradouro.setCep(null);
-			context.addMessage(null, new FacesMessage("ERRO", " CEP inválido"));
+
 		} else {
 			bases.setLogradouro(logradouro);
 		}
-		bases.setFotosbaseses(listFotosbases);
-		bases.setCelulases(ListaCelulas.getTarget());
-		basesDao.atualizar(bases);
+
+		if (basesDao.atualizar(bases) == true) {
+
 			
-	if(ListaCelulas.getTarget().size()== 0){
-		for(Celulas c : ListaCelulas.getSource()) {
-			c.setBases(null);
-			new CelulaDaoImp().atualizar(c);
+
+			// Salvar celulas
+			if (ListaCelulas.getTarget().size() == 0) {
+				for (Celulas c : ListaCelulas.getSource()) {
+					c.setBases(null);
+					new CelulaDaoImp().atualizar(c);
+				}
+			} else {
+				for (Celulas c : ListaCelulas.getTarget()) {
+					c.setBases(bases);
+					new CelulaDaoImp().atualizar(c);
+				}
+				for (Celulas c : ListaCelulas.getSource()) {
+					c.setBases(null);
+					new CelulaDaoImp().atualizar(c);
+				}
+
+			}
+			
 		}
-	}else {
-		for(Celulas c : ListaCelulas.getTarget()) {
-			c.setBases(bases);
-			new CelulaDaoImp().atualizar(c);
+		
+		// Salvar fotos
+		for (Fotosbases fotosbase : listFotosbases) {
+			if (fotosbase.getCodFoto() == null) {
+
+				String tmp = uuid.randomUUID().toString() + ".jpg";
+				fotosbase.setBases(bases);
+				fotosbase.setFoto("/fotos/bases/" + tmp);
+				salvarFoto(tmp, fotosbase.getImagem());
+				fotosBasesDao.salvar(fotosbase);
+			}
 		}
-		for(Celulas c : ListaCelulas.getSource()) {
-			c.setBases(null);
-			new CelulaDaoImp().atualizar(c);
+		
+		//excluir fotos
+		if(listFotosbasesExcluir.size() !=0) {
+			for(Fotosbases fotosbases : listFotosbasesExcluir) {
+				fotosBasesDao.excluir(fotosbases, fotosbases.getCodFoto());
+				excluirFoto(fotosbases.getFoto());
+			}
 		}
+		return prepararListarBases();
+
 	}
-		
-	
-		
-		
-		
-	
-    	return "/list/bases.mir";
-	}
+
 	public void excluir(ActionEvent event) {
-		
+
 		for (Fotosbases fotosbase : bases.getFotosbaseses()) {
 			excluirFoto(fotosbase.getFoto());
 		}
 		basesDao.excluir(bases, bases.getBasCod());
-		
+
 		listaBases = new ArrayList<Bases>();
-		listaBases.addAll(basesDao.listarBases(discipuloSessao.getDiscipulos().getDisCod()));
+		listaBases.addAll(basesDao.listarBases(discipuloSessao.getDiscipulos()
+				.getDisCod()));
 
 	}
 
@@ -287,8 +320,6 @@ public class BasesBean {
 		bases.setDiscipulosByLiderAcaoSocial(liderAcaoSocial);
 		bases.setDiscipulosByLiderGovJusto(liderGovernoJusto);
 
-		
-		
 		if (logradouro == null) {
 			logradouro.setCep(null);
 			context.addMessage(null, new FacesMessage("ERRO", " CEP inválido"));
@@ -298,11 +329,11 @@ public class BasesBean {
 
 		if (basesDao.salvar(bases) == (true)) {
 
-			for(Celulas c : ListaCelulas.getTarget()) {
+			for (Celulas c : ListaCelulas.getTarget()) {
 				c.setBases(bases);
 				new CelulaDaoImp().atualizar(c);
 			}
-			
+
 			for (Fotosbases fotosbase : listFotosbases) {
 				String tmp = uuid.randomUUID().toString() + ".jpg";
 				fotosbase.setBases(bases);
@@ -348,6 +379,7 @@ public class BasesBean {
 		}
 
 	}
+
 	public void excluirFoto(String Foto) {
 
 		// Para pegar direto o caminho da imagem
@@ -359,8 +391,8 @@ public class BasesBean {
 
 		// Foto = discipulos.getDisCpf() + ".jpg";
 		String caminho = path + "/" + Foto;
-		Foto=Foto.substring(13,Foto.length());
-		File file= new File(path,  "/" +Foto);
+		Foto = Foto.substring(13, Foto.length());
+		File file = new File(path, "/" + Foto);
 		file.delete();
 
 	}
@@ -723,7 +755,8 @@ public class BasesBean {
 	}
 
 	/**
-	 * @param listaCelulas the listaCelulas to set
+	 * @param listaCelulas
+	 *            the listaCelulas to set
 	 */
 	public void setListaCelulas(DualListModel<Celulas> listaCelulas) {
 		ListaCelulas = listaCelulas;
