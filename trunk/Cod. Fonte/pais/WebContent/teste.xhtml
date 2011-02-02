@@ -9,14 +9,31 @@
 		<link rel="stylesheet" type="text/css" href="../css/css.css" />
 </h:head>
 <h:body>
-<div id="pgCentralizado"> <h:form id="form">
-            
-            	
-            <h:commandButton action="#{discipuloBean.prepararDiscipulo}"/>	
-            
+ <h:form id="form">
+  <p:contextMenu > 
+  </p:contextMenu>
+            <center>
+            <h3>Dynamic QuickTime Movie</h3>  
+ <p:media id="video" value="http://wm01.mediaservices.ws/mir1221-live" width="800" height="600"  player="real" >
+ 	
+ </p:media>  
+ <object id="Object1" type="application/x-shockwave-flash" data="player_flv_maxi.swf" width="480" height="360">
+
+<param name="movie" value="player_flv_maxi.swf" />
+<param name="allowFullScreen" value="true" />
+<param name="wmode" value="opaque" />
+<param name="allowScriptAccess" value="sameDomain" />
+<param name="quality" value="high" />
+<param name="menu" value="true" />
+<param name="autoplay" value="false" />
+<param name="autoload" value="false" />
+<param name="FlashVars" value="configxml=aula2(1).xml" />
+
+</object> 
+            </center>
               
-            </h:form></div>
-            <ui:include src="layout/menu-superior.xhtml" />
+            </h:form>
+          
 
 </h:body>
 </html>
