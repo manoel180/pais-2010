@@ -35,6 +35,7 @@ public class Discipulos implements java.io.Serializable {
 	private Estadocivil estadocivil;
 	private Logradouro logradouro;
 	private Discipulos discipulos;
+	private Discipulos discipulosByDisConjugecad;
 	private Funcaoeclesiasticas funcaoeclesiasticas;
 	private Formacaoacademica formacaoacademica;
 	private Geracoes geracoes;
@@ -65,6 +66,8 @@ public class Discipulos implements java.io.Serializable {
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
 	private List<Encontros> encontroses;
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private Set<Discipulos> discipulosesForDisConjugecad = new HashSet<Discipulos>(
+			0);
 	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
 			0);
 	private Set<Mensagem> mensagemsForMensDisCod = new HashSet<Mensagem>(0);
@@ -179,6 +182,17 @@ public class Discipulos implements java.io.Serializable {
 
 	public void setDiscipulos(Discipulos discipulos) {
 		this.discipulos = discipulos;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "disConjugecad")
+	public Discipulos getDiscipulosByDisConjugecad() {
+		return this.discipulosByDisConjugecad;
+	}
+
+	public void setDiscipulosByDisConjugecad(
+			Discipulos discipulosByDisConjugecad) {
+		this.discipulosByDisConjugecad = discipulosByDisConjugecad;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -461,6 +475,16 @@ public class Discipulos implements java.io.Serializable {
 
 	public void setDiscipuloses(Set<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulosByDisConjugecad")
+	public Set<Discipulos> getDiscipulosesForDisConjugecad() {
+		return this.discipulosesForDisConjugecad;
+	}
+
+	public void setDiscipulosesForDisConjugecad(
+			Set<Discipulos> discipulosesForDisConjugecad) {
+		this.discipulosesForDisConjugecad = discipulosesForDisConjugecad;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulosByMensDisCodRecebe")

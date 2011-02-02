@@ -31,6 +31,7 @@ public class Mensagem implements java.io.Serializable {
 	private String mensTexto;
 	private Date mensData;
 	private char mensLida;
+	private char mensCaixa;
 	private Set<Mensagemanexos> mensagemanexoses = new HashSet<Mensagemanexos>(
 			0);
 
@@ -125,6 +126,21 @@ public class Mensagem implements java.io.Serializable {
 
 	public void setMensagemanexoses(Set<Mensagemanexos> mensagemanexoses) {
 		this.mensagemanexoses = mensagemanexoses;
+	}
+
+	/**
+	 * @return the mensCaixa
+	 */
+	@Column(name = "mensCaixa", length = 1)
+	public char getMensCaixa() {
+		return mensCaixa;
+	}
+
+	/**
+	 * @param mensCaixa the mensCaixa to set
+	 */
+	public void setMensCaixa(char mensCaixa) {
+		this.mensCaixa = mensCaixa;
 	}
 
 }
