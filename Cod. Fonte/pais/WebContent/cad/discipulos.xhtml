@@ -81,12 +81,25 @@
 								<f:ajax render="conjugeTxt" process="estcivil" event="change"
 									listener="#{discipuloBean.isCasado}" />
 							</h:selectOneMenu>
-							<h:outputLabel value="Nome do cônjuge:"
-								styleClass="Texto_cpf_login" for="conjugeTxt" />
+							
+							<h:outputLabel value="Cônjuge cadastrado no PAIS:" styleClass="Texto_cpf_login" />
+							<h:selectBooleanCheckbox value="#{discipuloBean}" required="true" />
+							
+							<h:outputLabel value="Nome do cônjuge:" styleClass="Texto_cpf_login" for="conjugeTxt" />
+								
+							<p:autoComplete readonly="#{discipuloBean.editar}" 
+								value="#{discipuloBean.discipulos.disconjuge}"
+								requiredMessage="Nome do cônjuge é obrigatório" 
+								styleClass="formularios2" maxlength="60" size="40"
+								required="true" id="conjugeTxt" />
+								
 							<h:inputText readonly="#{discipuloBean.editar}" value="#{discipuloBean.discipulos.disconjuge}"
 								requiredMessage="Nome do cônjuge é obrigatório" tabindex="6"
 								styleClass="formularios2" maxlength="60" size="40"
 								required="true" id="conjugeTxt" />
+								
+								
+								
 
 							<h:outputLabel value="Formação Acadêmica:"
 								styleClass="formulariosObrigatorio" for="formacademica" />

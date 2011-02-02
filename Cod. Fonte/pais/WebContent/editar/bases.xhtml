@@ -30,7 +30,7 @@
 	<ui:define name="conteudo">
 		<br />
 		<br />
-		<h:form id="form1">
+		<h:form prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
 
 			<p:focus />
@@ -241,26 +241,34 @@
 
 
 				<p:tab id="tbfotos" title="Fotos da base">
-
-					<p:dataTable id="fotos2" value="#{basesBean.listFotosbases}"
-						var="foto">
+					<p:panel id="fotos2">
+					<p:dataTable value="#{basesBean.listFotosbases}"
+					paginator="true" id="fotodb"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					rows="10"
+					emptyMessage="Nenhuma célula encontrada"
+					paginatorPosition="bottom"
+					var="foto" >
 						<p:column>
 							<h:outputLabel value="#{foto.legenda}" />
 						</p:column>
 						<p:column>
-							<p:commandLink value="Remover" update="form1:fotos2"
-								actionListener="#{basesBean.removerfoto}" ajax="true"
-								process="@this">
+							<h:commandButton value="Remover"   
+								action="#{basesBean.removerfoto}" >
 								<f:setPropertyActionListener value="#{foto}"
 									target="#{basesBean.fotosbases}" />
-							</p:commandLink>
+							</h:commandButton>
 						</p:column>
 					</p:dataTable>
+					</p:panel>
 					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 
 
 						<h:outputLabel value="Legenda:" />
-						<h:inputText value="#{basesBean.fotosbases.legenda}" />
+						<h:inputText id="legenda" value="#{basesBean.fotosbases.legenda}" />
 
 						<p:graphicImage id="foto" value="#{basesBean.imagem}" width="120"
 							height="116" cache="false" />
@@ -280,7 +288,7 @@
 
 						<p:commandButton value="Adicionar"
 							actionListener="#{basesBean.adicionarfoto}"
-							update="form1:fotos2 foto idarquivo">
+							update="fotos2 foto idarquivo legenda">
 						</p:commandButton>
 					</h:panelGrid>
 
@@ -312,7 +320,7 @@
 			<br />
 
 			<h:commandButton value="Editar" styleClass="formularios"
-				tabindex="25" actionListener="#{basesBean.alterar}"></h:commandButton>
+				action="#{basesBean.alterar}"></h:commandButton>
 			&nbsp;
 			<h:commandButton value="Cancelar" styleClass="formularios" tabindex="25"
 			action="#{basesBean.prepararListarBases}">
