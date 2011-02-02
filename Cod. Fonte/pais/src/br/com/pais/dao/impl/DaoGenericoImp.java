@@ -51,25 +51,28 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	}
 
 	@Override
-	public T atualizar(T object) {
+	public boolean atualizar(T object) {
 		EntityManager em = getEntityManager();
 		
 		try {
 			em.getTransaction().begin();
 			em.merge(object);
 			em.getTransaction().commit();
+			
 		}
 
 		catch (PersistenceException e) {
 			// TODO: handle exception
 			e.getCause();
+			return false;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			em.getTransaction().rollback();
+			return false;
 		} finally {
 			em.close();
 		}
-		return object;
+		return true;
 	}
 	
 	@Override

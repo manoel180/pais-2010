@@ -9,7 +9,7 @@ public interface DaoGenerico<T, ID extends Serializable> {
 	public Class<T> getObjectClass();
 	public boolean salvar(T object);
 	public T pesquisarPorId(ID id);
-	public T atualizar(T object);
+	public boolean atualizar(T object);
 	void excluir(T object, ID id);
 	public List<T> todos();
 	public List<T> listPesqParam(String query, Map<String, Object> params);
