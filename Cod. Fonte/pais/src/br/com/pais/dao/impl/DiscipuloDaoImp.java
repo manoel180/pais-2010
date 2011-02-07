@@ -135,7 +135,6 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 			Query query = getEntityManager().createQuery(
 					"From Discipulos d " +
 					"where d.discipulos.disCod = "+ discipulador + " and (d.dism12 = 's') " +
-					"and d.funcaoeclesiasticas.funCod > 2 " +
 					"and (d.geracoes.gerCod = " + geracao + ")");
 			return query.getResultList();
 		} catch (NoResultException nre) {
