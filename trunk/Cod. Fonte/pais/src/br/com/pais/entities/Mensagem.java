@@ -2,9 +2,9 @@ package br.com.pais.entities;
 
 // Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,32 +30,23 @@ public class Mensagem implements java.io.Serializable {
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-	private char mensLida;
-	private char mensCaixa;
-	private Set<Mensagemanexos> mensagemanexoses = new HashSet<Mensagemanexos>(
-			0);
+	private String mensLida;
+	private String mensCaixa;
+
+	private List<Mensagemanexos> mensagemanexoses = new ArrayList<Mensagemanexos>();
 
 	public Mensagem() {
 	}
 
 	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
 			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
-			char mensLida) {
+			String mensLida, String mensCaixa, List<Mensagemanexos> mensagemanexoses) {
 		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
 		this.discipulosByMensDisCod = discipulosByMensDisCod;
 		this.mensTexto = mensTexto;
 		this.mensData = mensData;
 		this.mensLida = mensLida;
-	}
-
-	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
-			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
-			char mensLida, Set<Mensagemanexos> mensagemanexoses) {
-		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
-		this.discipulosByMensDisCod = discipulosByMensDisCod;
-		this.mensTexto = mensTexto;
-		this.mensData = mensData;
-		this.mensLida = mensLida;
+		this.mensCaixa = mensCaixa;
 		this.mensagemanexoses = mensagemanexoses;
 	}
 
@@ -111,36 +102,30 @@ public class Mensagem implements java.io.Serializable {
 	}
 
 	@Column(name = "mensLida", nullable = false, length = 1)
-	public char getMensLida() {
+	public String getMensLida() {
 		return this.mensLida;
 	}
 
-	public void setMensLida(char mensLida) {
+	public void setMensLida(String mensLida) {
 		this.mensLida = mensLida;
 	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mensagem")
-	public Set<Mensagemanexos> getMensagemanexoses() {
-		return this.mensagemanexoses;
-	}
-
-	public void setMensagemanexoses(Set<Mensagemanexos> mensagemanexoses) {
-		this.mensagemanexoses = mensagemanexoses;
-	}
-
-	/**
-	 * @return the mensCaixa
-	 */
-	@Column(name = "mensCaixa", length = 1)
-	public char getMensCaixa() {
+	
+	@Column(name = "mensCaixa", nullable = false, length = 1)
+	public String getMensCaixa() {
 		return mensCaixa;
 	}
 
-	/**
-	 * @param mensCaixa the mensCaixa to set
-	 */
-	public void setMensCaixa(char mensCaixa) {
+	public void setMensCaixa(String mensCaixa) {
 		this.mensCaixa = mensCaixa;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mensagem", orphanRemoval = true)
+	public List<Mensagemanexos> getMensagemanexoses() {
+		return this.mensagemanexoses;
+	}
+
+	public void setMensagemanexoses(List<Mensagemanexos> mensagemanexoses) {
+		this.mensagemanexoses = mensagemanexoses;
 	}
 
 }
