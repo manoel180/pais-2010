@@ -3,6 +3,8 @@
  */
 package br.com.pais.util;
 
+import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -21,6 +23,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import br.com.pais.fileupload.MensagemAnexoFileUpload;
 import br.com.pais.mensagens.MessageManagerImpl;
 
 /**
@@ -105,7 +108,6 @@ public class SendEMail {
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro",
 			"erro.email_detail");
 		}
-
 	}
 	public void sendMailLembreteSenha(String funcEclesiastica, String nome, String email, String senha, String cpf) {
 		String html = "";
@@ -167,34 +169,32 @@ public class SendEMail {
 		}
 	}
 	
-	public void sendSimpleMailEnviarMensagem(String nomeEnviou, String nomeRecebe, String emailEnviar) {
+	public void sendSimpleMailEnviarMensagem(String diretorioImg, String nomeEnviou, String nomeRecebe, String emailEnviar) {
 		String html = "";
 		html += "<html>" + 
 				"<meta charset=\"UTF-8\">"+
 				"<body>"	+ 
 				"<img src='cid:image'></img>" + 
 				"<hr/>" + 
-				"Gr„Áa e Paz <b> "+ nomeRecebe +" </b> <br/>" +
-				"VoÁÍ Recebeu uma Mensagem de <b> "+ nomeEnviou +" </b> <br/>" +
-				"Para ver a mensagem acesse <b> http://www.pais12.com </b><br/>" +
+				"Gra√ßa e Paz <b> "+ nomeRecebe +" </b> <br/>" +
+				"Voc√™ Recebeu uma Mensagem de <b> "+ nomeEnviou +" </b> <br/>" +
+				"Para ver a mensagem acesse <b> <a href='http://www.pais12.com'>http://www.pais12.com</a> </b><br/>" +
 				
 				"<hr/>" + 
 				"<br/>"	+ 
 				"</body>" + 
 				"<br/>"+ 
 				"<footer>" +
-				"<b>OBS:</b> Favor n√o responder essa mensagem."+ 
+				"<b>OBS:</b> Favor n√£o responder essa mensagem."+ 
 				"</footer>" + 
 				"</html>";
 		
-		
 		Properties config = new Properties();
-		//config.setProperty("mail.debug", "true"); // Mostrar passo-a-passo no console
+		config.setProperty("mail.debug", "true"); // Mostrar passo-a-passo no console
 		config.setProperty("mail.transport.protocol", "smtp"); // Indica que ser√° usado SMTPS
 		config.setProperty("mail.smtp.host", "mail.pais12.com"); // Host do servidor de envio 
-		//config.setProperty("mail.smtp.port", "25"); // Porta do servidor de envio
+		config.setProperty("mail.smtp.port", "25"); // Porta do servidor de envio
 		config.setProperty("mail.smtp.auth", "true"); // Usa uma conta autenticada
-		String path = this.getClass().getResource("/br/com/pais/util/").getPath();
 		
 		Session session = Session.getInstance(config);
 		try {
@@ -203,7 +203,79 @@ public class SendEMail {
 			msg.setFrom(new InternetAddress("info@pais12.com"));
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(emailEnviar));
 			msg.setSubject("Mensagem do PAIS!");
-			msg.setContent(createHtmlContent(html, path));
+			msg.setContent(createHtmlContentEmail(html, diretorioImg));
+
+			Transport transport = session.getTransport();
+			transport.connect("info@pais12.com", "06112218");
+
+			transport.sendMessage(msg, msg.getAllRecipients());
+			transport.close();
+			//MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "info","sucesso.email_detail");
+		} catch (AddressException e) {
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro","erro.emailDestinarioinvalido_detail");
+			throw new IllegalArgumentException("Email de destinatario invalido!");		
+		} catch (MessagingException e) {
+			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro","erro.email_detail");
+		}
+	}
+	
+	private static Multipart createHtmlContentEmail(String conteudo, String diretorio)throws MessagingException {
+		MimeMultipart multipart = new MimeMultipart("related");
+
+		String html = "";
+		html += conteudo;
+
+		BodyPart mainPart = new MimeBodyPart();
+		mainPart.setContent(html, "text/html; charset=UTF-8;"); // Adiciona conte√∫do HTML
+		multipart.addBodyPart(mainPart);
+		
+	    //Anexa a Logo no HTML
+		BodyPart imagePart = new MimeBodyPart();
+		DataSource imgFds = new FileDataSource(diretorio + "\\logoEmail.png");
+		imagePart.setDataHandler(new DataHandler(imgFds));
+		imagePart.setHeader("Content-ID", "<image>"); // Adiciona a imagem ao email
+		multipart.addBodyPart(imagePart);
+		
+		return multipart;
+	}
+	
+	public void sendSimpleMailteste(String nomeEnviou, String nomeRecebe, String emailEnviar, 
+	String mensagem, List<MensagemAnexoFileUpload> listFileUpload, String diretorio) {
+		String html = "";
+		html += "<html>" + 
+				"<meta charset=\"UTF-8\">"+
+				"<body>"	+ 
+				"<img src='cid:image'></img>" + 
+				"<hr/>" + 
+				"Gra√ßa e Paz <b> "+ nomeRecebe +" </b> <br/>" +
+				"Voc√™ Recebeu uma Mensagem de <b> "+ nomeEnviou +" </b> <br/>" +
+				"Para ver a mensagem acesse <b> http://www.pais12.com </b><br/>" +
+				"<hr/>" + 
+				"<br/>"	
+				+ mensagem +
+				"</body>" + 
+				"<br/>"+ 
+				"<footer>" +
+				"<b>OBS:</b> Favor n√£o responder essa mensagem."+ 
+				"</footer>" + 
+				"</html>";
+		
+		Properties config = new Properties();
+		config.setProperty("mail.debug", "true"); // Mostrar passo-a-passo no console
+		config.setProperty("mail.transport.protocol", "smtp"); // Indica que ser√° usado SMTPS
+		config.setProperty("mail.smtp.host", "mail.pais12.com"); // Host do servidor de envio 
+		config.setProperty("mail.smtp.port", "25"); // Porta do servidor de envio
+		config.setProperty("mail.smtp.auth", "true"); // Usa uma conta autenticada
+		String path = "C:\\teste";
+		
+		Session session = Session.getInstance(config);
+		try {
+			
+			MimeMessage msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress("info@pais12.com"));
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(emailEnviar));
+			msg.setSubject("Mensagem do PAIS!");
+			msg.setContent(createHtmlContentTeste(html, path));
 
 			Transport transport = session.getTransport();
 			transport.connect("info@pais12.com", "06112218");
@@ -213,11 +285,37 @@ public class SendEMail {
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "info","sucesso.email_detail");
 		} catch (AddressException e) {
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro","erro.emailDestinarioinvalido_detail");
-			throw new IllegalArgumentException("Email de destinat·rio inv·lido!");		
+			throw new IllegalArgumentException("Email de destinatario invalido!");		
 		} catch (MessagingException e) {
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro","erro.email_detail");
 		}
 	}
 	
+	private static Multipart createHtmlContentTeste(String conteudo, String path)throws MessagingException {
+		MimeMultipart multipart = new MimeMultipart("related");
 
+		String html = "";
+		html += conteudo;
+
+		BodyPart mainPart = new MimeBodyPart();
+		mainPart.setContent(html, "text/html; charset=UTF-8;"); // Adiciona conte√∫do HTML
+		multipart.addBodyPart(mainPart);
+		
+	    //Anexa a Logo no HTML
+		BodyPart imagePart = new MimeBodyPart();
+		DataSource imgFds = new FileDataSource(path + "/logo.png");
+		imagePart.setDataHandler(new DataHandler(imgFds));
+		imagePart.setHeader("Content-ID", "<image>"); // Adiciona a imagem ao email
+		multipart.addBodyPart(imagePart);
+		
+		//Anexos
+		File file = new File(path + "/ajax-loader.gif");  
+	    MimeBodyPart bodyPartAnexo = new MimeBodyPart();  
+	    bodyPartAnexo.setDataHandler(new DataHandler(new FileDataSource(file)));  
+	    bodyPartAnexo.setFileName(file.getName());  
+	    multipart.addBodyPart(bodyPartAnexo);
+		
+		return multipart;
+	}
+	
 }
