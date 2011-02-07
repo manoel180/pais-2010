@@ -16,7 +16,8 @@ public class MensagemDaoImp extends DaoGenericoImp<Mensagem, Integer> implements
 	public List<Mensagem> listarMensagensRecebidas(Discipulos discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo and mensLida = 'N'");
+					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo " +
+					"and mensCaixa = 'E' and mensLida = 'N'");
 			query.setParameter("discipulo", discipulo);
 			return query.getResultList();
 		} catch (NoResultException nre) {
@@ -32,7 +33,8 @@ public class MensagemDaoImp extends DaoGenericoImp<Mensagem, Integer> implements
 	public List<Mensagem> listarCaixaEntrada(Discipulos discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo order by mensData DESC, mensCod DESC");
+					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo " +
+					"and mensCaixa = 'E' order by mensData ASC, mensCod DESC");
 			query.setParameter("discipulo", discipulo);
 			return query.getResultList();
 		} catch (NoResultException nre) {
@@ -48,7 +50,8 @@ public class MensagemDaoImp extends DaoGenericoImp<Mensagem, Integer> implements
 	public List<Mensagem> listarCaixaSaida(Discipulos discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Mensagem where discipulosByMensDisCod = :discipulo order by mensData DESC");
+					"From Mensagem where discipulosByMensDisCod = :discipulo " +
+					"and mensCaixa = 'S' order by mensData ASC, mensCod DESC");
 			query.setParameter("discipulo", discipulo);
 			return query.getResultList();
 		} catch (NoResultException nre) {

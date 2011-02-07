@@ -44,20 +44,4 @@ public class CelulaDaoImp extends DaoGenericoImp<Celulas, Integer> implements Ce
 		}
 	}
 
-	public List<Celulas> listarCelulasSemBasePorZona(int idzona) {
-		try {
-
-			Query query = getEntityManager().createQuery(
-					"select celulas from Celulas as celulas " +
-					"where celulas.bases is null " +
-					"and celulas.zona.idzona = " + idzona);
-			return query.getResultList();
-		} catch (NoResultException nre) {
-			// TODO: handle exception
-			return null;
-		} finally {
-			getEntityManager().close();
-		}
-	}
-
 }
