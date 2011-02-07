@@ -37,7 +37,6 @@
 				   <p:dataTable
 					id="dtRecebidas" 
 					var="mens" 
-					selection="#{mensagemBean.mensagemSelecionada}"
 					value="#{mensagemBean.listaRecebidas}" 
 					paginator="true"
 					firstPageLinkLabel="&lt;&lt; Primeiro"
@@ -82,46 +81,44 @@
 							<h:outputText value="&nbsp;LER" styleClass="Fonte_12" />
 						</center>
 						</f:facet>
-						<p:commandLink title="Ler Mensagem" action="#{mensagemBean.atualizarStatusMensagem}" update="outMensagem outMensagem2" oncomplete="dlgMensagem.show()">   
+						<p:commandLink title="Ler Mensagem" action="#{mensagemBean.LerMensagemEntrada}" ajax="false">   
                         <center>
-                        <p:graphicImage value="/img/editar.png"/>   
+                        <p:graphicImage value="/img/ver_mensagem.png"/>   
+                        </center>
+                        <f:setPropertyActionListener value="#{mens}" target="#{mensagemBean.mensagemSelecionada}" />
+                        </p:commandLink>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;EXCLUIR" styleClass="Fonte_12" />
+						</center>
+						</f:facet>
+						<p:commandLink title="Ler Mensagem" oncomplete="mensagemExcluir.show()">   
+                        <center>
+                        <p:graphicImage value="/img/excluir_mensagem.png"/>   
                         </center>
                         <f:setPropertyActionListener value="#{mens}" target="#{mensagemBean.mensagemSelecionada}" />
                         </p:commandLink>
 					</p:column>
 				</p:dataTable>
-				
-				<p:dialog header="CAIXA DE ENTRADA" widgetVar="dlgMensagem" resizable="false"
-			              modal="true" width="700" showEffect="slide" hideEffect="slide">
-			            <p:outputPanel id="outMensagem">
-			            <h:panelGrid columns="1"> 
-			            
-			            <h:outputText id="display" value="#{mensagemBean.mensagemSelecionada.mensTexto}" escape="false" />
-			            <h:outputText value="Mensagem" styleClass="formulariosObrigatorio"/>  
-			            <h:inputTextarea readonly="true" rows="10" cols="85" value="#{mensagemBean.mensagemSelecionada.mensTexto}" styleClass="formularios2"/>
-				        </h:panelGrid>
-				        <br/>
-				        <h:panelGrid columns="2" cellpadding="2">
-				        <h:outputText value="Responder:" styleClass="formulariosObrigatorio"/>
-				        <h:selectBooleanCheckbox value="#{mensagemBean.responder}">
-                           <p:ajax action="#{mensagemBean.checkResponder}" event="change" update="outMensagem2"/> 
-                        </h:selectBooleanCheckbox>
-                        </h:panelGrid> 
-                        </p:outputPanel> 
-				        
-				        <p:outputPanel id="outMensagem2">
-				        <h:inputTextarea id="textareaResposta" rendered="#{mensagemBean.responder}" rows="10" cols="75" value="#{mensagemBean.mensagem.mensTexto}" styleClass="formularios2"/>
-				        
-			            <h:panelGrid columns="2" cellpadding="2">
-			                <p:commandButton value="Responder" actionListener="#{mensagemBean.responderMensagem}" 
-			                                 update="outPrincipal" oncomplete="dlgMensagem.hide()" />
-			                <p:commandButton value="Cancelar" onclick="dlgMensagem.hide()" />
-			            </h:panelGrid>  
-			            </p:outputPanel> 
-			    </p:dialog>
-                    
 				</p:tab>
 			</p:tabView>
+			
+			<p:dialog header="EXCLUIR MENSAGEM ENVIADA" widgetVar="mensagemExcluir" resizable="false"
+			              modal="true" width="400">
+			            <h:panelGrid columns="3" columnClasses="coluna1, coluna1">
+				        <h:outputText value="Deseja realmente excluir está mensagem" styleClass="formulariosObrigatorio"/>
+				        <h:outputText value="?" styleClass="formulariosObrigatorio"/>  
+				        </h:panelGrid>
+				        
+			            <h:panelGrid columns="2" cellpadding="2">
+			                <p:commandButton value="Sim" actionListener="#{mensagemBean.ExcluirMensagemEntrada}" 
+			                                 update="dtRecebidas" oncomplete="mensagemExcluir.hide()" />
+			                <p:commandButton value="Não" onclick="mensagemExcluir.hide()" />
+			            </h:panelGrid>  
+			</p:dialog>
 			
 			</p:outputPanel> 
 			</h:form>
