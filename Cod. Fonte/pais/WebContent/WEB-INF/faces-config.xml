@@ -93,6 +93,11 @@
   <managed-bean-class>br.com.pais.managedbeans.BasesBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <managed-bean>
+  <managed-bean-name>treeBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.TreeBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
  <!--
  <faces-config-extension>
   <phase-listener>br.com.pais.mensagens.MessageListener3</phase-listener>
