@@ -1,3 +1,12 @@
+input {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	color: #56778B;
+	background-color: #E4ECEF;
+	border: 1px solid #CEDBE1;
+}
 body {
 	background-color: #D1DEE4;
 	margin-left: 0px;
