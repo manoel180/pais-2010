@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:form>
+<p:menubar autoSubmenuDisplay="true">
+		<p:submenu>
+ 			<f:facet name="label">
+				<p:menuitem action="#{mensagemBean.prepararListarMensagem}" value="&nbsp;PRINCIPAL&nbsp;" ajax="false" />
+			</f:facet>
+		</p:submenu>
+
+		<p:submenu label="CADASTRAR" align="left" >
+			<p:menuitem value="Discípulo" action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
+			<p:submenu label="&nbsp;Célula &nbsp;">  
+                <p:menuitem value="&nbsp;Nova Célula &nbsp;" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+                <p:menuitem value="&nbsp;Listar Célula &nbsp;" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+            </p:submenu>
+            
+            <p:submenu label="&nbsp;Bases &nbsp;" rendered="#{loginBean.menuBases}">  
+                <p:menuitem value="&nbsp;Nova Base &nbsp;" action="#{basesBean.prepararBases}"  ajax="false"/>
+                <p:menuitem value="&nbsp;Listar Bases &nbsp;" action="#{basesBean.prepararListarBases}" ajax="false"/>
+            </p:submenu>
+		</p:submenu>
+		
+		<p:submenu  label="FINANCEIRO"  align="left">
+		    <p:menuitem value="&nbsp;Fazer Repasse &nbsp;" action="#{movimentacaoBean.prepararMovimento}" rendered="#{loginBean.menuFazerRepasse}" ajax="false"/>
+			<p:menuitem value="&nbsp;Receber Repasse &nbsp;" action="#{repasseBean.prepararRepasse}"  rendered="#{loginBean.menuReceberRepasse}" ajax="false" />
+			<p:submenu rendered="#{loginBean.menuFazerRepasse}">  
+                <f:facet name="label">  
+                    <p:menuitem value="&nbsp;Listar Repasses &nbsp;"/>  
+                </f:facet>  
+                <p:menuitem value="Recebidos" action="#{repasseBean.prepararListarRepasseRecebidos}" rendered="#{loginBean.menuListarRecebidos}" ajax="false"/>
+                <p:menuitem value="Enviados" action="#{repasseBean.prepararListarRepasseEnviados}" rendered="#{loginBean.menuListarEnviados}" ajax="false"/>
+            </p:submenu>
+		</p:submenu>
+		
+		<p:submenu label="RELATÓRIOS"  >
+		</p:submenu>
+		
+		<p:submenu label="EVENTOS" >
+				<p:menuitem value="&nbsp;Encontros&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Congressos&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Celebrações&nbsp;" ajax="false" />
+				<p:menuitem value="&nbsp;Batismos nas Águas&nbsp;" ajax="false" />
+		</p:submenu>
+
+		<p:submenu label="ESCOLA DE LÍDERES" >
+			<p:menuitem value="&nbsp; Abrir Escola&nbsp;" ajax="false" />
+			<p:menuitem value="&nbsp; Lançar Notas&nbsp;" ajax="false" />
+		</p:submenu>
+		
+		<p:submenu label="MENSAGENS">
+			<p:menuitem action="#{mensagemBean.prepararMensagem}" value="&nbsp;Enviar Mensagem&nbsp;" ajax="false" />
+			<p:menuitem action="#{mensagemBean.caixaEntrada}" value="&nbsp;Caixa Entrada&nbsp;" ajax="false" />
+			<p:menuitem action="#{mensagemBean.caixaSaida}" value="&nbsp;Caixa Saída&nbsp;" ajax="false" />
+		</p:submenu>
+		
+		<p:submenu>
+ 			<f:facet name="label">
+				<p:menuitem action="#{loginBean.sairAplicacao}" value="SAIR" align="left"  ajax="false" />
+			</f:facet>
+		</p:submenu>
+	</p:menubar>
+	
+</h:form>
+</html>

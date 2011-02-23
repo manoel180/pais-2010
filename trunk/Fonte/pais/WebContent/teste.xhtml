@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+		<link  rel="stylesheet" type="text/css" href="css/css.css" />
+		<link rel="stylesheet" type="text/css" href="../css/css.css" />
+</h:head>
+<h:body>
+ <h:form id="form">
+  <p:contextMenu > 
+  </p:contextMenu>
+            <center>
+            <h3>Dynamic QuickTime Movie</h3>  
+ <p:media id="video" value="http://wm01.mediaservices.ws/mir1221-live" width="800" height="600"  player="real" >
+ 	
+ </p:media>  
+ <object id="Object1" type="application/x-shockwave-flash" data="player_flv_maxi.swf" width="480" height="360">
+
+<param name="movie" value="player_flv_maxi.swf" />
+<param name="allowFullScreen" value="true" />
+<param name="wmode" value="opaque" />
+<param name="allowScriptAccess" value="sameDomain" />
+<param name="quality" value="high" />
+<param name="menu" value="true" />
+<param name="autoplay" value="false" />
+<param name="autoload" value="false" />
+<param name="FlashVars" value="configxml=aula2(1).xml" />
+
+</object> 
+            </center>
+              
+            </h:form>
+          
+
+</h:body>
+</html>

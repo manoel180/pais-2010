@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+	
+	<ui:define name="javascript">
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskMoney.0.2.js"></script>
+	
+	<script>
+	jQuery(function($){
+		  jQuery("#movData").mask("99/99/9999");
+		  $("#movValor").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:true});
+	});
+	</script>
+	</ui:define>
+    
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="FINANCEIRO"/>  
+         <p:menuitem value="CADASTRO DE MOVIMENTO" action="#{movimentacaoBean.prepararCadastro}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<br />
+		<h:form prependId="false">
+			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			<p:tabView orientation="top">
+				<p:tab title="Dados da Célula">
+					<p:panel> 
+				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				        <p:graphicImage value="#{movimentacaoBean.discipuloSessao.discipulos.disfoto}" width="41" height="40"/>
+				        <h:outputText value="#{movimentacaoBean.discipuloSessao.discipulos.disnome}" styleClass="Texto_cpf_login"/>   
+				        </h:panelGrid>
+				        </p:panel>
+			            <p:panel header="Dados Movimento"> 
+				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				            <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/> 
+				            <h:outputText value="#{movimentacaoBean.celulaSelecionada.geracoes.gerDescricao}" styleClass="Texto_cpf_login"/>
+							<h:outputText value="Data:" styleClass="formulariosObrigatorio"/>
+							<p:calendar id="movData" tabindex="1" value="#{movimentacaoBean.movimento.movData}"
+							        required="true" requiredMessage="Data do Movimento é obrigatório!"
+				                    inputStyleClass="formularios" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"/>
+						    <h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
+						    <h:selectOneMenu tabindex="2" value="#{movimentacaoBean.movimento.movTipo}"
+								requiredMessage="Tipo do Movimento é obrigatório!"
+								styleClass="formularios" required="true">
+								<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
+								<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
+								<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
+								<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
+								<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
+								<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
+							</h:selectOneMenu>
+							<h:outputText value="Valor R$:" styleClass="formulariosObrigatorio"/>
+							<h:inputText id="movValor" tabindex="3" value="#{movimentacaoBean.movimento.movValor}" styleClass="formularios"
+							 required="true" requiredMessage="Valor é Obrigatório!">
+							 <f:convertNumber type="currency" pattern="#,##0.00" minFractionDigits="2"/>
+							</h:inputText> 
+						</h:panelGrid>
+			            </p:panel>
+				</p:tab>
+			</p:tabView>
+			<br/>
+			<p:commandButton value="Cadastrar" styleClass="formularios"
+			                 update="outPnlRepasse"
+			                 oncomplete="repasseDialog.show()"
+			                 actionListener="#{movimentacaoBean.limparRepasseDialog}" /> 
+			&nbsp;
+			<p:commandButton value="Cancelar" styleClass="formularios" 
+			action="#{movimentacaoBean.prepararCadastro}" ajax="false"/>
+			
+			<p:dialog header="DADOS DO REPASSE" widgetVar="repasseDialog" resizable="false"
+		              modal="true" width="450" showEffect="slide" hideEffect="slide">
+		    <p:outputPanel id="outPnlRepasse">
+		            <h:panelGrid columns="1">
+			        <h:outputText value="Informe o Local do Repasse:" styleClass="formulariosObrigatorio"/>  
+			        <h:inputTextarea rows="10" cols="50" value="#{movimentacaoBean.repasse.resLocal}" styleClass="formularios2"/>
+			        </h:panelGrid>
+		            <h:panelGrid columns="2" cellpadding="2">
+		                <p:commandButton value="Confirmar" styleClass="formularios" 
+		                oncomplete="repasseDialog.hide(); imprimirDialog.show();"
+		                actionListener="#{movimentacaoBean.salvarMovimento}"
+		                update="outPnlImprimir"/>
+		                <p:commandButton value="Cancelar" styleClass="formularios" 
+		                onclick="repasseDialog.hide()" />
+		            </h:panelGrid>  
+		    </p:outputPanel>
+		    </p:dialog>
+		    
+		    <p:dialog header="DADOS DO REPASSE GERADO" widgetVar="imprimirDialog" resizable="false"
+		    closable="false" modal="true" width="700" showEffect="slide" hideEffect="slide">
+		    <p:outputPanel id="outPnlImprimir">
+		            <p:panel> 
+				        <h:panelGrid columns="14" columnClasses="coluna1,coluna2,coluna2">
+				        <h:outputText value="Discipulo:" styleClass="formulariosObrigatorio"/> 
+				        <p:graphicImage value="#{movimentacaoBean.protocolo.fotoDiscipulo}" width="41" height="40"/>
+				        <h:outputText value="#{movimentacaoBean.protocolo.discipulo}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/>
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value=""/> 
+				        <h:outputText value="Discipulador:" styleClass="formulariosObrigatorio"/> 
+				        <p:graphicImage value="#{movimentacaoBean.protocolo.fotoDiscipulador}" width="41" height="40"/>
+				        <h:outputText value="#{movimentacaoBean.protocolo.discipulador}" styleClass="Texto_cpf_login"/>  
+				        </h:panelGrid>
+				    </p:panel>
+				    <hr/>
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				        <h:outputText value="Tipo de Movimento:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{movimentacaoBean.protocolo.tipo}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Período:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{movimentacaoBean.protocolo.inicio} á #{movimentacaoBean.protocolo.fim}" styleClass="Texto_cpf_login"/> 
+				        <h:outputText value="Valor:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{movimentacaoBean.protocolo.valor}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Local do Repasse:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{movimentacaoBean.protocolo.local}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Data do Repasse:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{movimentacaoBean.protocolo.data}" styleClass="Texto_cpf_login"/>
+				        <h:outputText value="Protocolo Gerado:" styleClass="formulariosObrigatorio"/> 
+				        <h:outputText value="#{movimentacaoBean.protocolo.protocolo}" styleClass="Texto_cpf_login"/>
+				    </h:panelGrid>
+				    <br/>
+		            <h:panelGrid columns="4" cellpadding="2">
+		            <h:commandLink action="#{movimentacaoBean.imprimirProtocolo}" target="_blank">  
+                        <center>
+                        <p:graphicImage value="/img/but_imprimir.png"/>     
+                        </center>  
+                    </h:commandLink>
+                    <h:outputText value=""/> 
+				    <h:outputText value=""/>
+                    <h:commandLink action="#{movimentacaoBean.prepararMovimento}">  
+                        <center>
+                        <p:graphicImage value="/img/but_fechar.png"/>     
+                        </center>  
+                    </h:commandLink>
+		            </h:panelGrid>
+		    </p:outputPanel>
+		    </p:dialog>
+		</h:form>
+		    
+	</ui:define>
+</ui:composition>
