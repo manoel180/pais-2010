@@ -65,7 +65,7 @@ public class Discipulos implements java.io.Serializable {
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
 	private List<Encontros> encontroses;
-	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private List<Discipulos> discipuloses;
 	private Set<Discipulos> discipulosesForDisConjugecad = new HashSet<Discipulos>(
 			0);
 	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
@@ -103,7 +103,7 @@ public class Discipulos implements java.io.Serializable {
 			Set<Celulas> celulases, Set<Celulas> celulases_1,
 			Set<Bases> basesesForLiderGovJusto, Set<Bases> basesesForBasDisCod,
 			Set<Bases> basesesForLiderAcaoSocial, List<Encontros> encontroses,
-			Set<Discipulos> discipuloses,
+			List<Discipulos> discipuloses,
 			Set<Mensagem> mensagemsForMensDisCodRecebe,
 			Set<Mensagem> mensagemsForMensDisCod) {
 		this.estadocivil = estadocivil;
@@ -469,11 +469,11 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulos")
-	public Set<Discipulos> getDiscipuloses() {
+	public List<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
 
-	public void setDiscipuloses(Set<Discipulos> discipuloses) {
+	public void setDiscipuloses(List<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
 	}
 	

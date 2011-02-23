@@ -10,6 +10,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javassist.compiler.ast.Keyword;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -18,8 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 
 import br.com.pais.dao.BasesDao;
 import br.com.pais.dao.CondicaoBasesDao;
@@ -50,7 +54,6 @@ import br.com.pais.entities.Logradouro;
 import br.com.pais.entities.Statusbase;
 import br.com.pais.entities.Tipobases;
 import br.com.pais.entities.Zona;
-import br.com.pais.mensagens.MessageManagerImpl;
 import br.com.pais.util.ApplicationSecurityManager;
 
 /**
@@ -68,7 +71,10 @@ public class BasesBean {
 	private Fotosbases fotosbases = new Fotosbases();
 	private Discipulos liderGovernoJusto = new Discipulos();
 	private Discipulos liderAcaoSocial = new Discipulos();
-
+	private TreeNode root;
+	private TreeNode raiz;
+	private TreeNode selectedNode;
+	private ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
 	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 
 	// Objetos Daos
@@ -164,7 +170,28 @@ public class BasesBean {
 		return nomeArquivoSelecionado;
 	}
 
+	public void carregarLideres(Discipulos discipulos, TreeNode pai) {
+
+			for (Discipulos d : discipulos.getDiscipuloses()) {
+				nodes.add(new DefaultTreeNode(d, pai));
+				if (!discipulos.getDiscipuloses().isEmpty()) {
+					carregarLideres(d, (pai.getChildren().get(0)));
+					nodes = new ArrayList<TreeNode>();
+				}
+			}
+	}
+
+
 	public String prepararBases() {
+		nodes = new ArrayList<TreeNode>();
+		selectedNode = new DefaultTreeNode();
+		root = new DefaultTreeNode("root", null);
+		nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos(), root));
+		carregarLideres(discipuloSessao.getDiscipulos(), nodes.get(0));
+		if(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad()!=null ){
+			nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root));
+			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(0));
+		}
 		zona = new Zona();
 		zona.setIdzona(1);
 		listFotosbases = new ArrayList<Fotosbases>();
@@ -182,6 +209,7 @@ public class BasesBean {
 		statusbase = new Statusbase();
 		tipobases = new Tipobases();
 		logradouro = new Logradouro();
+
 		listDiscipulos = discipuloDao.listarDiscipulos(discipuloSessao
 				.getDiscipulos().getDisCod());
 		listZonas = zonasDao.todos();
@@ -205,7 +233,7 @@ public class BasesBean {
 
 	public String prepararEdicao() {
 		fotosbases = new Fotosbases();
-		
+
 		listZonas = zonasDao.todos();
 		listDiscipulos = discipuloDao.listarDiscipulos(discipuloSessao
 				.getDiscipulos().getDisCod());
@@ -251,8 +279,6 @@ public class BasesBean {
 
 		if (basesDao.atualizar(bases) == true) {
 
-			
-
 			// Salvar celulas
 			if (ListaCelulas.getTarget().size() == 0) {
 				for (Celulas c : ListaCelulas.getSource()) {
@@ -270,9 +296,9 @@ public class BasesBean {
 				}
 
 			}
-			
+
 		}
-		
+
 		// Salvar fotos
 		for (Fotosbases fotosbase : listFotosbases) {
 			if (fotosbase.getCodFoto() == null) {
@@ -284,10 +310,10 @@ public class BasesBean {
 				fotosBasesDao.salvar(fotosbase);
 			}
 		}
-		
-		//excluir fotos
-		if(listFotosbasesExcluir.size() !=0) {
-			for(Fotosbases fotosbases : listFotosbasesExcluir) {
+
+		// excluir fotos
+		if (listFotosbasesExcluir.size() != 0) {
+			for (Fotosbases fotosbases : listFotosbasesExcluir) {
 				fotosBasesDao.excluir(fotosbases, fotosbases.getCodFoto());
 				excluirFoto(fotosbases.getFoto());
 			}
@@ -760,6 +786,36 @@ public class BasesBean {
 	 */
 	public void setListaCelulas(DualListModel<Celulas> listaCelulas) {
 		ListaCelulas = listaCelulas;
+	}
+
+	/**
+	 * @return the root
+	 */
+	public TreeNode getRoot() {
+		return root;
+	}
+
+	/**
+	 * @param root
+	 *            the root to set
+	 */
+	public void setRoot(TreeNode root) {
+		this.root = root;
+	}
+
+	/**
+	 * @return the selectedNode
+	 */
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	/**
+	 * @param selectedNode
+	 *            the selectedNode to set
+	 */
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
 	}
 
 }

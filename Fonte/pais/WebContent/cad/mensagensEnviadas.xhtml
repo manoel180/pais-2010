@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="MENSAGENS"/>  
+         <p:menuitem value="CAIXA SAÍDA" action="#{mensagemBean.caixaSaida}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+		<h:form prependId="false">	
+		<p:outputPanel id="outPrincipal">	
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		
+			<p:tabView orientation="top">
+				<p:tab id="tabListarRecebidas" title="Caixa de Saída">
+				   
+				   <p:dataTable
+					id="dtEnviadas" 
+					var="mens" 
+					selection="#{mensagemBean.mensagemSelecionada}"
+					value="#{mensagemBean.listaEnviadas}" 
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhuma mensagem encontrada"
+					paginatorPosition="bottom">
+
+					<p:column id="dtFoto" 
+					    filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+							<h:outputText value="&nbsp;FOTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<p:graphicImage value="#{mens.discipulosByMensDisCodRecebe.disfoto}" width="41" height="40"/>
+					</p:column>
+					<p:column id="dtEnviada"
+						filterStyleClass="formularios" resizable="true"
+						sortBy="#{mens.discipulosByMensDisCod.disnome}">
+						<f:facet name="header">
+							<h:outputText value="&nbsp;ENVIADA PARA" styleClass="Fonte_12" />
+						</f:facet>
+						<h:outputText value="#{mens.discipulosByMensDisCodRecebe.disnome}" styleClass="Fonte_13"/>
+					</p:column>
+					<p:column id="dtData"
+						filterStyleClass="formularios" resizable="true"
+						sortBy="#{mens.mensData}">
+						<f:facet name="header">
+							<h:outputText value="&nbsp;DATA" styleClass="Fonte_12" />
+						</f:facet>
+						<h:outputText value="#{mens.mensData}" styleClass="Fonte_13">
+						<f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;LER" styleClass="Fonte_12" />
+						</center>
+						</f:facet>
+						<p:commandLink title="Ler Mensagem" action="#{mensagemBean.LerMensagemSaida}" ajax="false">   
+                        <center>
+                        <p:graphicImage value="/img/ver_mensagem.png"/>   
+                        </center>
+                        <f:setPropertyActionListener value="#{mens}" target="#{mensagemBean.mensagemSelecionada}" />
+                        </p:commandLink>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;EXCLUIR" styleClass="Fonte_12" />
+						</center>
+						</f:facet>
+						<p:commandLink title="Ler Mensagem" oncomplete="mensagemExcluir.show()">   
+                        <center>
+                        <p:graphicImage value="/img/excluir_mensagem.png"/>   
+                        </center>
+                        <f:setPropertyActionListener value="#{mens}" target="#{mensagemBean.mensagemSelecionada}" />
+                        </p:commandLink>
+					</p:column>
+				</p:dataTable>
+
+				</p:tab>
+			</p:tabView>
+			
+			<p:dialog header="EXCLUIR MENSAGEM ENVIADA" widgetVar="mensagemExcluir" resizable="false"
+			              modal="true" width="400">
+			            <h:panelGrid columns="3" columnClasses="coluna1, coluna1">
+				        <h:outputText value="Deseja realmente excluir está mensagem" styleClass="formulariosObrigatorio"/>
+				        <h:outputText value="?" styleClass="formulariosObrigatorio"/>  
+				        </h:panelGrid>
+				        
+			            <h:panelGrid columns="2" cellpadding="2">
+			                <p:commandButton value="Sim" actionListener="#{mensagemBean.ExcluirMensagemSaida}" 
+			                                 update="dtEnviadas" oncomplete="mensagemExcluir.hide()" />
+			                <p:commandButton value="Não" onclick="mensagemExcluir.hide()" />
+			            </h:panelGrid>  
+			</p:dialog>
+			
+			</p:outputPanel> 
+			</h:form>
+	</ui:define>
+</ui:composition>
