@@ -69,6 +69,7 @@ public class BasesBean {
 	private List<Fotosbases> listFotosbases = new ArrayList<Fotosbases>();
 	private List<Fotosbases> listFotosbasesExcluir = new ArrayList<Fotosbases>();
 	private Fotosbases fotosbases = new Fotosbases();
+	private Discipulos liderBase = new Discipulos();
 	private Discipulos liderGovernoJusto = new Discipulos();
 	private Discipulos liderAcaoSocial = new Discipulos();
 	private TreeNode root;
@@ -192,6 +193,7 @@ public class BasesBean {
 			nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root));
 			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(0));
 		}
+		
 		zona = new Zona();
 		zona.setIdzona(1);
 		listFotosbases = new ArrayList<Fotosbases>();
@@ -816,6 +818,20 @@ public class BasesBean {
 	 */
 	public void setSelectedNode(TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
+	}
+
+	/**
+	 * @return the liderBase
+	 */
+	public Discipulos getLiderBase() {
+		return liderBase;
+	}
+
+	/**
+	 * @param liderBase the liderBase to set
+	 */
+	public void setLiderBase(Discipulos liderBase) {
+		this.liderBase = liderBase;
 	}
 
 }
