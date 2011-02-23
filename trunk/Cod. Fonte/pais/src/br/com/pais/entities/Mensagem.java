@@ -30,8 +30,8 @@ public class Mensagem implements java.io.Serializable {
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-	private String mensLida;
-	private String mensCaixa;
+	private char mensLida;
+	private char mensCaixa;
 
 	private List<Mensagemanexos> mensagemanexoses = new ArrayList<Mensagemanexos>();
 
@@ -40,7 +40,7 @@ public class Mensagem implements java.io.Serializable {
 
 	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
 			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
-			String mensLida, String mensCaixa, List<Mensagemanexos> mensagemanexoses) {
+			char mensLida, char mensCaixa, List<Mensagemanexos> mensagemanexoses) {
 		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
 		this.discipulosByMensDisCod = discipulosByMensDisCod;
 		this.mensTexto = mensTexto;
@@ -102,20 +102,20 @@ public class Mensagem implements java.io.Serializable {
 	}
 
 	@Column(name = "mensLida", nullable = false, length = 1)
-	public String getMensLida() {
+	public char getMensLida() {
 		return this.mensLida;
 	}
 
-	public void setMensLida(String mensLida) {
+	public void setMensLida(char mensLida) {
 		this.mensLida = mensLida;
 	}
 	
 	@Column(name = "mensCaixa", nullable = false, length = 1)
-	public String getMensCaixa() {
+	public char getMensCaixa() {
 		return mensCaixa;
 	}
 
-	public void setMensCaixa(String mensCaixa) {
+	public void setMensCaixa(char mensCaixa) {
 		this.mensCaixa = mensCaixa;
 	}
 

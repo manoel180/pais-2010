@@ -14,8 +14,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import org.primefaces.component.behavior.ajax.AjaxBehavior;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.StreamedContent;
@@ -43,7 +43,6 @@ import br.com.pais.entities.Logradouro;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.exception.ValidarTEException;
 import br.com.pais.util.ApplicationSecurityManager;
-import br.com.pais.util.SendEMail;
 import br.com.pais.util.ValidarCPF;
 import br.com.pais.util.ValidarTituloEleitor;
 
@@ -53,8 +52,11 @@ import br.com.pais.util.ValidarTituloEleitor;
 
 public class DiscipuloBean {
 
-	protected boolean editar = true;
-
+	private boolean editar = true;
+	private boolean isConjugeCad = false;
+	private Discipulos conjugePesq;
+	private boolean conjugeCadEdit = false;
+	
 	private Discipulos discipulos = new Discipulos();
 	private Encontros encontros = new Encontros();
 	private Geracoes geracoes = new Geracoes();
@@ -75,6 +77,7 @@ public class DiscipuloBean {
 	private DualListModel<Encontros> ListaEncontros = new DualListModel<Encontros>();
 	private List<Encontros> source = new ArrayList<Encontros>();
 	private List<Encontros> target = new ArrayList<Encontros>();
+	List<Discipulos> listDiscipulosConjuges = new ArrayList<Discipulos>();
 
 	private List<Formacaoeclesiasticas> sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
 	private List<Formacaoeclesiasticas> targetFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
@@ -101,33 +104,45 @@ public class DiscipuloBean {
 	private boolean editarM12 = false;
 	
 	
-	
-	
 	// Buscar pelo cep
 	public void buscarCEP(AjaxBehaviorEvent event) {
-		// String cep = getLogradouro().getCep().substring(0, 5);
-		// cep += getLogradouro().getCep().substring(6, 9);
 		logradouro = logradouroDao.encontrarPorCEP(getLogradouro().getCep());
 		if (logradouro == null) {
-			// logradouro.setCep("");
+
 			discipulos.setDisEndNumero(null);
 			discipulos.setDisEndComplemento(null);
 		}
-		// logradouro.getBairro().;
-		// cidade = bairro.getLocalidade();
-		// estado = cidade.getEstado();
-		// return cep;
+
 	}
 
+	public List<Discipulos> completeDiscipulos(String query) {		
+		listDiscipulosConjuges = discipuloDao.listarDiscipulosCasados(query, discipuloSessao.getDiscipulos().getDisSexo());
+		return listDiscipulosConjuges;
+	}
+	
 	public void isCasado(AjaxBehaviorEvent event) {
 		if (estadocivil.getEstCod() == 2) {
 			editar = false;
+			conjugeCadEdit = false;
+		
 		} else {
 			editar = true;
+			conjugeCadEdit = true;
 			discipulos.setDisconjuge(null);
+			
 		}
 
 	}
+	public void isCasadoCad(AjaxBehaviorEvent event) {
+		if (isConjugeCad != true) {
+			discipulos.setDisconjuge(null);
+		} 
+	}
+
+	public void handleSelect(SelectEvent event) {
+		conjugePesq = discipuloDao.pesquisarPorId(conjugePesq.getDisCod());
+	}
+	
 	
 	public void isM12(AjaxBehaviorEvent event) {
 		if (discipulos.getDism12() == 's') {
@@ -228,6 +243,8 @@ public class DiscipuloBean {
 	}
 
 	public String prepararDiscipulo() {
+		conjugePesq = new Discipulos();
+		isConjugeCad = false;
 		listaFuncaoEclesiasticas = funcaoeclesiasticasDao.listarFuncaoPorSexo(
 				discipuloSessao.getDiscipulos().getDisSexo(), discipuloSessao
 						.getDiscipulos().getFuncaoeclesiasticas().getFunCod());
@@ -282,17 +299,28 @@ public class DiscipuloBean {
 		if (discipulos.getDisTitEleitor() != null) {
 			validartituloeleitor(null);
 		}
+		
 		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
 		discipulos.setEncontroses(ListaEncontros.getTarget());
 		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
 		discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
 
+		
 		discipulos.setEstadocivil(estadocivil);
+		if(estadocivil.getEstCod()==2 && isConjugeCad==true){
+			discipulos.setDiscipulosByDisConjugecad(conjugePesq);
+		}
+		
 		discipulos.setFormacaoacademica(formacaoacademica);
 		discipulos.setFuncaoeclesiasticas(funcaoeclesiasticas);
 		discipulos.setGeracoes(geracoes);
 
 		if (discipuloDao.salvar(discipulos) == (true)) {
+			if(estadocivil.getEstCod()==2 && isConjugeCad==true){
+				conjugePesq.setDiscipulosByDisConjugecad(discipulos);
+				discipuloDao.atualizar(conjugePesq);
+			}
+			
 			if (discipulos.getDisemail() != null
 					|| discipulos.getDisemail() != ""
 					&& (funcaoeclesiasticas.getFunCod() != 1 || funcaoeclesiasticas
@@ -466,8 +494,13 @@ public class DiscipuloBean {
 	 * @return the imagem
 	 */
 	public StreamedContent getImagem() {
-
-		return imagem;
+		if(imagem == null || imagem.equals(null)) {
+			InputStream stream = this.getClass().getResourceAsStream(
+			"/br/com/pais/util/sem_foto.jpg");
+			return imagem = new DefaultStreamedContent(stream, "image/jpeg", "sem_foto");
+		}else {
+			return imagem;
+		}
 	}
 
 	/**
@@ -687,4 +720,61 @@ public class DiscipuloBean {
 		this.editarM12 = editarM12;
 	}
 
+	/**
+	 * @return the isConjugeCad
+	 */
+	public boolean isConjugeCad() {
+		return isConjugeCad;
+	}
+
+	/**
+	 * @param isConjugeCad the isConjugeCad to set
+	 */
+	public void setConjugeCad(boolean isConjugeCad) {
+		this.isConjugeCad = isConjugeCad;
+	}
+
+	/**
+	 * @return the conjugePesq
+	 */
+	public Discipulos getConjugePesq() {
+		return conjugePesq;
+	}
+
+	/**
+	 * @param conjugePesq the conjugePesq to set
+	 */
+	public void setConjugePesq(Discipulos conjugePesq) {
+		this.conjugePesq = conjugePesq;
+	}
+
+	/**
+	 * @return the listDiscipulosConjuges
+	 */
+	public List<Discipulos> getListDiscipulosConjuges() {
+		return listDiscipulosConjuges;
+	}
+
+	/**
+	 * @param listDiscipulosConjuges the listDiscipulosConjuges to set
+	 */
+	public void setListDiscipulosConjuges(List<Discipulos> listDiscipulosConjuges) {
+		this.listDiscipulosConjuges = listDiscipulosConjuges;
+	}
+
+	/**
+	 * @return the conjugeCadEdit
+	 */
+	public boolean isConjugeCadEdit() {
+		return conjugeCadEdit;
+	}
+
+	/**
+	 * @param conjugeCadEdit the conjugeCadEdit to set
+	 */
+	public void setConjugeCadEdit(boolean conjugeCadEdit) {
+		this.conjugeCadEdit = conjugeCadEdit;
+	}
+
+	
 }

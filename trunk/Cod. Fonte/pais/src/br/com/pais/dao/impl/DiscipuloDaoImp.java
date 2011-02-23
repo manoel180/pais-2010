@@ -161,4 +161,26 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 			getEntityManager().close();
 		}
 	}
+
+	@Override
+	public List<Discipulos> listarDiscipulosCasados(String nome, char sexo ){
+		try {
+			Query query = getEntityManager().createQuery(
+					"select discipulos from Discipulos as discipulos " +
+					"where discipulos.disnome like '"+nome+"%' " +
+					"and discipulos.disSexo <> '"+sexo +"' "+
+					" and discipulos.estadocivil.estCod = 2 " +
+					" order by discipulos.disnome"
+					);
+					
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+
 }

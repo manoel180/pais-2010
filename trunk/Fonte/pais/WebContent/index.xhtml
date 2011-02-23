@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view contentType="text/html">
+	<h:head>  
+	<ui:insert name="javascript" />
+	<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/theme/skin.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/css_forms.css" />
+</h:head>
+<body>
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#E8EFF3">
+		<tr>
+			<td align="center" valign="top" scope="col">
+			<table width="100%" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td height="214" align="center" class="fundo" scope="col">
+					<table width="960" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="216" align="center" valign="top" style="background-image:url(/pais/img/topo_novo.png)" scope="col">
+							<table width="960" border="0" align="center" cellpadding="0"
+								cellspacing="0">
+								<tr>
+									<th scope="col">&nbsp;</th>
+								</tr>
+								<tr>
+									<td align="right" scope="col">
+									<table width="290" border="0" align="right" cellpadding="2"
+										cellspacing="0">
+										<tr>
+											<td width="33" height="20" align="center" valign="top"
+												class="Fonte_14_Branca" scope="col">
+												<p:graphicImage
+												value="#{loginBean.discipuloSessao.discipulos.disfoto}"
+												width="41" height="40" />
+												</td>
+											<td width="249" align="left" valign="top"
+												class="Fonte_13_Logado" scope="col"><strong>Bem
+											Vindo,</strong><br />
+											SR(A): <h:outputLabel value="#{loginBean.discipuloSessao.discipulos.disnome}"
+												   styleClass="Fonte_13_Logado" />
+												   </td>
+										</tr>
+										<tr>
+											<td height="20" align="right" valign="top"
+												class="Fonte_14_Branca" scope="col"><img
+												src="/pais/img/calendar_empty.png" width="25" height="25" /></td>
+											<td align="left" class="Fonte_13_Logado" scope="col"><strong>Dia
+											da Semana: </strong><h:outputLabel value="#{data_Hora.dia}" /></td>
+										</tr>
+
+										<tr>
+											<td height="20" align="right" valign="top"
+												class="Fonte_14_Branca" scope="col"><img
+												src="/pais/img/old_clock.png" width="25" height="25" /></td>
+											<td align="left" class="Fonte_13_Logado" scope="col">
+											<h:form
+												id="horaForm">
+												<strong>Hora Certa: </strong>
+												<h:outputLabel id="hora" value="#{data_Hora.hora}" />
+												<p:poll interval="1" update="hora" process="hora" autoStart="true" />
+											</h:form>
+											</td>
+										</tr>
+										<tr>
+											<td height="20" align="right" valign="top" class="Fonte_14_Branca" scope="col"></td>
+											<td align="left" class="Fonte_13_Logado" scope="col"></td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+								<tr>
+									<th scope="col">&nbsp;</th>
+								</tr>
+								<tr>
+								<td height="21" align="center" scope="col">
+								</td>
+								</tr>
+								<tr>
+									<td height="30" align="center" scope="col">
+										<ui:include src="layout/menu-superior.xhtml" />
+									</td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" scope="col">
+					<table width="960" border="0" align="center" cellpadding="0" cellspacing="0">
+						<tr>
+							<th scope="col">
+							<table width="960" border="0" align="center" cellpadding="0" cellspacing="0">
+								<tr>
+									<td colspan="5" align="center" style="background-image:url(/pais/img/barra_fundo_menu.png)" scope="col">
+									<img src="/pais/img/barra_fundo_menu.png" width="10" height="10" />
+									</td>
+								</tr>
+								<tr>
+									<td width="960" rowspan="2" valign="top" bgcolor="#E8EFF3" scope="col">
+									<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+										<tr>
+											<td align="left">
+											<h:form>
+												<ui:insert name="menu-vc-esta" />
+											</h:form>
+											</td>
+										</tr>
+										<tr>
+											<td align="left"><ui:insert name="conteudo" /></td>
+										</tr>
+									</table>
+									</td>
+								</tr>
+							</table>
+							</th>
+						</tr>
+						<tr>
+							<th scope="col">&nbsp;</th>
+						</tr>
+						<tr>
+							<th scope="col">&nbsp;</th>
+						</tr>
+						<tr>
+							<th scope="col">&nbsp;</th>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" style="background-image:url(/pais/img/barra_fundo_rodape.png)" scope="col">
+					<img src="/pais/img/barra_fundo_rodape.png" width="3" height="3" />
+					</td>
+				</tr>
+				<tr>
+					<td height="50" align="center" bgcolor="#D1DEE4" scope="col"><span
+						class="Texto_cpf_login">Copyrigth 2010 | <strong>Ministério
+					Internacional da Restauração</strong>. Todos os direitos reservados</span></td>
+				</tr>
+			</table>
+			</td>
+		</tr>
+	</table>
+	</body>
+</f:view>
+</html>

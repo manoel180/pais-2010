@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+    
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="MENSAGENS"/>  
+	     <p:menuitem value="CAIXA ENTRADA" action="#{mensagemBean.caixaEntrada}" ajax="false" />
+         <p:menuitem value="LER MENSAGEM" action="#{mensagemBean.LerMensagemEntrada}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+		
+		<h:form prependId="false">		
+		<p:outputPanel id="outMensagens">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:tabView orientation="top" activeIndex="0">
+			    <p:tab title="Mensagem Recebida">
+			    <h:panelGrid columns="1">
+			      <p:graphicImage value="#{mensagemBean.mensagemSelecionada.discipulosByMensDisCod.disfoto}" width="41" height="40"/>
+			      <h:outputText value="#{mensagemBean.mensagemSelecionada.discipulosByMensDisCod.disnome}" styleClass="Fonte_12"/>
+				  <h:outputText value="Enviou a Mensagem Abaixo" styleClass="Fonte_12"/>
+				</h:panelGrid>
+			    <h:panelGrid columns="1" bgcolor="white" width="100%">
+			    <h:outputText value="#{mensagemBean.mensagemSelecionada.mensTexto}" escape="false" />
+				</h:panelGrid>
+				</p:tab>
+				
+				<p:tab title="Arquivos Recebidos">
+					<p:dataTable
+					id="dtAnexos" 
+					var="anex" 
+					value="#{mensagemBean.listFileUpload}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" 
+					emptyMessage="Nenhum Anexo Adicionado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;ANEXOS ADICIONADOS" styleClass="Fonte_12"/>
+					</f:facet>
+						
+					<p:column>
+					    <center>
+						<p:graphicImage value="/img/#{anex.fotoTipoArquivo}"/>
+						</center> 
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;ARQUIVO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{anex.nomeArquivoSelecionado}"/>
+					</p:column>
+					
+					<p:column style="width:10px 0px">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;BAIXAR" styleClass="Fonte_12" />
+						</center>
+						</f:facet>
+						<p:commandLink title="Baixar" update="outMensagens" ajax="false" action="#{mensagemBean.BaixarAnexoEntrada}">  
+						    <center>
+						    <p:graphicImage value="/img/download.png"/> 
+						    </center>
+						    <f:setPropertyActionListener value="#{anex.nomeArquivoSelecionado}" target="#{mensagemBean.arquivoSelecionado}" /> 
+						</p:commandLink>
+					</p:column>
+					
+				    </p:dataTable>
+				</p:tab>
+				
+				<p:tab title="Responder" rendered="false">
+				  <p:editor width="920" value="#{mensagemBean.mensagem.mensTexto}"/>
+				</p:tab>
+				
+				<p:tab title="Enviar Novos Arquivos" rendered="false">
+				    <h:panelGrid columns="1">
+				    <h:outputText value="Arquivos Suportados jpg, jpeg, png, gif, doc, docx, txt, pdf, rar, zip com Tamanho Máximo 10MB." />
+				 
+					<p:fileUpload sizeLimit="10485760" image="/img/but_enviar.jpg"
+						width="68" auto="true"
+						fileUploadListener="#{mensagemBean.handleFileUploadEnviar}"
+						allowTypes="*.jpg;*.jpeg;*.png;*.gif;*.doc;*.docx;*.txt;*.pdf;*.rar;*.zip" 
+						description="Imagens e Documentos" 
+						update="outAnexos" />
+					</h:panelGrid>
+					
+					<p:outputPanel id="outAnexos">
+					<p:dataTable
+					id="dtAnexosEnviar" 
+					var="anexEnviar" 
+					value="#{mensagemBean.listFileUploadEnviar}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" 
+					emptyMessage="Nenhum Anexo Adicionado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;ANEXOS ADICIONADOS" styleClass="Fonte_12"/>
+					</f:facet>
+					<p:column>
+					    <center>
+						<p:graphicImage id="foto" value="/img/#{anexEnviar.fotoTipoArquivo}"/> 
+						</center>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;ARQUIVO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{anexEnviar.nomeArquivoSelecionado}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;EXCLUIR" styleClass="Fonte_12" />
+					    </center>
+						</f:facet>
+						<p:commandLink title="Excluir Anexo" update="outAnexos" action="#{mensagemBean.excluirAnexoEnviar}">  
+                        <center>
+                        <p:graphicImage value="/img/deletar.png"/>     
+                        </center>
+                        <f:setPropertyActionListener value="#{anexEnviar}" target="#{mensagemBean.mensagemAnexoSelecionada}" />
+                        </p:commandLink>
+					</p:column>
+					
+				    </p:dataTable>
+				    </p:outputPanel>
+				</p:tab>
+			</p:tabView>
+			<br />
+			<p:commandButton value="Responder Mensagem" update="outPrincipal"
+			                 action="#{mensagemBean.responderMensagem}" ajax="false" rendered="false"/> 
+	
+			</p:outputPanel>
+			</h:form>
+	</ui:define>
+</ui:composition>
