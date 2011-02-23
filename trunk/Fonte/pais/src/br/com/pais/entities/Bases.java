@@ -32,6 +32,7 @@ public class Bases implements java.io.Serializable {
 	private Integer basCod;
 	private Discipulos discipulosByLiderGovJusto;
 	private Discipulos discipulosByBasDisCod;
+	private Discipulos liderBase;
 	private Logradouro logradouro;
 	private Zona zona;
 	private Statusbase statusbase;
@@ -100,6 +101,8 @@ public class Bases implements java.io.Serializable {
 		this.basCod = basCod;
 	}
 
+
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "liderGovJusto")
 	public Discipulos getDiscipulosByLiderGovJusto() {
@@ -281,6 +284,22 @@ public class Bases implements java.io.Serializable {
 
 	public void setCelulases(List<Celulas> celulases) {
 		this.celulases = celulases;
+	}
+
+	/**
+	 * @return the liderBase
+	 */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "liderBase")
+	public Discipulos getLiderBase() {
+		return liderBase;
+	}
+
+	/**
+	 * @param liderBase the liderBase to set
+	 */
+	public void setLiderBase(Discipulos liderBase) {
+		this.liderBase = liderBase;
 	}
 
 }
