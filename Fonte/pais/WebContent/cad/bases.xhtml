@@ -49,7 +49,7 @@
 						<h:outputLabel value="Líder da Base:" styleClass="formulariosObrigatorio" />
 						<h:inputText styleClass="formularios2" maxlength="60" size="40"
 							required="true" autocomplete="off" id="nomeLiderBase" onclick="dlg.show();"
-							value="#{loginBean.discipuloSessao.discipulos.disnome}"
+							value="#{basesBean.liderBase.disnome}"
 							requiredMessage="Nome é obrigatório">
 						</h:inputText>
 						
@@ -321,14 +321,19 @@
 <p:dialog header="Selecione o Líder" modal="true"  widgetVar="dlg" resizable="false">
 
 <p:treeTable value="#{basesBean.root}" var="node" selectionMode="single"  selection="#{basesBean.selectedNode}">
-							<p:column>
-								<f:facet name="header"> Nome </f:facet>
+							<p:column filterBy="#{node.disnome}"  sortBy="#{node.disnome}">
+								<f:facet name="header" > Nome </f:facet>
+								<f:facet name="filter" value="#{node.disnome}"/>
 								<p:graphicImage value="#{node.disfoto}" width="40" height="40"/>
 								<h:outputText value="#{node.disnome}" />
 							</p:column>
 							
 							<p:column>
 								<f:facet name="header"> Equipe </f:facet>
+								<h:outputText value="#{node.geracoes.gerDescricao}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header"> Selecionar </f:facet>
 								<h:outputText value="#{node.geracoes.gerDescricao}" />
 							</p:column>
 						</p:treeTable>
