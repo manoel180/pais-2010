@@ -19,6 +19,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -61,6 +63,7 @@ public class Discipulos implements java.io.Serializable {
 	private List<Formacaoeclesiasticas> formacaoeclesiasticases ;
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Celulas> celulases_1 = new HashSet<Celulas>(0);
+	private Set<Bases> basesesForLiderBase = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderGovJusto = new HashSet<Bases>(0);
 	private Set<Bases> basesesForBasDisCod = new HashSet<Bases>(0);
 	private Set<Bases> basesesForLiderAcaoSocial = new HashSet<Bases>(0);
@@ -439,6 +442,21 @@ public class Discipulos implements java.io.Serializable {
 		this.basesesForLiderGovJusto = basesesForLiderGovJusto;
 	}
 
+	/**
+	 * @return the basesesForLiderBase
+	 */
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "liderBase")
+	public Set<Bases> getBasesesForLiderBase() {
+		return basesesForLiderBase;
+	}
+
+	/**
+	 * @param basesesForLiderBase the basesesForLiderBase to set
+	 */
+	public void setBasesesForLiderBase(Set<Bases> basesesForLiderBase) {
+		this.basesesForLiderBase = basesesForLiderBase;
+	}
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulosByBasDisCod")
 	public Set<Bases> getBasesesForBasDisCod() {
 		return this.basesesForBasDisCod;
@@ -469,6 +487,7 @@ public class Discipulos implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulos")
+	@OrderBy("disnome")
 	public List<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
@@ -505,5 +524,7 @@ public class Discipulos implements java.io.Serializable {
 	public void setMensagemsForMensDisCod(Set<Mensagem> mensagemsForMensDisCod) {
 		this.mensagemsForMensDisCod = mensagemsForMensDisCod;
 	}
+
+	
 
 }
