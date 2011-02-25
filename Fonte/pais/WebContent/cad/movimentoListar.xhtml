@@ -30,7 +30,6 @@
     
 		<h:form prependId="false">
 		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-		
 			<p:tabView orientation="top">
 				<p:tab id="tabListarCelula" title="Células Cadastradas">
 					<p:dataTable
@@ -99,9 +98,9 @@
                             <f:setPropertyActionListener value="#{cel}" target="#{movimentacaoBean.celulaSelecionada}" />    
                         </p:commandLink> 
 			        </p:column>
-				</p:dataTable> 
-			    
-			    <p:dialog header="DETALHES DA CÉLULA" widgetVar="celulaDetalhe" resizable="false"  
+				</p:dataTable>
+				
+				<p:dialog header="DETALHES DA CÉLULA" widgetVar="celulaDetalhe" resizable="false"  
                           modal="true" width="450" showEffect="slide" hideEffect="slide"> 
                 <p:outputPanel id="pnlCelulaDetalhe"> 
                     
