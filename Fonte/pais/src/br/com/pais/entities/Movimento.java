@@ -2,7 +2,6 @@ package br.com.pais.entities;
 
 // Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,28 +31,33 @@ public class Movimento implements java.io.Serializable {
 	private Date movData;
 	private Date movHora;
 	private String movTipo;
+	private String movEspecie;
 	private Double movValor;
-	private Character movRecebido;
+	private String movRecebido;
 	private String movProtocolo;
 	private String movProtocoloPai;
 	private Set<Repasse> repasses = new HashSet<Repasse>(0);
+	private Set<Movimentocheque> movimentocheques = new HashSet<Movimentocheque>(0);
 
 	public Movimento() {
 	}
 
 	public Movimento(Celulas celulas, Bases bases, Date movData, Date movHora,
-			String movTipo, Double movValor, Character movRecebido,
-			String movProtocolo, String movProtocoloPai, Set<Repasse> repasses) {
+			String movTipo, String movEspecie, Double movValor,
+			String movRecebido, String movProtocolo, String movProtocoloPai,
+			Set<Repasse> repasses, Set<Movimentocheque> movimentocheques) {
 		this.celulas = celulas;
 		this.bases = bases;
 		this.movData = movData;
 		this.movHora = movHora;
 		this.movTipo = movTipo;
+		this.movEspecie = movEspecie;
 		this.movValor = movValor;
 		this.movRecebido = movRecebido;
 		this.movProtocolo = movProtocolo;
 		this.movProtocoloPai = movProtocoloPai;
 		this.repasses = repasses;
+		this.movimentocheques = movimentocheques;
 	}
 
 	@Id
@@ -116,7 +120,16 @@ public class Movimento implements java.io.Serializable {
 		this.movTipo = movTipo;
 	}
 
-	@Column(name = "movValor", precision = 10)
+	@Column(name = "movEspecie", length = 60)
+	public String getMovEspecie() {
+		return this.movEspecie;
+	}
+
+	public void setMovEspecie(String movEspecie) {
+		this.movEspecie = movEspecie;
+	}
+
+	@Column(name = "movValor", precision = 22, scale = 0)
 	public Double getMovValor() {
 		return this.movValor;
 	}
@@ -126,11 +139,11 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	@Column(name = "movRecebido", length = 1)
-	public Character getMovRecebido() {
+	public String getMovRecebido() {
 		return this.movRecebido;
 	}
 
-	public void setMovRecebido(Character movRecebido) {
+	public void setMovRecebido(String movRecebido) {
 		this.movRecebido = movRecebido;
 	}
 
@@ -161,4 +174,12 @@ public class Movimento implements java.io.Serializable {
 		this.repasses = repasses;
 	}
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
+	public Set<Movimentocheque> getMovimentocheques() {
+		return this.movimentocheques;
+	}
+
+	public void setMovimentocheques(Set<Movimentocheque> movimentocheques) {
+		this.movimentocheques = movimentocheques;
+	}
 }
