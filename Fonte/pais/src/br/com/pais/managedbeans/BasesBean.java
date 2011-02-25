@@ -10,8 +10,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javassist.compiler.ast.Keyword;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -65,6 +63,7 @@ public class BasesBean {
 	protected boolean editar = true;
 	private int cod = 0;
 	private UUID uuid;
+	
 	private Bases bases = new Bases();
 	private List<Fotosbases> listFotosbases = new ArrayList<Fotosbases>();
 	private List<Fotosbases> listFotosbasesExcluir = new ArrayList<Fotosbases>();
@@ -73,8 +72,11 @@ public class BasesBean {
 	private Discipulos liderGovernoJusto = new Discipulos();
 	private Discipulos liderAcaoSocial = new Discipulos();
 	private TreeNode root;
-	private TreeNode raiz;
-	private TreeNode selectedNode;
+	private int index;
+	private DefaultTreeNode treeNode;
+	
+	private int opcao;
+	private Discipulos selectedLider;
 	private ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
 	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 
@@ -171,13 +173,33 @@ public class BasesBean {
 		return nomeArquivoSelecionado;
 	}
 
+	public void selecionarLider() {
+		switch (opcao) {
+		case 1:
+			liderBase = selectedLider;
+			break;
+		case 2:
+			liderGovernoJusto= selectedLider;
+			break;
+		case 3:
+			liderAcaoSocial = selectedLider;
+			break;
+		}
+		opcao = 0;
+	}
+		
 	public void carregarLideres(Discipulos discipulos, TreeNode pai) {
-
-			for (Discipulos d : discipulos.getDiscipuloses()) {
-				nodes.add(new DefaultTreeNode(d, pai));
+		treeNode = new DefaultTreeNode();
+		listDiscipulos =  discipulos.getDiscipuloses();
+			for (Discipulos d : listDiscipulos) {
+				treeNode = new DefaultTreeNode(d,pai);
+				
+				//nodes.add(new DefaultTreeNode(d, pai));
+				nodes.add(treeNode);
+				index = nodes.indexOf(treeNode);
+				System.out.println(d.getDisnome());
 				if (!discipulos.getDiscipuloses().isEmpty()) {
-					carregarLideres(d, (pai.getChildren().get(0)));
-					nodes = new ArrayList<TreeNode>();
+					carregarLideres(d, (nodes.get(index)));
 				}
 			}
 	}
@@ -185,7 +207,10 @@ public class BasesBean {
 
 	public String prepararBases() {
 		nodes = new ArrayList<TreeNode>();
-		selectedNode = new DefaultTreeNode();
+		treeNode = new DefaultTreeNode();
+		opcao = 0;
+		index = 0;
+		
 		root = new DefaultTreeNode("root", null);
 		nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos(), root));
 		carregarLideres(discipuloSessao.getDiscipulos(), nodes.get(0));
@@ -203,6 +228,7 @@ public class BasesBean {
 		target = new ArrayList<Celulas>();
 		ListaCelulas = new DualListModel<Celulas>(source, target);
 		fotosbases = new Fotosbases();
+		liderBase = new Discipulos();
 		liderAcaoSocial = new Discipulos();
 		liderGovernoJusto = new Discipulos();
 		condicaobase = new Condicaobase();
@@ -234,6 +260,19 @@ public class BasesBean {
 	}
 
 	public String prepararEdicao() {
+		nodes = new ArrayList<TreeNode>();
+		opcao = 0;
+		
+		//selectedNode = new DefaultTreeNode();
+		root = new DefaultTreeNode("root", null);
+		nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos(), root));
+		carregarLideres(discipuloSessao.getDiscipulos(), nodes.get(0));
+		if(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad()!=null ){
+			nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root));
+			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(0));
+		}
+		
+		
 		fotosbases = new Fotosbases();
 
 		listZonas = zonasDao.todos();
@@ -245,6 +284,7 @@ public class BasesBean {
 		listtipobases = tipoBasesDao.todos();
 		logradouro = bases.getLogradouro();
 		zona = bases.getZona();
+		liderBase = bases.getLiderBase();
 		liderAcaoSocial = bases.getDiscipulosByLiderAcaoSocial();
 		liderGovernoJusto = bases.getDiscipulosByLiderGovJusto();
 		tipobases.setTpbCod(bases.getTipobases().getTpbCod());
@@ -262,12 +302,13 @@ public class BasesBean {
 	}
 
 	public String alterar() {
-
+		
 		bases.setCondicaobase(condicaobase);
 		bases.setStatusbase(statusbase);
 		bases.setTipobases(tipobases);
 		bases.setZona(zona);
 
+		bases.setLiderBase(liderBase);
 		bases.setDiscipulosByBasDisCod(discipuloSessao.getDiscipulos());
 		bases.setDiscipulosByLiderAcaoSocial(liderAcaoSocial);
 		bases.setDiscipulosByLiderGovJusto(liderGovernoJusto);
@@ -343,7 +384,8 @@ public class BasesBean {
 		bases.setStatusbase(statusbase);
 		bases.setTipobases(tipobases);
 		bases.setZona(zona);
-
+		
+		bases.setLiderBase(liderBase);
 		bases.setDiscipulosByBasDisCod(discipuloSessao.getDiscipulos());
 		bases.setDiscipulosByLiderAcaoSocial(liderAcaoSocial);
 		bases.setDiscipulosByLiderGovJusto(liderGovernoJusto);
@@ -805,20 +847,7 @@ public class BasesBean {
 		this.root = root;
 	}
 
-	/**
-	 * @return the selectedNode
-	 */
-	public TreeNode getSelectedNode() {
-		return selectedNode;
-	}
-
-	/**
-	 * @param selectedNode
-	 *            the selectedNode to set
-	 */
-	public void setSelectedNode(TreeNode selectedNode) {
-		this.selectedNode = selectedNode;
-	}
+	
 
 	/**
 	 * @return the liderBase
@@ -832,6 +861,34 @@ public class BasesBean {
 	 */
 	public void setLiderBase(Discipulos liderBase) {
 		this.liderBase = liderBase;
+	}
+
+	/**
+	 * @return the selectedLider
+	 */
+	public Discipulos getSelectedLider() {
+		return selectedLider;
+	}
+
+	/**
+	 * @param selectedLider the selectedLider to set
+	 */
+	public void setSelectedLider(Discipulos selectedLider) {
+		this.selectedLider = selectedLider;
+	}
+
+	/**
+	 * @return the opcao
+	 */
+	public int getOpcao() {
+		return opcao;
+	}
+
+	/**
+	 * @param opcao the opcao to set
+	 */
+	public void setOpcao(int opcao) {
+		this.opcao = opcao;
 	}
 
 }
