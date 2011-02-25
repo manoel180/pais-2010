@@ -30,6 +30,7 @@ import br.com.pais.dao.impl.FormacaoeclesiasticasDaoImp;
 import br.com.pais.dao.impl.FuncaoeclesiasticasDaoImp;
 import br.com.pais.dao.impl.LogradouroDaoImp;
 import br.com.pais.entities.Bairro;
+import br.com.pais.entities.Bases;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Encontros;
 import br.com.pais.entities.Estado;
@@ -43,6 +44,7 @@ import br.com.pais.entities.Logradouro;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.exception.ValidarTEException;
 import br.com.pais.util.ApplicationSecurityManager;
+import br.com.pais.util.SendEMail;
 import br.com.pais.util.ValidarCPF;
 import br.com.pais.util.ValidarTituloEleitor;
 
@@ -102,6 +104,7 @@ public class DiscipuloBean {
 	private boolean editarSenha;
 
 	private boolean editarM12 = false;
+	private List<Discipulos> listaDiscipulos = new ArrayList<Discipulos>();
 	
 	
 	// Buscar pelo cep
@@ -219,22 +222,11 @@ public class DiscipuloBean {
 					.getExternalContext().getRequest();
 			String path = request.getSession().getServletContext()
 					.getRealPath("/fotos");
-			// String webDirPath = urlArquivo.substring(0,
-			// urlArquivo.indexOf(webDir)+webDir.length());
-			// System.out.println(webDirPath);
-
+		
 			conteudo = event.getFile().getContents();
 
 			String caminho = path + "\\" + discipulos.getDisCpf() + ".jpg";// event.getFile().getFileName();
-			// //new
-			// ApplicationSecurityManager().getDiscipulos().getDisCpf();//
-
-			/*FileOutputStream fos = new FileOutputStream(caminho);
-
-			fos.write(conteudo);
-
-			fos.close();
-*/
+		
 		} catch (IOException ex) {
 			Logger.getLogger(FileUploadController.class.getName()).log(
 					Level.SEVERE, null, ex);
@@ -242,6 +234,13 @@ public class DiscipuloBean {
 		return nomeArquivoSelecionado;
 	}
 
+	public String prepararListarDiscipulos() {
+		listaDiscipulos  = new ArrayList<Discipulos>();
+		listaDiscipulos.addAll(discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
+		return "/list/discipulos.mir";
+	}
+	
+	
 	public String prepararDiscipulo() {
 		conjugePesq = new Discipulos();
 		isConjugeCad = false;
@@ -278,6 +277,14 @@ public class DiscipuloBean {
 
 		return "/cad/discipulos.mir";
 
+	}
+	public String prepararEdicao() {
+		
+		
+		
+		
+		
+		return "/editar/discipulos.mir";
 	}
 
 	public void salvar(ActionEvent event) {
@@ -333,10 +340,10 @@ public class DiscipuloBean {
 					}
 				}// for end
 
-				//new SendEMail().sendSimpleMailEnviarSenha(
-				//		funcaoeclesiasticas.getFunDescricao(),
-				//		discipulos.getDisnome(), discipulos.getDisemail(),
-				//		discipulos.getDisSenha(), discipulos.getDisCpf());
+				new SendEMail().sendSimpleMailEnviarSenha(
+						funcaoeclesiasticas.getFunDescricao(),
+						discipulos.getDisnome(), discipulos.getDisemail(),
+						discipulos.getDisSenha(), discipulos.getDisCpf());
 			} 
 		} else {
 			context.addMessage(null, new FacesMessage(
@@ -774,6 +781,20 @@ public class DiscipuloBean {
 	 */
 	public void setConjugeCadEdit(boolean conjugeCadEdit) {
 		this.conjugeCadEdit = conjugeCadEdit;
+	}
+
+	/**
+	 * @return the listaDiscipulos
+	 */
+	public List<Discipulos> getListaDiscipulos() {
+		return listaDiscipulos;
+	}
+
+	/**
+	 * @param listaDiscipulos the listaDiscipulos to set
+	 */
+	public void setListaDiscipulos(List<Discipulos> listaDiscipulos) {
+		this.listaDiscipulos = listaDiscipulos;
 	}
 
 	
