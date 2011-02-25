@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -56,7 +57,7 @@ public class RelatorioDaoImp implements RelatorioDao {
 		String jasper = getDiretorioReal("/jasper/protocoloCheque.jasper");
 		String nomeRelatorioProtocolo = listaProtocolo.get(0).getProtocolo();
         String path = getDiretorioReal("//relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
-        String pathSubRelatorio = getDiretorioReal("/jasper/").concat("\\");
+        String pathSubRelatorio = getDiretorioReal("/jasper/cheques.jasper");
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 	    HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
@@ -82,6 +83,7 @@ public class RelatorioDaoImp implements RelatorioDao {
 			response.sendRedirect("/pais/relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
 		} catch (Exception e) {
 			e.printStackTrace();
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!",e.getMessage()));
 		}
 	}
 	
@@ -91,7 +93,7 @@ public class RelatorioDaoImp implements RelatorioDao {
 		String jasper = getDiretorioReal("/jasper/protocoloDinheiroCheque.jasper");
 		String nomeRelatorioProtocolo = listaProtocolo.get(0).getProtocolo();
         String path = getDiretorioReal("//relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
-        String pathSubRelatorio = getDiretorioReal("/jasper/").concat("\\");
+        String pathSubRelatorio = getDiretorioReal("/jasper/cheques.jasper");
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 	    HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
