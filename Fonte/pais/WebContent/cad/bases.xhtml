@@ -30,7 +30,7 @@
 	<ui:define name="conteudo">
 		<br />
 		<br />
-		<h:form id="form1">
+		<h:form id="form1" prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
 
 			<p:focus />
@@ -45,14 +45,15 @@
 							value="#{loginBean.discipuloSessao.discipulos.disnome}"
 							requiredMessage="Nome é obrigatório" readonly="true">
 						</h:inputText>
-						
-						<h:outputLabel value="Líder da Base:" styleClass="formulariosObrigatorio" />
+
+						<h:outputLabel value="Líder da Base:"
+							styleClass="formulariosObrigatorio" />
 						<h:inputText styleClass="formularios2" maxlength="60" size="40"
-							required="true" autocomplete="off" id="nomeLiderBase" onclick="dlg.show();"
-							value="#{basesBean.liderBase.disnome}"
-							requiredMessage="Nome é obrigatório">
+							required="true" autocomplete="off" id="nomeLiderBase"
+							onfocus="dlg.show();" value="#{basesBean.liderBase.disnome}"
+							readonly="true" requiredMessage="Nome é obrigatório">
 						</h:inputText>
-						
+
 
 						<h:outputLabel value="Dia Reunião:"
 							styleClass="formulariosObrigatorio" />
@@ -105,23 +106,21 @@
 
 						<h:outputLabel value="Líder Governo do Justo:"
 							styleClass="formulariosObrigatorio" />
-						<h:selectOneMenu id="ldGovernoJusto"
-							requiredMessage="Líder Governo do Justo é obrigatório"
-							value="#{basesBean.liderGovernoJusto.disCod}"
-							styleClass="formularios2" required="true">
-							<f:selectItems value="#{basesBean.listDiscipulos}" var="liderGJ"
-								itemValue="#{liderGJ.disCod}" itemLabel="#{liderGJ.disnome}" />
-						</h:selectOneMenu>
+						<h:inputText styleClass="formularios2" maxlength="60" size="40"
+							required="true" autocomplete="off" id="ldGovernoJusto"
+							onfocus="dlgGJ.show();"
+							value="#{basesBean.liderGovernoJusto.disnome}" readonly="true"
+							requiredMessage="Líder Governo do Justo é obrigatório">
+						</h:inputText>
 
 						<h:outputLabel value="Líder Ação Social:"
 							styleClass="formulariosObrigatorio" />
-						<h:selectOneMenu id="ldAcaoSocial"
-							value="#{basesBean.liderAcaoSocial.disCod}"
-							requiredMessage="Líder Ação Social é obrigatório"
-							styleClass="formularios2" required="true">
-							<f:selectItems value="#{basesBean.listDiscipulos}" var="liderAS"
-								itemValue="#{liderAS.disCod}" itemLabel="#{liderAS.disnome}" />
-						</h:selectOneMenu>
+						<h:inputText styleClass="formularios2" maxlength="60" size="40"
+							required="true" autocomplete="off" id="ldAcaoSocial"
+							onfocus="dlgAS.show();"
+							value="#{basesBean.liderAcaoSocial.disnome}" readonly="true"
+							requiredMessage="Líder Ação Social é obrigatório">
+						</h:inputText>
 
 						<h:outputLabel value="Status:" styleClass="formulariosObrigatorio" />
 						<h:selectOneMenu id="status"
@@ -150,8 +149,7 @@
 			<br />
 
 
-			<p:tabView id="tabView" effect="opacity"
-				contentTransition="true">
+			<p:tabView id="tabView" effect="opacity" contentTransition="true">
 
 				<p:tab id="tbendereco" title="Endereço">
 
@@ -164,8 +162,8 @@
 							required="true">
 							<f:selectItems value="#{basesBean.listZonas}" var="zona"
 								itemValue="#{zona.idzona}" itemLabel="#{zona.descricao}" />
-							<f:ajax render="dtcelula"
-								execute="@this" event="change" listener="#{basesBean.buscarCelulaZona}" />	
+							<f:ajax render="dtcelula" execute="@this" event="change"
+								listener="#{basesBean.buscarCelulaZona}" />
 						</h:selectOneMenu>
 						<h:outputLabel />
 						<h:outputLabel />
@@ -272,8 +270,8 @@
 							height="116" cache="false" />
 
 
-						<p:fileUpload sizeLimit="1048576" image="/img/but_enviar.jpg"
-							width="68" customUI="true" auto="true" widgetVar="uploader"
+						<p:fileUpload sizeLimit="1048576" image="/img/but_anexar_foto.png"
+							width="119" customUI="true" auto="true" widgetVar="uploader"
 							fileUploadListener="#{basesBean.handleFileUpload}"
 							allowTypes="*.jpg;*.png;*.gif;" description="Imagens"
 							id="uploader" update="foto idarquivo" />
@@ -295,22 +293,21 @@
 
 
 				<p:tab id="tbCelulas" title="Células da base">
-<center><h:panelGrid id="dtcelula" columns="2"
+					<center><h:panelGrid id="dtcelula" columns="2"
 						columnClasses="coluna1, coluna2">
-					<center><p:pickList
-						value="#{basesBean.listaCelulas}" var="celulas"
-						converter="celulasConverter" styleClass="formulariosObrigatorio"
-						itemLabel="#{celulas.celNome}" tabindex="24"
-						itemValue="#{celulas}" addAllLabel="Adicionar Todos"
-						addLabel="Adicionar" removeAllLabel="Remover Todos"
-						removeLabel="Remover" effect="fade">
+						<center><p:pickList value="#{basesBean.listaCelulas}"
+							var="celulas" converter="celulasConverter"
+							styleClass="formulariosObrigatorio"
+							itemLabel="#{celulas.celCod}" tabindex="24"
+							itemValue="#{celulas}" addAllLabel="Adicionar Todos"
+							addLabel="Adicionar" removeAllLabel="Remover Todos"
+							removeLabel="Remover" effect="fade">
 
-						<f:facet name="sourceCaption">Células sem Base</f:facet>
-						<f:facet name="targetCaption">Células desta Base</f:facet>
+							<f:facet name="sourceCaption">Células sem Base</f:facet>
+							<f:facet name="targetCaption">Células desta Base</f:facet>
 
-					</p:pickList></center>
-					</h:panelGrid>
-					</center>
+						</p:pickList></center>
+					</h:panelGrid></center>
 				</p:tab>
 			</p:tabView>
 
@@ -318,26 +315,101 @@
 
 			<h:commandButton value="Salvar..." styleClass="formularios"
 				tabindex="25" actionListener="#{basesBean.salvar}"></h:commandButton>
-<p:dialog header="Selecione o Líder" modal="true"  widgetVar="dlg" resizable="false">
 
-<p:treeTable value="#{basesBean.root}" var="node" selectionMode="single"  selection="#{basesBean.selectedNode}">
-							<p:column filterBy="#{node.disnome}"  sortBy="#{node.disnome}">
-								<f:facet name="header" > Nome </f:facet>
-								<f:facet name="filter" value="#{node.disnome}"/>
-								<p:graphicImage value="#{node.disfoto}" width="40" height="40"/>
-								<h:outputText value="#{node.disnome}" />
-							</p:column>
-							
-							<p:column>
-								<f:facet name="header"> Equipe </f:facet>
-								<h:outputText value="#{node.geracoes.gerDescricao}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header"> Selecionar </f:facet>
-								<h:outputText value="#{node.geracoes.gerDescricao}" />
-							</p:column>
-						</p:treeTable>
-</p:dialog>
+			<p:dialog id="dlg" header="Selecionar Líder da Base" modal="true"
+				widgetVar="dlg" resizable="false" width="600">
+				<p:treeTable value="#{basesBean.root}" var="lider">
+					<p:column>
+						<f:facet name="header"> Nome </f:facet>
+						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
+						<h:outputText value=" #{lider.disnome}" />
+					</p:column>
+
+					<p:column>
+						<f:facet name="header"> Gerações </f:facet>
+						<center>
+							<h:outputText value="#{lider.geracoes.gerDescricao}" />
+						</center>	
+					</p:column>
+					<p:column>
+						<f:facet name="header"> Selecionar </f:facet>
+						<center>
+							<p:commandButton update="nomeLiderBase" type="image"
+								image="/img/ver.png" process="@this" oncomplete="dlg.hide()"
+								action="#{basesBean.selecionarLider}">
+								<f:setPropertyActionListener value="#{lider}"
+									target="#{basesBean.selectedLider}" />
+								<f:setPropertyActionListener value="1"
+									target="#{basesBean.opcao}" />	
+							</p:commandButton>
+						</center>	
+					</p:column>
+				</p:treeTable>
+			</p:dialog>
+
+			<p:dialog id="dlgGJ" header="Selecionar Líder Governo do Justo" modal="true"
+				widgetVar="dlgGJ" resizable="false" width="600">
+
+				<p:treeTable value="#{basesBean.root}" var="lider">
+					<p:column>
+						<f:facet name="header"> Nome </f:facet>
+						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
+						<h:outputText value=" #{lider.disnome}" />
+					</p:column>
+
+					<p:column>
+						<f:facet name="header"> Gerações </f:facet>
+						<center>
+							<h:outputText value="#{lider.geracoes.gerDescricao}" />
+						</center>	
+					</p:column>
+					<p:column>
+						<f:facet name="header"> Selecionar </f:facet>
+						<center>
+							<p:commandButton update="ldGovernoJusto" type="image"
+								image="/img/ver.png" process="@this" oncomplete="dlgGJ.hide()"
+								action="#{basesBean.selecionarLider}">
+								<f:setPropertyActionListener value="#{lider}"
+									target="#{basesBean.selectedLider}" />
+								<f:setPropertyActionListener value="2"
+									target="#{basesBean.opcao}" />	
+							</p:commandButton>
+						</center>	
+					</p:column>
+				</p:treeTable>
+			</p:dialog>
+			
+			<p:dialog id="dlgAS" header="Selecione Líder Ação Social" modal="true"
+				widgetVar="dlgAS" resizable="false" width="600">
+				<p:treeTable value="#{basesBean.root}" var="lider">
+					<p:column>
+						<f:facet name="header"> Nome </f:facet>
+						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
+						<h:outputText value=" #{lider.disnome}" />
+					</p:column>
+
+					<p:column >
+						<f:facet name="header"> Gerações </f:facet>
+						<center>
+							<h:outputText value="#{lider.geracoes.gerDescricao}" />
+						</center>
+					</p:column>
+					
+					<p:column  >
+						<f:facet name="header"> Selecionar </f:facet>
+						<center>
+							<p:commandButton update="ldAcaoSocial" type="image"
+								image="/img/ver.png" process="@this" oncomplete="dlgAS.hide()"
+								action="#{basesBean.selecionarLider}">
+								<f:setPropertyActionListener value="#{lider}"
+									target="#{basesBean.selectedLider}" />
+								<f:setPropertyActionListener value="3"
+									target="#{basesBean.opcao}" />	
+							</p:commandButton>
+						</center>
+					</p:column>
+				</p:treeTable>
+			</p:dialog>
 		</h:form>
 
 	</ui:define>
