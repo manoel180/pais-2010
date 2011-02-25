@@ -38,10 +38,10 @@
 					<h:panelGrid columns="2">
 
 						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
-							<h:outputLabel value="Lider da Célula:" styleClass="formulariosObrigatorio" for="nomeDiscipulador" />
+							<h:outputLabel value="Código:" styleClass="formulariosObrigatorio" />
+							<h:inputText id="Cod" size="10" styleClass="formularios2" value="#{celulaBean.celulas.celCod}" readonly="true"/>
+							<h:outputLabel value="Líder:" styleClass="formulariosObrigatorio" for="nomeDiscipulador" />
 							<h:inputText id="nomeDiscipulador" size="40" styleClass="formularios2" value="#{loginBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
-							<h:outputLabel value="Nome da Célula:" styleClass="Texto_cpf_login" for="nomeCelula" />
-							<h:inputText id="nomeCelula" size="30" styleClass="formularios2" required="true" value="#{celulaBean.celulas.celNome}" requiredMessage="Nome da célula é obrigatório"/>
 							<h:outputLabel value="Hora da Reunião:" styleClass="Texto_cpf_login" for="hrReuniao" />
 							<p:inputMask mask="99:99" id="hrReuniao"
 								value="#{celulaBean.celulas.celHorarioReuniao}" size="8"

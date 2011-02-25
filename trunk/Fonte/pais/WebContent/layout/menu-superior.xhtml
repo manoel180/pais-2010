@@ -15,7 +15,11 @@
 		</p:submenu>
 
 		<p:submenu label="CADASTRAR" align="left" >
-			<p:menuitem value="Discípulo" action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
+			<p:submenu label="Discípulo">  
+                <p:menuitem value="Novo Discípulo" action="#{discipuloBean.prepararDiscipulo}"  ajax="false" />
+                <p:menuitem value="Listar Discípulos" action="#{discipuloBean.prepararListarDiscipulos}" ajax="false"/>
+            </p:submenu>
+			
 			<p:submenu label="&nbsp;Célula &nbsp;">  
                 <p:menuitem value="&nbsp;Nova Célula &nbsp;" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
                 <p:menuitem value="&nbsp;Listar Célula &nbsp;" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
