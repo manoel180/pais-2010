@@ -1,12 +1,3 @@
-input {
-	font-family: Trebuchet MS;
-	font-size: 12px;
-	font-style: 1;
-	font-weight: 1;
-	color: #56778B;
-	background-color: #E4ECEF;
-	border: 1px solid #CEDBE1;
-}
 body {
 	background-color: #D1DEE4;
 	margin-left: 0px;
@@ -166,3 +157,286 @@ a:active {
 	font-weight: normal;
 	color: #07335F;
 }
+
+#cheque {
+	width:800px;
+	height:327px;
+	position: absolute;
+	background-image:url(/pais/img/template_cheque.jpg);
+	}
+#cheque_comp {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 20px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_banco {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 70px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_agencia {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 120px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_c1 {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 195px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_conta {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 230px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_c2 {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 374px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_logo_banco {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 163px;
+	left: 25px;
+	}
+#cheque_numCheque {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 430px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_c3 {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 540px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_valNum {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 570px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_valExtenso {
+	width: 636px;
+	height: auto;
+	position:absolute;
+	top: 61px;
+	left: 139px;
+	text-align:left;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_pagoA {
+	width: 636px;
+	height: auto;
+	position:absolute;
+	top: 116px;
+	left: 35px;
+	text-align:left;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataCidade {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 354px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataDia {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 489px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataMes {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 580px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataAno {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 750px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_NomePagante {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 198px;
+	left: 354px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_CpfPagante {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 242px;
+	left: 379px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_ClienteDesde {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 257px;
+	left: 492px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_PreDatado {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 243px;
+	left: 25px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 20px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_NumAutenticacao {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 291px;
+	left: 25px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 20px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
