@@ -166,7 +166,7 @@ public class RepasseBean {
 		movimento.setMovHora(data.getTime());
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
-		movimento.setMovRecebido('N');
+		movimento.setMovRecebido("N");
 		movimento.setMovTipo(listaMovimentos.get(0).getMovTipo());
 		movimento.setMovValor(totalNaoRecebido);
 		movimentoDao.salvar(movimento);
@@ -186,7 +186,7 @@ public class RepasseBean {
 		for(Movimento mov : listaMovimentos){
 			movimento = new Movimento();
 			movimento = mov;
-			movimento.setMovRecebido('S');
+			movimento.setMovRecebido("S");
 			movimento.setMovProtocoloPai(protocoloPai);
 			movimentoDao.atualizar(movimento);
 		}
@@ -226,10 +226,10 @@ public class RepasseBean {
 		protocolo.setDiscipulador(listaDiscipulos.get(0).getDisnome());
 		protocolo.setFotoDiscipulador(listaDiscipulos.get(0).getDisfoto());
 		protocolo.setTipo(movimentoGerado.getMovTipo());
-		protocolo.setInicio(primeiroDiaCorrenteTemp);
-		protocolo.setFim(ultimoDiaCorrenteTemp);
-		protocolo.setValor(valor);
-		protocolo.setData(data);
+		//protocolo.setInicio(primeiroDiaCorrenteTemp);
+		//protocolo.setFim(ultimoDiaCorrenteTemp);
+		//protocolo.setValor(valor);
+		//protocolo.setData(data);
 		protocolo.setLocal(repasse.getResLocal());
 		protocolo.setProtocolo(movimentoGerado.getMovProtocolo());
 	}
@@ -245,7 +245,7 @@ public class RepasseBean {
 		
 		List<Protocolo> listaProtocolo = new ArrayList<Protocolo>();
 		listaProtocolo.add(protocolo);
-		relatorioDao.gerarProtocolo(listaProtocolo);
+		//relatorioDao.gerarProtocolo(listaProtocolo);
 	}
 	
 	private String getDiretorioReal(String diretorio) {
