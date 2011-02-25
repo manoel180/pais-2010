@@ -1,7 +1,6 @@
 package br.com.pais.managedbeans;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,26 +11,36 @@ import java.util.UUID;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 
-import org.primefaces.event.CloseEvent;
+import org.primefaces.event.DateSelectEvent;
 
+import br.com.pais.dao.BancosDao;
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.dao.DiscipuloDao;
+import br.com.pais.dao.MovimentoChequeDao;
 import br.com.pais.dao.MovimentoDao;
 import br.com.pais.dao.RelatorioDao;
 import br.com.pais.dao.RepasseDao;
+import br.com.pais.dao.impl.BancosDaoImp;
 import br.com.pais.dao.impl.CelulaDaoImp;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
+import br.com.pais.dao.impl.MovimentoChequeDaoImp;
 import br.com.pais.dao.impl.MovimentoDaoImp;
 import br.com.pais.dao.impl.RelatorioDaoImp;
 import br.com.pais.dao.impl.RepasseDaoImp;
+import br.com.pais.entities.Bancos;
 import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Movimento;
+import br.com.pais.entities.Movimentocheque;
+import br.com.pais.entities.MovimentochequeId;
 import br.com.pais.entities.Repasse;
 import br.com.pais.entities.RepasseId;
 import br.com.pais.relatorio.Protocolo;
+import br.com.pais.relatorio.ProtocoloCheques;
 import br.com.pais.util.ApplicationSecurityManager;
 
 public class MovimentacaoBean {
@@ -41,21 +50,277 @@ public class MovimentacaoBean {
 	private Repasse repasse = new Repasse();
 	private RepasseId repasseId = new RepasseId();
 	private Protocolo protocolo = new Protocolo();
+	private ProtocoloCheques protocoloCheques = new ProtocoloCheques();
+	private Movimentocheque movimentoCheque = new Movimentocheque();
+	private MovimentochequeId movimentoChequeId = new MovimentochequeId();
+	private Movimentocheque movimentoChequeSelecionado;
 
 	private Celulas celulaSelecionada;
-	private String primeiroDiaCorrente;
-	private String ultimoDiaCorrente;
-	
+	private Date primeiroDiaCorrente;
+	private Date ultimoDiaCorrente;
+
 	//List
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
 	private List<Discipulos> listaDiscipulos = new ArrayList<Discipulos>();
-	
+	private List<Bancos> listaBancos = new ArrayList<Bancos>();
+	private List<Protocolo> listaProtocolo = new ArrayList<Protocolo>();
+	private List<ProtocoloCheques> listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
+
 	//Daos
 	private MovimentoDao movimentoDao = new MovimentoDaoImp();
 	private CelulaDao celulaDao = new CelulaDaoImp();
 	private RepasseDao repasseDao = new RepasseDaoImp();
 	private DiscipuloDao discipuloDao = new DiscipuloDaoImp();
 	private RelatorioDao relatorioDao = new RelatorioDaoImp();
+	private BancosDao bancosDao = new BancosDaoImp();
+	private MovimentoChequeDao movimentoChequeDao = new MovimentoChequeDaoImp();
+	
+	private int comboBancos = 0;
+	private boolean mostraLogoBanco = false;
+	private String logoBanco = null;
+	private List<Bancos> listaBancoSelecionado = new ArrayList<Bancos>();
+	private boolean preDatado = false;
+	private String clienteDesde = null;
+	private List<Movimentocheque> listaMovimentoCheque = new ArrayList<Movimentocheque>();
+	private List<MovimentochequeId> listaMovimentoChequeId = new ArrayList<MovimentochequeId>();
+	private int contadorValidadorCheque = 0;
+	private String acaoBotaoCheque = null; 
+	private boolean mostraCheque = false;
+	private boolean mostraDinheiro = false;
+	private boolean mostraCadastrar = false;
+	private int contadorValidadorRepasse = 0;
+	
+	private Double valorTotalMovimento = 0.00;
+	private Double valorTotalMovimentoDinheiro = 0.00;
+	private Double valorTotalMovimentoCheque = 0.00;
+	private boolean dialogRepasseMovimentoDinheiro = false; 
+	private boolean dialogRepasseMovimentoDinheiroCheque = false;
+	private boolean dialogRepasseMovimentoCheque = false;
+
+	private String btnUpdateRepasseDialog = "outPnlImprimir";
+	private String btnOnCompleteRepasseDialog = "repasseDialog.hide(); imprimirDialog.show()";
+	
+	public SelectItem[] getBancosCombo() {
+		listaBancos = new ArrayList<Bancos>();
+		listaBancos.addAll(bancosDao.listarBancosAtivos());
+		List<SelectItem> itens = new ArrayList<SelectItem>(listaBancos.size());
+		
+		for(Bancos b : listaBancos) {
+			itens.add(new SelectItem(b.getCodBanco(), b.getDescBanco()));
+		}
+		return itens.toArray(new SelectItem[itens.size()]);
+	}
+	
+	public void comboBancoSelecionado(AjaxBehaviorEvent event) throws Exception {	
+		if(comboBancos > 0){
+		listaBancoSelecionado = new ArrayList<Bancos>();
+		listaBancoSelecionado.addAll(bancosDao.listarBancoSelecionado(comboBancos));
+		
+		logoBanco = listaBancoSelecionado.get(0).getLogoBanco();
+		mostraLogoBanco = true;
+		}
+		else{
+			mostraLogoBanco = false;
+		}
+	}
+
+	public void editarCheque(){
+		movimentoCheque = new Movimentocheque();
+		movimentoChequeId = new MovimentochequeId();
+		comboBancos = 0;
+		logoBanco = null;
+		mostraLogoBanco = true;
+		clienteDesde = null;
+		preDatado = false;
+		acaoBotaoCheque = "Editar";
+		
+		movimentoCheque = movimentoChequeSelecionado;
+		movimentoChequeId = movimentoCheque.getId();
+		
+		comboBancos = movimentoChequeSelecionado.getBancos().getCodBanco();
+		logoBanco = movimentoChequeSelecionado.getBancos().getLogoBanco();
+		
+		clienteDesde = movimentoChequeId.getClienteDesdeMes().concat("/").concat(movimentoChequeId.getClienteDesdeAno());
+		
+		if(movimentoChequeId.getPreDatado().contains("S"))preDatado = true;
+		else preDatado = false;
+	}
+	
+	public void adicionarCheque(){
+		if(contadorValidadorCheque <= 0)
+		{
+		movimentoCheque = new Movimentocheque();
+		movimentoChequeId = new MovimentochequeId();
+		comboBancos = 0;
+		clienteDesde = null;
+		logoBanco = null;
+		mostraLogoBanco = false;
+		preDatado = false;
+		acaoBotaoCheque = "Salvar";
+		movimentoChequeId.setValNum(0.00);
+		}
+	}
+	
+	public void salvarCheque(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		
+		if(validarCheque() == true){
+			if(acaoBotaoCheque.contains("Salvar")){
+				salvarChequeLista();
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!!!","Cheque Salvo Com Sucesso!"));
+			}
+			
+			if(acaoBotaoCheque.contains("Editar")){
+				editarChequeLista();
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!!!","Cheque Editado Com Sucesso!"));
+			}
+		}
+	}
+	
+	private void salvarChequeLista(){
+		movimentoChequeId.setPagoPara("Ministério Internacional da Restauração");
+		movimentoChequeId.setClienteDesdeMes(clienteDesde.substring(0, 2));
+		movimentoChequeId.setClienteDesdeAno(clienteDesde.substring(3, 7));
+		
+		movimentoCheque.setId(movimentoChequeId);
+		movimentoCheque.setBancos(listaBancoSelecionado.get(0));
+		listaMovimentoCheque.add(movimentoCheque);
+	}
+	
+	private void editarChequeLista(){
+		int index = listaMovimentoCheque.indexOf(movimentoCheque);
+		
+		movimentoChequeId.setPagoPara("Ministério Internacional da Restauração");
+		movimentoChequeId.setClienteDesdeMes(clienteDesde.substring(0, 2));
+		movimentoChequeId.setClienteDesdeAno(clienteDesde.substring(3, 7));
+		
+		movimentoCheque.setId(movimentoChequeId);
+		movimentoCheque.setBancos(listaBancoSelecionado.get(0));
+		listaMovimentoCheque.set(index, movimentoCheque);
+	}
+	
+	public void excluirChequeLista(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		
+		if(listaMovimentoCheque.remove(movimentoChequeSelecionado)){
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!!!","Cheque Excluido Com Sucesso!"));
+		}
+		else{
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sucesso!!!","Não Foi Possivel Excluir o Cheque!"));
+		}
+	}
+	
+	public boolean validarCheque(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		contadorValidadorCheque = 0;
+		
+		if(movimentoChequeId.getValNum() <= 0.00){
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Valor do Cheque Zerado!"));
+			contadorValidadorCheque = contadorValidadorCheque + 1;
+		}
+		
+		if(movimentoChequeId.getValExtenso().length() <= 0){
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Valor Extenso em Branco!"));
+			contadorValidadorCheque = contadorValidadorCheque + 1;
+		}
+		
+		if(contadorValidadorCheque <= 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public void comboTipoOferta(AjaxBehaviorEvent event){
+		if(movimento.getMovTipo().contains("Selecione")){
+			mostraCadastrar = false;
+			mostraCheque = false;
+			mostraDinheiro = false;
+		}
+		else{
+				if(movimento.getMovEspecie().contains("Dinheiro")){
+					mostraCadastrar = true;
+					mostraCheque = false;
+					mostraDinheiro = true;
+				}
+				if(movimento.getMovEspecie().contains("Cheque")){
+					mostraCadastrar = true;
+					mostraCheque = true;
+					mostraDinheiro = false;
+				}
+				if(movimento.getMovEspecie().contains("Dinheiro e Cheque")){
+					mostraCadastrar = true;
+					mostraCheque = true;
+					mostraDinheiro = true;
+				}
+		}
+	}
+	
+	public void comboTipoEspecie(AjaxBehaviorEvent event){
+		if(movimento.getMovEspecie().contains("Selecione")){
+			mostraCadastrar = false;
+			mostraCheque = false;
+			mostraDinheiro = false;
+		}
+		else{
+			if(movimento.getMovTipo().contains("Selecione")){
+				mostraCadastrar = false;
+				mostraCheque = false;
+				mostraDinheiro = false;
+			}
+			else{
+				if(movimento.getMovEspecie().contains("Dinheiro")){
+					mostraCadastrar = true;
+					mostraCheque = false;
+					mostraDinheiro = true;
+				}
+				if(movimento.getMovEspecie().contains("Cheque")){
+					mostraCadastrar = true;
+					mostraCheque = true;
+					mostraDinheiro = false;
+				}
+				if(movimento.getMovEspecie().contains("Dinheiro e Cheque")){
+					mostraCadastrar = true;
+					mostraCheque = true;
+					mostraDinheiro = true;
+				}
+			}
+		}
+	}
+	
+	public void comboPredatado(AjaxBehaviorEvent event){
+		if(movimentoChequeId.getPreDatado().contains("S"))preDatado = true;
+		if(movimentoChequeId.getPreDatado().contains("N"))preDatado = false;
+	}
+	
+	public void selecionadoCalendarDataCheque(DateSelectEvent event) {  
+		movimentoChequeId.setDataCheque(event.getDate());   
+		movimentoChequeId.setDataCidade("Manaus");
+		
+		SimpleDateFormat formatarData = new SimpleDateFormat("dd/MM/yyyy");
+		String dataFormatada = formatarData.format(movimentoChequeId.getDataCheque());
+		
+		String dia = dataFormatada.substring(0, 2);
+		String mes = dataFormatada.substring(3, 5);
+		String ano = dataFormatada.substring(8, 10);
+		
+		movimentoChequeId.setDataDia(dia);
+		movimentoChequeId.setDataAno(ano);
+		
+		if(mes.contains("01"))movimentoChequeId.setDataMes("Janeiro");
+		if(mes.contains("02"))movimentoChequeId.setDataMes("Fevereiro");
+		if(mes.contains("03"))movimentoChequeId.setDataMes("Março");
+		if(mes.contains("04"))movimentoChequeId.setDataMes("Abril");
+		if(mes.contains("05"))movimentoChequeId.setDataMes("Maio");
+		if(mes.contains("06"))movimentoChequeId.setDataMes("Junho");
+		if(mes.contains("07"))movimentoChequeId.setDataMes("Julho");
+		if(mes.contains("08"))movimentoChequeId.setDataMes("Agosto");
+		if(mes.contains("09"))movimentoChequeId.setDataMes("Setembro");
+		if(mes.contains("10"))movimentoChequeId.setDataMes("Outubro");
+		if(mes.contains("11"))movimentoChequeId.setDataMes("Novembro");
+		if(mes.contains("12"))movimentoChequeId.setDataMes("Dezembro");
+    }
 	
 	public String prepararMovimento(){		
 		listaCelulas = new ArrayList<Celulas>();
@@ -65,23 +330,48 @@ public class MovimentacaoBean {
 	
 	public String prepararCadastro(){
 		movimento = new Movimento();
+		repasse = new Repasse();
+		repasseId = new RepasseId();
+		protocolo = new Protocolo();
+		movimentoCheque = new Movimentocheque();
+		movimentoChequeId = new MovimentochequeId();
+		mostraCadastrar = false;
+		mostraCheque = false;
+		mostraDinheiro = false;
+		movimento.setMovValor(0.00);
+		listaMovimentoCheque = new ArrayList<Movimentocheque>();
+		listaMovimentoChequeId = new ArrayList<MovimentochequeId>();
+		dialogRepasseMovimentoCheque = false;
+		dialogRepasseMovimentoDinheiroCheque = false;
+		
 		return "/cad/movimentoCadastro";
 	}
 	
-	public void handleClose(CloseEvent event) {  
-		movimento = new Movimento();
-    }
-	
-	public void limparRepasseDialog(){
-		repasse = new Repasse();
+	public void repasseDialog(){
+		if(validarSalvarRepasse1() == true){
+			btnOnCompleteRepasseDialog = "repasseDialog.hide(); imprimirDialog.show();";
+			btnUpdateRepasseDialog = "outPnlImprimir";
+		}
+		else{
+			btnOnCompleteRepasseDialog = "repasseDialog.hide();";
+			btnUpdateRepasseDialog = "msg";
+		}
 	}
 	
-	public String salvarMovimento() throws Exception {
+	public void salvarMovimento() throws Exception {
+		//Se For Tudo Validado
+		if(validarSalvarRepasse2() == true){
+			if(movimento.getMovEspecie().equals("Dinheiro"))salvarMovimentoDinheiro();
+			if(movimento.getMovEspecie().equals("Cheque"))salvarMovimentoCheque();
+			if(movimento.getMovEspecie().equals("Dinheiro e Cheque"))salvarMovimentoDinheiroCheque();
+		}
+	}
+	
+	public void salvarMovimentoDinheiro() throws Exception{
 		Calendar data = Calendar.getInstance();
 		
-		FacesContext context = FacesContext.getCurrentInstance();
 		movimento.setCelulas(celulaSelecionada);
-		movimento.setMovRecebido('N');
+		movimento.setMovRecebido("N");
 		movimento.setBases(null);
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
@@ -94,25 +384,196 @@ public class MovimentacaoBean {
 			repasse.setResData(movimento.getMovData());
 			repasse.setResValor(movimento.getMovValor());
 			repasseDao.salvar(repasse);
-		}  else {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","C�lula n�o cadastrada!"));
 		}
 		preencheProtocoloGerado();
+	}
+	
+	public void salvarMovimentoCheque() throws Exception{
+		Calendar data = Calendar.getInstance();
+		Double valorMovimento = 0.00;
 		
-		return null;
+		for(Movimentocheque mov : listaMovimentoCheque) {
+			valorMovimento = valorMovimento + mov.getId().getValNum();
+		}
+		
+		movimento.setCelulas(celulaSelecionada);
+		movimento.setMovRecebido("N");
+		movimento.setBases(null);
+		movimento.setMovProtocolo(gerarProtocolo());
+		movimento.setMovProtocoloPai(null);
+		movimento.setMovHora(data.getTime());
+		movimento.setMovValor(valorMovimento);
+		if (movimentoDao.salvar(movimento) == (true)) {
+			//SALVA OS CHEQUES
+			for(Movimentocheque mov : listaMovimentoCheque) {
+				movimentoCheque = new Movimentocheque();
+				movimentoChequeId = new MovimentochequeId();
+				
+				movimentoChequeId = mov.getId();
+				movimentoChequeId.setCodBanco(mov.getBancos().getCodBanco());
+				movimentoChequeId.setCodMovimento(movimento.getMovCod());
+				movimentoCheque.setId(movimentoChequeId);
+				movimentoCheque.setBancos(mov.getBancos());
+				movimentoCheque.setMovimento(movimento);
+				
+				movimentoChequeDao.salvar(movimentoCheque);
+			}
+			
+			//SALVA O REPASSE
+			repasseId.setDisCod(discipuloSessao.getDiscipulos().getDisCod());
+			repasseId.setMovCod(movimento.getMovCod());
+			repasse.setId(repasseId);
+			repasse.setResData(movimento.getMovData());
+			repasse.setResValor(movimento.getMovValor());
+			repasseDao.salvar(repasse);
+		}
+		preencheProtocoloGerado();
+	}
+	
+	public void salvarMovimentoDinheiroCheque() throws Exception{
+		Calendar data = Calendar.getInstance();
+		Double valorMovimento = movimento.getMovValor();
+		
+		for(Movimentocheque mov : listaMovimentoCheque) {
+			valorMovimento = valorMovimento + mov.getId().getValNum();
+		}
+		
+		movimento.setCelulas(celulaSelecionada);
+		movimento.setMovRecebido("N");
+		movimento.setBases(null);
+		movimento.setMovProtocolo(gerarProtocolo());
+		movimento.setMovProtocoloPai(null);
+		movimento.setMovHora(data.getTime());
+		movimento.setMovValor(valorMovimento);
+		if (movimentoDao.salvar(movimento) == (true)) {
+			//SALVA OS CHEQUES
+			for(Movimentocheque mov : listaMovimentoCheque) {
+				movimentoCheque = new Movimentocheque();
+				movimentoChequeId = new MovimentochequeId();
+				
+				movimentoChequeId = mov.getId();
+				movimentoChequeId.setCodBanco(mov.getBancos().getCodBanco());
+				movimentoChequeId.setCodMovimento(movimento.getMovCod());
+				movimentoCheque.setId(movimentoChequeId);
+				
+				movimentoChequeDao.salvar(movimentoCheque);
+			}
+			
+			//SALVA O REPASSE
+			repasseId.setDisCod(discipuloSessao.getDiscipulos().getDisCod());
+			repasseId.setMovCod(movimento.getMovCod());
+			repasse.setId(repasseId);
+			repasse.setResData(movimento.getMovData());
+			repasse.setResValor(movimento.getMovValor());
+			repasseDao.salvar(repasse);
+		}
+		preencheProtocoloGerado();
+	}
+	
+	public boolean validarSalvarRepasse1(){
+		contadorValidadorRepasse = 0;
+		
+		//VALIDA SE FOR DINHEIRO
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			if(movimento.getMovData() == null){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+			if(movimento.getMovValor() <= 0.00){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+		}
+		
+		//VALIDA SE FOR CHEQUE
+		if(movimento.getMovEspecie().equals("Cheque")){
+			if(movimento.getMovData() == null){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+			if(listaMovimentoCheque.size() <= 0){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+		}
+		
+		//VALIDA SE FOR DINHEIRO E CHEQUE
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			if(movimento.getMovData() == null){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+			if(movimento.getMovValor() <= 0.00){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+			if(listaMovimentoCheque.size() <= 0){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+			}
+		}
+		
+		if(contadorValidadorRepasse <= 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public boolean validarSalvarRepasse2(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		contadorValidadorRepasse = 0;
+		
+		//VALIDA SE FOR DINHEIRO
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			if(movimento.getMovData() == null){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Data do Movimento em Branco!"));
+			}
+			if(movimento.getMovValor() <= 0.00){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Valor R$ Zerado!"));
+			}
+		}
+		
+		//VALIDA SE FOR CHEQUE
+		if(movimento.getMovEspecie().equals("Cheque")){
+			if(movimento.getMovData() == null){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Data do Movimento em Branco!"));
+			}
+			if(listaMovimentoCheque.size() <= 0){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Nenhum Cheque Adicionado!"));
+			}
+		}
+		
+		//VALIDA SE FOR DINHEIRO E CHEQUE
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			if(movimento.getMovData() == null){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Data do Movimento em Branco!"));
+			}
+			if(movimento.getMovValor() <= 0.00){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Valor R$ Zerado!"));
+			}
+			if(listaMovimentoCheque.size() <= 0){
+				contadorValidadorRepasse = contadorValidadorRepasse + 1;
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Nenhum Cheque Adicionado!"));
+			}
+		}
+		
+		if(contadorValidadorRepasse <= 0){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	public void preencheProtocoloGerado() throws Exception{
-		listaDiscipulos = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
-        
+		valorTotalMovimento = 0.00;
+		valorTotalMovimentoDinheiro = 0.00;
+		valorTotalMovimentoCheque = 0.00;
 		PrimeiroUltimoDiaCorrente();
 		
-		String valor =  NumberFormat.getCurrencyInstance().format(movimento.getMovValor());
-		valor = valor.replaceAll("[R$]", "");
-		
-		SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
-		String data = formatarDate.format(movimento.getMovData());
+		listaDiscipulos = new ArrayList<Discipulos>();
+		listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
 		
 		protocolo = new Protocolo();
 		protocolo.setDiscipulo(discipuloSessao.getDiscipulos().getDisnome());
@@ -122,24 +583,126 @@ public class MovimentacaoBean {
 		protocolo.setTipo(movimento.getMovTipo());
 		protocolo.setInicio(primeiroDiaCorrente);
 		protocolo.setFim(ultimoDiaCorrente);
-		protocolo.setValor(valor);
-		protocolo.setData(data);
+		protocolo.setValormovimento(movimento.getMovValor());
+		protocolo.setData(movimento.getMovData());
 		protocolo.setLocal(repasse.getResLocal());
 		protocolo.setProtocolo(movimento.getMovProtocolo());
+		protocolo.setEspecie(movimento.getMovEspecie());
+		protocolo.setListacheques(null);
+		protocolo.setValorcheques(null);
+		protocolo.setValordinheiro(null);
+		
+		//Seta os Valores Para O Repasse Gerado
+		valorTotalMovimento = movimento.getMovValor();
+		
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			dialogRepasseMovimentoDinheiro = true;
+			dialogRepasseMovimentoDinheiroCheque = false;
+			dialogRepasseMovimentoCheque = false;
+		}
+		
+		if(movimento.getMovEspecie().equals("Cheque")){
+			dialogRepasseMovimentoDinheiro = true;
+			dialogRepasseMovimentoDinheiroCheque = false;
+			dialogRepasseMovimentoCheque = true;
+		}
+		
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			dialogRepasseMovimentoDinheiro = false;
+			dialogRepasseMovimentoDinheiroCheque = true;
+			dialogRepasseMovimentoCheque = false;
+			for(Movimentocheque mov : listaMovimentoCheque) {
+				valorTotalMovimentoCheque = valorTotalMovimentoCheque + mov.getId().getValNum();
+			}
+			valorTotalMovimentoDinheiro = (valorTotalMovimento - valorTotalMovimentoCheque);
+			
+			protocolo.setValorcheques(valorTotalMovimentoCheque);
+			protocolo.setValordinheiro(valorTotalMovimentoDinheiro);
+		}
+		
+		listaMovimentoChequeId = new ArrayList<MovimentochequeId>();
+		for(Movimentocheque mov : listaMovimentoCheque) {
+			movimentoChequeId = new MovimentochequeId();
+			movimentoChequeId.setValNum(mov.getId().getValNum());
+			movimentoChequeId.setDataCheque(mov.getId().getDataCheque());
+			
+			if(mov.getId().getPreDatado().equals("S"))movimentoChequeId.setPreDatado("Sim");
+			else movimentoChequeId.setPreDatado("Não");
+			
+			listaMovimentoChequeId.add(movimentoChequeId);
+		}
 	}
 	
 	public void imprimirProtocolo(){
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			preencheProtocoloDinheiro();
+			relatorioDao.gerarProtocoloDinheiro(listaProtocolo);
+		}
+		
+		if(movimento.getMovEspecie().equals("Cheque")){
+			preencheProtocoloCheque();
+			relatorioDao.gerarProtocoloCheque(listaProtocolo);
+		}
+		
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			preencheProtocoloDinheiroCheque();
+			relatorioDao.gerarProtocoloDinheiroCheque(listaProtocolo);
+		}
+	}
+	
+	public void preencheProtocoloDinheiro(){
 		String logo = getDiretorioReal("/img/logoRelatorio.png");
-		String fotoDiscipulo = getDiretorioReal(discipuloSessao.getDiscipulos().getDisfoto());
-		String fotoDiscipulador = getDiretorioReal(listaDiscipulos.get(0).getDisfoto());
+		//String fotoDiscipulo = getDiretorioReal(discipuloSessao.getDiscipulos().getDisfoto());
+		//String fotoDiscipulador = getDiretorioReal(listaDiscipulos.get(0).getDisfoto());
 		
 		protocolo.setLogo(logo);
-		protocolo.setFotoDiscipulo(fotoDiscipulo);
-		protocolo.setFotoDiscipulador(fotoDiscipulador);
 		
-		List<Protocolo> listaProtocolo = new ArrayList<Protocolo>();
+		listaProtocolo = new ArrayList<Protocolo>();
 		listaProtocolo.add(protocolo);
-		relatorioDao.gerarProtocolo(listaProtocolo);
+	}
+	
+	public void preencheProtocoloCheque(){
+		String logo = getDiretorioReal("/img/logoRelatorio.png");
+		
+		protocolo.setLogo(logo);
+		
+		listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
+		for(MovimentochequeId cheq : listaMovimentoChequeId) {
+			protocoloCheques = new ProtocoloCheques();
+			protocoloCheques.setDatacheque(cheq.getDataCheque());
+			
+			if(cheq.getPreDatado().equals("Sim") || cheq.getPreDatado().equals("S"))protocoloCheques.setPredatadocheque("Sim");
+			else protocoloCheques.setPredatadocheque("Não");
+
+			protocoloCheques.setValorcheque(cheq.getValNum());
+			listaProtocoloCheques.add(protocoloCheques);
+		}
+		protocolo.setListacheques(listaProtocoloCheques);
+		
+		listaProtocolo = new ArrayList<Protocolo>();
+		listaProtocolo.add(protocolo);
+	}
+	
+	public void preencheProtocoloDinheiroCheque(){
+		String logo = getDiretorioReal("/img/logoRelatorio.png");
+		
+		protocolo.setLogo(logo);
+		
+		listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
+		for(MovimentochequeId cheq : listaMovimentoChequeId) {
+			protocoloCheques = new ProtocoloCheques();
+			protocoloCheques.setDatacheque(cheq.getDataCheque());
+			
+			if(cheq.getPreDatado().equals("Sim") || cheq.getPreDatado().equals("S"))protocoloCheques.setPredatadocheque("Sim");
+			else protocoloCheques.setPredatadocheque("Não");
+			
+			protocoloCheques.setValorcheque(cheq.getValNum());
+			listaProtocoloCheques.add(protocoloCheques);
+		}
+		protocolo.setListacheques(listaProtocoloCheques);
+		
+		listaProtocolo = new ArrayList<Protocolo>();
+		listaProtocolo.add(protocolo);
 	}
 	
 	private String getDiretorioReal(String diretorio) {
@@ -166,8 +729,8 @@ public class MovimentacaoBean {
 		Date datePrimeiroDiaCorrente = (Date)formatter.parse(primeiroDiaCorrenteTemp);
 		Date dateUltimoDiaCorrente = (Date)formatter.parse(ultimoDiaCorrenteTemp);
 		
-		primeiroDiaCorrente = formatarDate.format(datePrimeiroDiaCorrente);
-		ultimoDiaCorrente = formatarDate.format(dateUltimoDiaCorrente);
+		primeiroDiaCorrente = datePrimeiroDiaCorrente;
+		ultimoDiaCorrente = dateUltimoDiaCorrente;
     }
 	
 	public String gerarProtocolo(){
@@ -232,16 +795,249 @@ public class MovimentacaoBean {
 	public void setListaDiscipulos(List<Discipulos> listaDiscipulos) {
 		this.listaDiscipulos = listaDiscipulos;
 	}
-	public String getPrimeiroDiaCorrente() {
+	public Date getPrimeiroDiaCorrente() {
 		return primeiroDiaCorrente;
 	}
-	public void setPrimeiroDiaCorrente(String primeiroDiaCorrente) {
+	public void setPrimeiroDiaCorrente(Date primeiroDiaCorrente) {
 		this.primeiroDiaCorrente = primeiroDiaCorrente;
 	}
-	public String getUltimoDiaCorrente() {
+	public Date getUltimoDiaCorrente() {
 		return ultimoDiaCorrente;
 	}
-	public void setUltimoDiaCorrente(String ultimoDiaCorrente) {
+	public void setUltimoDiaCorrente(Date ultimoDiaCorrente) {
 		this.ultimoDiaCorrente = ultimoDiaCorrente;
+	}
+	public Movimentocheque getMovimentoCheque() {
+		return movimentoCheque;
+	}
+
+	public void setMovimentoCheque(Movimentocheque movimentoCheque) {
+		this.movimentoCheque = movimentoCheque;
+	}
+
+	public MovimentochequeId getMovimentoChequeId() {
+		return movimentoChequeId;
+	}
+
+	public void setMovimentoChequeId(MovimentochequeId movimentoChequeId) {
+		this.movimentoChequeId = movimentoChequeId;
+	}
+	
+	public List<Bancos> getListaBancos() {
+		return listaBancos;
+	}
+
+	public void setListaBancos(List<Bancos> listaBancos) {
+		this.listaBancos = listaBancos;
+	}
+	public int getComboBancos() {
+		return comboBancos;
+	}
+
+	public void setComboBancos(int comboBancos) {
+		this.comboBancos = comboBancos;
+	}
+	public List<Bancos> getListaBancoSelecionado() {
+		return listaBancoSelecionado;
+	}
+
+	public void setListaBancoSelecionado(List<Bancos> listaBancoSelecionado) {
+		this.listaBancoSelecionado = listaBancoSelecionado;
+	}
+	public String getLogoBanco() {
+		return logoBanco;
+	}
+
+	public void setLogoBanco(String logoBanco) {
+		this.logoBanco = logoBanco;
+	}
+	
+	public boolean isMostraLogoBanco() {
+		return mostraLogoBanco;
+	}
+
+	public void setMostraLogoBanco(boolean mostraLogoBanco) {
+		this.mostraLogoBanco = mostraLogoBanco;
+	}
+	
+	public boolean isPreDatado() {
+		return preDatado;
+	}
+
+	public void setPreDatado(boolean preDatado) {
+		this.preDatado = preDatado;
+	}
+	
+	public String getClienteDesde() {
+		return clienteDesde;
+	}
+
+	public void setClienteDesde(String clienteDesde) {
+		this.clienteDesde = clienteDesde;
+	}
+	
+	public List<Movimentocheque> getListaMovimentoCheque() {
+		return listaMovimentoCheque;
+	}
+
+	public void setListaMovimentoCheque(List<Movimentocheque> listaMovimentoCheque) {
+		this.listaMovimentoCheque = listaMovimentoCheque;
+	}
+
+	public List<MovimentochequeId> getListaMovimentoChequeId() {
+		return listaMovimentoChequeId;
+	}
+
+	public void setListaMovimentoChequeId(
+			List<MovimentochequeId> listaMovimentoChequeId) {
+		this.listaMovimentoChequeId = listaMovimentoChequeId;
+	}
+	
+	public int getContadorValidadorCheque() {
+		return contadorValidadorCheque;
+	}
+
+	public void setContadorValidadorCheque(int contadorValidadorCheque) {
+		this.contadorValidadorCheque = contadorValidadorCheque;
+	}
+	
+	public Movimentocheque getMovimentoChequeSelecionado() {
+		return movimentoChequeSelecionado;
+	}
+
+	public void setMovimentoChequeSelecionado(
+			Movimentocheque movimentoChequeSelecionado) {
+		this.movimentoChequeSelecionado = movimentoChequeSelecionado;
+	}
+	
+	public String getAcaoBotaoCheque() {
+		return acaoBotaoCheque;
+	}
+
+	public void setAcaoBotaoCheque(String acaoBotaoCheque) {
+		this.acaoBotaoCheque = acaoBotaoCheque;
+	}
+	
+	public boolean isMostraCheque() {
+		return mostraCheque;
+	}
+
+	public void setMostraCheque(boolean mostraCheque) {
+		this.mostraCheque = mostraCheque;
+	}
+
+	public boolean isMostraDinheiro() {
+		return mostraDinheiro;
+	}
+
+	public void setMostraDinheiro(boolean mostraDinheiro) {
+		this.mostraDinheiro = mostraDinheiro;
+	}
+	
+	public boolean isMostraCadastrar() {
+		return mostraCadastrar;
+	}
+
+	public void setMostraCadastrar(boolean mostraCadastrar) {
+		this.mostraCadastrar = mostraCadastrar;
+	}
+	
+	public int getContadorValidadorRepasse() {
+		return contadorValidadorRepasse;
+	}
+
+	public void setContadorValidadorRepasse(int contadorValidadorRepasse) {
+		this.contadorValidadorRepasse = contadorValidadorRepasse;
+	}
+	
+	public String getBtnUpdateRepasseDialog() {
+		return btnUpdateRepasseDialog;
+	}
+
+	public void setBtnUpdateRepasseDialog(String btnUpdateRepasseDialog) {
+		this.btnUpdateRepasseDialog = btnUpdateRepasseDialog;
+	}
+
+	public String getBtnOnCompleteRepasseDialog() {
+		return btnOnCompleteRepasseDialog;
+	}
+
+	public void setBtnOnCompleteRepasseDialog(String btnOnCompleteRepasseDialog) {
+		this.btnOnCompleteRepasseDialog = btnOnCompleteRepasseDialog;
+	}
+	
+	public Double getValorTotalMovimento() {
+		return valorTotalMovimento;
+	}
+
+	public void setValorTotalMovimento(Double valorTotalMovimento) {
+		this.valorTotalMovimento = valorTotalMovimento;
+	}
+
+	public Double getValorTotalMovimentoDinheiro() {
+		return valorTotalMovimentoDinheiro;
+	}
+
+	public void setValorTotalMovimentoDinheiro(Double valorTotalMovimentoDinheiro) {
+		this.valorTotalMovimentoDinheiro = valorTotalMovimentoDinheiro;
+	}
+
+	public Double getValorTotalMovimentoCheque() {
+		return valorTotalMovimentoCheque;
+	}
+
+	public void setValorTotalMovimentoCheque(Double valorTotalMovimentoCheque) {
+		this.valorTotalMovimentoCheque = valorTotalMovimentoCheque;
+	}
+	
+	public boolean isDialogRepasseMovimentoDinheiroCheque() {
+		return dialogRepasseMovimentoDinheiroCheque;
+	}
+
+	public void setDialogRepasseMovimentoDinheiroCheque(
+			boolean dialogRepasseMovimentoDinheiroCheque) {
+		this.dialogRepasseMovimentoDinheiroCheque = dialogRepasseMovimentoDinheiroCheque;
+	}
+	
+	public boolean isDialogRepasseMovimentoCheque() {
+		return dialogRepasseMovimentoCheque;
+	}
+
+	public void setDialogRepasseMovimentoCheque(boolean dialogRepasseMovimentoCheque) {
+		this.dialogRepasseMovimentoCheque = dialogRepasseMovimentoCheque;
+	}
+	
+	public ProtocoloCheques getProtocoloCheques() {
+		return protocoloCheques;
+	}
+
+	public void setProtocoloCheques(ProtocoloCheques protocoloCheques) {
+		this.protocoloCheques = protocoloCheques;
+	}
+	
+	public List<Protocolo> getListaProtocolo() {
+		return listaProtocolo;
+	}
+
+	public void setListaProtocolo(List<Protocolo> listaProtocolo) {
+		this.listaProtocolo = listaProtocolo;
+	}
+	
+	public List<ProtocoloCheques> getListaProtocoloCheques() {
+		return listaProtocoloCheques;
+	}
+
+	public void setListaProtocoloCheques(
+			List<ProtocoloCheques> listaProtocoloCheques) {
+		this.listaProtocoloCheques = listaProtocoloCheques;
+	}
+	
+	public boolean isDialogRepasseMovimentoDinheiro() {
+		return dialogRepasseMovimentoDinheiro;
+	}
+
+	public void setDialogRepasseMovimentoDinheiro(
+			boolean dialogRepasseMovimentoDinheiro) {
+		this.dialogRepasseMovimentoDinheiro = dialogRepasseMovimentoDinheiro;
 	}
 }
