@@ -124,18 +124,24 @@
 						</h:panelGrid>
 
 						<h:form prependId="false">
-							<center style="width: 300px;"><p:graphicImage id="foto"
+						<p:panel id="pnlFotos" style="background: transparent;">
+							<center style="width: 300px;">
+							<p:graphicImage id="foto" rendered="#{discipuloBean.fotoEdit == true}"
 								value="#{discipuloBean.imagem}" width="120" height="116"
+								cache="false" />
+								<p:graphicImage id="fotosalva" rendered="#{discipuloBean.fotoEdit == false}" 
+								value="#{discipuloBean.discipulos.disfoto}" width="120" height="116"
 								cache="false" /> <br />
 
 							<p:fileUpload sizeLimit="1048576" image="/img/but_anexar_foto.png"
 								width="118" customUI="true" auto="true" widgetVar="uploader"
 								fileUploadListener="#{discipuloBean.handleFileUpload}"
 								allowTypes="*.jpg;*.png;*.gif;" description="Imagens"
-								id="uploader" update="foto idarquivo" /> <h:outputText
-								value="Arquivo selecionado: " styleClass="Texto_cpf_login" /> <h:outputText
+								id="uploader" update="pnlFotos" /> <h:outputText
+								value="Arquivo selecionado: " styleClass="formulariosObrigatorio" /> <h:outputText
 								id="idarquivo" value="#{discipuloBean.nomeArquivoSelecionado}"
 								styleClass="Texto_cpf_login" /></center>
+						</p:panel>
 						</h:form>
 
 					</h:panelGrid>
@@ -216,7 +222,7 @@
 						</p:inputMask>
 						<h:outputLabel value="Complemento:" styleClass="Texto_cpf_login"
 							for="complemento" />
-						<h:inputText id="complemento" maxlength="10" size="4"
+						<h:inputText id="complemento" maxlength="10" size="30"
 							styleClass="formularios2" tabindex="13"
 							value="#{discipuloBean.discipulos.disEndComplemento}" />
 						<h:outputLabel value="Bairro:" styleClass="formulariosObrigatorio"
@@ -291,7 +297,7 @@
 							<h:outputLabel value="Senha de Acesso:"
 								styleClass="formulariosObrigatorio" for="senha" />
 							<h:inputSecret id="senha" size="10" styleClass="formularios2"
-								required="true" tabindex="19"
+								required="true" tabindex="19" redisplay="true"
 								value="#{discipuloBean.discipulos.disSenha}"
 								readonly="#{discipuloBean.editarSenha}"
 								requiredMessage="Senha é obrigatória" />
@@ -372,8 +378,8 @@
 
 			<br />
 
-			<h:commandButton value="Salvar..." styleClass="formularios"
-				tabindex="25" actionListener="#{discipuloBean.salvar}"></h:commandButton>
+			<h:commandButton value="Editar..." styleClass="formularios"
+				tabindex="25" actionListener="#{discipuloBean.editar}"></h:commandButton>
 	
 	<p:dialog  closeOnEscape="true" position="center" resizable="false" widgetVar="dlg1" header="Dados do discípulo">
 		<h:panelGrid id="dlg" columns="2" columnClasses="coluna1, coluna2">
