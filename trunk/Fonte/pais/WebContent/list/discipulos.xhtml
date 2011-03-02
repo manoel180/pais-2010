@@ -43,7 +43,7 @@
 						nextPageLinkLabel="Avançar &gt;" width="100%"
 						sortAscMessage="Ordena em ordem crescente"
 						sortDescMessage="Ordena em ordem descrecente" rows="12"
-						dynamic="true" emptyMessage="Nenhum discípulo encontrado"
+						emptyMessage="Nenhum discípulo encontrado"
 						paginatorPosition="bottom">
 
 						<p:column style="width:50px" filterStyleClass="formularios"
@@ -88,17 +88,10 @@
 								<center><h:outputText value="&nbsp;EDITAR"
 									styleClass="Fonte_12" /></center>
 							</f:facet>
-							<h:commandButton image="/img/editar.png"  action="#{discipuloBean.prepararEdicao}">
-							<f:setPropertyActionListener value="#{discipulo}"
-									target="#{discipuloBean.discipulos}" />
-							</h:commandButton>		
-							<!--<p:commandLink title="Editar Discípulo" process="@this"
-								action="#{discipuloBean.prepararEdicao}" ajax="false">
-								<center><p:graphicImage value="/img/editar.png" /></center>
-								<f:setPropertyActionListener value="#{discipulo}"
-									target="#{discipuloBean.discipulos}" />
-							</p:commandLink>
-						--></p:column>
+								<h:commandButton image="/img/editar.png"  action="#{discipuloBean.prepararEdicao}">
+								<f:setPropertyActionListener value="#{discipulo}" target="#{discipuloBean.discipulos}" />
+								</h:commandButton>		
+						</p:column>
 						<p:column style="width:10px 0px">
 							<f:facet name="header">
 								<center><h:outputText value="&nbsp;EXCLUIR"
@@ -208,7 +201,7 @@
 							</h:inputText>
 														
 						</h:panelGrid>
-							<p:graphicImage id="foto"
+							<p:graphicImage id="foto" 
 								value="#{discipuloBean.discipulos.disfoto}" width="120" height="116"
 								cache="false" />
 							
@@ -226,19 +219,19 @@
 					<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 
 						<h:outputLabel value="RG:" styleClass="Texto_cpf_login" for="rg" />
-						<h:inputText id="rg" styleClass="formularios2"
+						<h:inputText id="rg" styleClass="formularios2" readonly="true"
 							value="#{discipuloBean.discipulos.disRg}" />
 
 
 						<h:outputLabel value=" CPF:" styleClass="Texto_cpf_login"
 							for="cpfMask" />
 						<p:inputMask id="cpfMask" mask="999.999.999-99" size="15"
-							value="#{discipuloBean.discipulos.disCpf}"
+							value="#{discipuloBean.discipulos.disCpf}" readonly="true"
 							maxlength="14" styleClass="formularios2" />
 						
 						<h:outputLabel value="Título Eleitor:"
 							styleClass="Texto_cpf_login" for="TitEleitor1" />
-						<h:inputText id="TitEleitor1" maxlength="12"
+						<h:inputText id="TitEleitor1" maxlength="12" readonly="true"
 							value="#{discipuloBean.discipulos.disTitEleitor}"
 							styleClass="formularios2"/>
 
@@ -251,8 +244,8 @@
 						<h:outputLabel value="CEP:" styleClass="Texto_cpf_login"
 							for="cep" />
 
-						<h:inputText id="cep" size="20" 
-							value="#{discipuloBean.discipulos.logradouro.cep}" maxlength="8"
+						<h:inputText id="cep" size="20" readonly="true" 
+							value="#{discipuloBean.discipulos.logradouro.cep}"
 							styleClass="formularios2"/>
 							
 						<h:outputText /><h:outputText />
@@ -271,13 +264,13 @@
 						<h:outputLabel value="Número:" styleClass="Texto_cpf_login"
 							for="num" />
 						<p:inputMask mask="?9999" id="num" maxlength="4" 
-							size="4" styleClass="formularios2"
+							size="4" styleClass="formularios2" readonly="true"
 							value="#{discipuloBean.discipulos.disEndNumero}">
 						</p:inputMask>
 						<h:outputLabel value="Complemento:" styleClass="Texto_cpf_login"
 							for="complemento" />
 						<h:inputText id="complemento" maxlength="10" size="30"
-							styleClass="formularios2"
+							styleClass="formularios2" readonly="true"
 							value="#{discipuloBean.discipulos.disEndComplemento}" />
 						<h:outputLabel value="Bairro:" styleClass="Texto_cpf_login"
 							for="bairro" />
@@ -307,24 +300,24 @@
 							for="emailTxt" />
 						<h:inputText id="emailTxt" size="40" maxlength="60" 
 							value="#{discipuloBean.discipulos.disemail}"
-							styleClass="formularios2"/>
+							styleClass="formularios2" readonly="true"/>
 						
 						<h:outputLabel value="Tel. Fixo:" styleClass="Texto_cpf_login"
 							for="telTxt" />
 						<p:inputMask mask="(99) 9999-9999" id="telTxt" 
 							value="#{discipuloBean.discipulos.disTelFixo}" 
-							styleClass="formularios2" />
+							styleClass="formularios2" readonly="true"/>
 
 						<h:outputLabel value="Tel. Celular:" styleClass="Texto_cpf_login"
 							for="telTxt2" />
 						<p:inputMask mask="(99) 9999-9999" id="telTxt2"
 							value="#{discipuloBean.discipulos.disTelCelular}"
-							styleClass="formularios2" />
+							styleClass="formularios2" readonly="true"/>
 						<h:outputLabel value="Tel. Comercial:"
 							styleClass="Texto_cpf_login" for="telTxt3" />
 						<p:inputMask mask="(99) 9999-9999" id="telTxt3"
 							value="#{discipuloBean.discipulos.disTelComercial}"
-							styleClass="formularios2" />
+							styleClass="formularios2" readonly="true"/>
 					</h:panelGrid>
 
 				</p:tab>
@@ -333,7 +326,7 @@
 						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 							<h:outputLabel value="Função Eclesiástica:"
 								styleClass="Texto_cpf_login" for="funcaoeclesiastica" />
-							<h:inputText id="funcaoeclesiastica"
+							<h:inputText id="funcaoeclesiastica" readonly="true"
 								value="#{discipuloBean.discipulos.funcaoeclesiasticas.funDescricao}"
 								styleClass="formularios2"/>
 								
