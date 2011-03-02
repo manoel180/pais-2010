@@ -363,11 +363,14 @@ public class DiscipuloBean {
 
 	public void editar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (conteudo == null) {
-			discipulos.setDisfoto("/img/sem_foto.jpg"); 
-		} else {
+		if (fotoEdit == true) {
+			//discipulos.setDisfoto("/img/sem_foto.jpg"); // Falta Verificar
 			discipulos.setDisfoto("/fotos/" + salvarFoto());
-		}
+		} /*else {
+			discipulos.setDisfoto("/fotos/" + salvarFoto());
+		}*/
+		
+		
 
 		if (logradouro == null) {
 			logradouro.setCep(null);
@@ -433,12 +436,11 @@ public class DiscipuloBean {
 	
 	public void salvar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
-		if (fotoEdit == true) {
-			//discipulos.setDisfoto("/img/sem_foto.jpg"); // Falta Verificar
+		if (conteudo == null) {
+			discipulos.setDisfoto("/img/sem_foto.jpg"); 
+		} else {
 			discipulos.setDisfoto("/fotos/" + salvarFoto());
-		} /*else {
-			discipulos.setDisfoto("/fotos/" + salvarFoto());
-		}*/
+		}
 
 		if (logradouro == null) {
 			logradouro.setCep(null);
@@ -501,10 +503,7 @@ public class DiscipuloBean {
 	public String salvarFoto() {
 		String Foto = null;
 		try {
-
-			// imagem = new
-			// DefaultStreamedContent(event.getFile().getInputstream());
-
+		
 			// Para pegar direto o caminho da imagem
 			FacesContext faces = FacesContext.getCurrentInstance();
 			HttpServletRequest request = (HttpServletRequest) faces
@@ -512,9 +511,8 @@ public class DiscipuloBean {
 			String path = request.getSession().getServletContext()
 					.getRealPath("/fotos/");
 
-			// conteudo = event.getFile().getContents();
 			Foto = discipulos.getDisCpf() + ".jpg";
-			String caminho = path + "/" + Foto;// event.getFile().getFileName();
+			String caminho = path + "/" + Foto;
 
 			FileOutputStream fos = new FileOutputStream(caminho);
 
