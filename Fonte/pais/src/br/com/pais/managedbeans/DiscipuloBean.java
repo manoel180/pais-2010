@@ -3,12 +3,15 @@ package br.com.pais.managedbeans;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -30,7 +33,6 @@ import br.com.pais.dao.impl.FormacaoeclesiasticasDaoImp;
 import br.com.pais.dao.impl.FuncaoeclesiasticasDaoImp;
 import br.com.pais.dao.impl.LogradouroDaoImp;
 import br.com.pais.entities.Bairro;
-import br.com.pais.entities.Bases;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Encontros;
 import br.com.pais.entities.Estado;
@@ -51,14 +53,16 @@ import br.com.pais.util.ValidarTituloEleitor;
 /**
  * @author manoel
  */
-
+@ManagedBean
+@SessionScoped
 public class DiscipuloBean {
 
 	private boolean editar = true;
 	private boolean isConjugeCad = false;
 	private Discipulos conjugePesq;
 	private boolean conjugeCadEdit = false;
-	
+	private boolean fotoEdit = false;
+
 	private Discipulos discipulos = new Discipulos();
 	private Encontros encontros = new Encontros();
 	private Geracoes geracoes = new Geracoes();
@@ -210,8 +214,15 @@ public class DiscipuloBean {
 	}
 
 	public String handleFileUpload(FileUploadEvent event) {
-
+		
+		
 		try {
+			if (discipulos.getDisCod() != null){
+				fotoEdit = true;
+			}else
+			{
+				fotoEdit= false;
+			}
 			setNomeArquivoSelecionado(event.getFile().getFileName());
 			imagem = new DefaultStreamedContent(event.getFile()
 					.getInputstream());
@@ -235,6 +246,8 @@ public class DiscipuloBean {
 	}
 
 	public String prepararListarDiscipulos() {
+		
+		/*discipulos = new Discipulos();*/
 		listaDiscipulos  = new ArrayList<Discipulos>();
 		listaDiscipulos.addAll(discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
 		return "/list/discipulos.mir";
@@ -279,18 +292,79 @@ public class DiscipuloBean {
 
 	}
 	public String prepararEdicao() {
+		nomeArquivoSelecionado = "";
+		fotoEdit = false;
+		source = new ArrayList<Encontros>();
+		target = new ArrayList<Encontros>();
+		sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
+		targetFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
+		isConjugeCad = false;
+		conjugeCadEdit = true;
+		conjugePesq = null;
+		editar = true;
+		editarM12 = discipulos.getDism12() == 's';
+		
+		source.addAll(new EncontrosDaoImp().todos());
+		target = discipulos.getEncontroses();
+		
+		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp().todos());
+		targetFormacaoEclesiasticas = discipulos.getFormacaoeclesiasticases();
+		
+		for (Formacaoeclesiasticas fe : targetFormacaoEclesiasticas){
+			for (Formacaoeclesiasticas fe2: sourceFormacaoEclesiasticas)
+				if(fe2.getForEcCod() == fe.getForEcCod()){
+					sourceFormacaoEclesiasticas.remove(fe2);
+					break;
+				}
+		}
+		 
+		for (Encontros e : target){
+			for (Encontros e2: source)
+				if(e2.getEncCod()== e.getEncCod()){
+					source.remove(e2);
+					break;
+				}
+		}
+		 		
+		
+		ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>(sourceFormacaoEclesiasticas, targetFormacaoEclesiasticas);
+		ListaEncontros = new DualListModel<Encontros>(source, target);
+		
+		listaFuncaoEclesiasticas = funcaoeclesiasticasDao.listarFuncaoPorSexo(
+				discipuloSessao.getDiscipulos().getDisSexo(), discipuloSessao
+						.getDiscipulos().getFuncaoeclesiasticas().getFunCod());
 		
 		
+		logradouro = new Logradouro();
+		estadocivil = discipulos.getEstadocivil();
+		logradouro = discipulos.getLogradouro();
+		formacaoacademica = discipulos.getFormacaoacademica();
+		funcaoeclesiasticas = discipulos.getFuncaoeclesiasticas();
+		geracoes = discipulos.getGeracoes();
 		
 		
-		
+		if(discipulos.getEstadocivil().getEstCod()==2){
+			if(discipulos.getDiscipulosByDisConjugecad()==(null)){
+				isConjugeCad = false;
+				conjugeCadEdit = false;
+				conjugePesq = null;
+				editar = false;
+			}else{
+				editar = false;
+				isConjugeCad = true;
+				conjugeCadEdit = false;
+				conjugePesq = discipulos.getDiscipulosByDisConjugecad();
+				
+			}
+		}	
+		 		
 		return "/editar/discipulos.mir";
 	}
 
-	public void salvar(ActionEvent event) {
+	public void editar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (conteudo == null) {
-			discipulos.setDisfoto("/img/sem_foto.jpg"); // Falta Verificar
+			discipulos.setDisfoto("/img/sem_foto.jpg"); 
 		} else {
 			discipulos.setDisfoto("/fotos/" + salvarFoto());
 		}
@@ -322,9 +396,81 @@ public class DiscipuloBean {
 		discipulos.setFuncaoeclesiasticas(funcaoeclesiasticas);
 		discipulos.setGeracoes(geracoes);
 
+		if (discipuloDao.atualizar(discipulos) == (true)) {
+			if(estadocivil.getEstCod()==2 && isConjugeCad==true){
+				conjugePesq.setDiscipulosByDisConjugecad(discipulos);
+				conjugePesq.setEstadocivil(estadocivil);
+				discipuloDao.atualizar(conjugePesq);
+			}
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, "SUCESSO!!!",
+					"Dados atualizados com sucesso!"));
+			
+			/*if (discipulos.getDisemail() != null
+					|| discipulos.getDisemail() != ""
+					&& (funcaoeclesiasticas.getFunCod() != 1 || funcaoeclesiasticas
+							.getFunCod() != 2)) {
+
+				for (Funcaoeclesiasticas fe : listaFuncaoEclesiasticas) {
+					if (fe.getFunCod() == funcaoeclesiasticas.getFunCod()) {
+
+						funcaoeclesiasticas = fe;
+					}
+				}// for end
+
+				new SendEMail().sendSimpleMailEnviarSenha(
+						funcaoeclesiasticas.getFunDescricao(),
+						discipulos.getDisnome(), discipulos.getDisemail(),
+						discipulos.getDisSenha(), discipulos.getDisCpf());
+			}*/ 
+		} else {
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "ERRO!!!",
+					"Erro ao cadastrar!"));
+		}
+	}
+	
+	
+	public void salvar(ActionEvent event) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (fotoEdit == true) {
+			//discipulos.setDisfoto("/img/sem_foto.jpg"); // Falta Verificar
+			discipulos.setDisfoto("/fotos/" + salvarFoto());
+		} /*else {
+			discipulos.setDisfoto("/fotos/" + salvarFoto());
+		}*/
+
+		if (logradouro == null) {
+			logradouro.setCep(null);
+			context.addMessage(null, new FacesMessage("ERRO", " CEP inválido"));
+		} else {
+			discipulos.setLogradouro(logradouro);
+		}
+
+		validarcpf(null);
+		if (discipulos.getDisTitEleitor() != null) {
+			validartituloeleitor(null);
+		}
+		
+		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
+		discipulos.setEncontroses(ListaEncontros.getTarget());
+		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
+		discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
+
+		
+		discipulos.setEstadocivil(estadocivil);
+		if(estadocivil.getEstCod()==2 && isConjugeCad==true){
+			discipulos.setDiscipulosByDisConjugecad(conjugePesq);
+		}
+		
+		discipulos.setFormacaoacademica(formacaoacademica);
+		discipulos.setFuncaoeclesiasticas(funcaoeclesiasticas);
+		discipulos.setGeracoes(geracoes);
+
 		if (discipuloDao.salvar(discipulos) == (true)) {
 			if(estadocivil.getEstCod()==2 && isConjugeCad==true){
 				conjugePesq.setDiscipulosByDisConjugecad(discipulos);
+				conjugePesq.setEstadocivil(estadocivil);
 				discipuloDao.atualizar(conjugePesq);
 			}
 			
@@ -797,5 +943,11 @@ public class DiscipuloBean {
 		this.listaDiscipulos = listaDiscipulos;
 	}
 
-	
+	public boolean isFotoEdit() {
+		return fotoEdit;
+	}
+
+	public void setFotoEdit(boolean fotoEdit) {
+		this.fotoEdit = fotoEdit;
+	}	
 }

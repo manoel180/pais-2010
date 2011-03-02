@@ -260,7 +260,10 @@ public class Discipulos implements java.io.Serializable {
 
 	@Column(name = "dispai", length = 60)
 	public String getDispai() {
-		return this.dispai;
+		if (this.dispai == null)
+			return this.dispai;
+		else
+			return this.dispai.toUpperCase();
 	}
 
 	public void setDispai(String dispai) {
@@ -269,7 +272,10 @@ public class Discipulos implements java.io.Serializable {
 
 	@Column(name = "disconjuge", length = 60)
 	public String getDisconjuge() {
-		return this.disconjuge;
+		if (this.disconjuge == null)
+			return this.disconjuge;
+		else
+			return this.disconjuge.toUpperCase();
 	}
 
 	public void setDisconjuge(String disconjuge) {
@@ -278,7 +284,11 @@ public class Discipulos implements java.io.Serializable {
 
 	@Column(name = "dismae", nullable = false, length = 60)
 	public String getDismae() {
-		return this.dismae;
+		
+		if (this.dismae == null)
+			return this.dismae;
+		else
+			return this.dismae.toUpperCase();
 	}
 
 	public void setDismae(String dismae) {

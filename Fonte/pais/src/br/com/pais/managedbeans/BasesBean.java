@@ -215,8 +215,11 @@ public class BasesBean {
 		nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos(), root));
 		carregarLideres(discipuloSessao.getDiscipulos(), nodes.get(0));
 		if(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad()!=null ){
-			nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root));
-			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(0));
+			treeNode = new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root);
+			nodes.add(treeNode);
+			index = nodes.indexOf(treeNode);
+			index = nodes.indexOf(treeNode);
+			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(index));
 		}
 		
 		zona = new Zona();
@@ -261,15 +264,19 @@ public class BasesBean {
 
 	public String prepararEdicao() {
 		nodes = new ArrayList<TreeNode>();
+		treeNode = new DefaultTreeNode();
 		opcao = 0;
+		index = 0;
 		
-		//selectedNode = new DefaultTreeNode();
 		root = new DefaultTreeNode("root", null);
 		nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos(), root));
 		carregarLideres(discipuloSessao.getDiscipulos(), nodes.get(0));
 		if(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad()!=null ){
-			nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root));
-			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(0));
+			treeNode = new DefaultTreeNode(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), root);
+			nodes.add(treeNode);
+			index = nodes.indexOf(treeNode);
+			index = nodes.indexOf(treeNode);
+			carregarLideres(discipuloSessao.getDiscipulos().getDiscipulosByDisConjugecad(), nodes.get(index));
 		}
 		
 		
