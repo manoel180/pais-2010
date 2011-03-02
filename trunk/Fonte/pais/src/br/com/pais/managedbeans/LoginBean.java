@@ -85,7 +85,7 @@ public class LoginBean {
 			cpf = "";
 			editar = true;
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro","CPF ou SENHA inv�lida!");
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro","CPF ou SENHA inválida!");
 			facesContext.addMessage(null, message);
 			return "/login.mir";
 		}
