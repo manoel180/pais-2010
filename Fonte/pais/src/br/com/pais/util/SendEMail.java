@@ -37,9 +37,12 @@ public class SendEMail {
 
 		String html = "";
 		html += conteudo;
-
+		
 		BodyPart mainPart = new MimeBodyPart();
 		mainPart.setContent(html, "text/html; charset=UTF-8;"); // Adiciona conteúdo HTML
+		mainPart.setHeader("X-Priority","1");
+		mainPart.setHeader("Priority","Urgent");
+		mainPart.setHeader("Importance","high");
 		multipart.addBodyPart(mainPart);
 
 		BodyPart imagePart = new MimeBodyPart();
