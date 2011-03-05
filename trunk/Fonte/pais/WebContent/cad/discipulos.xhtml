@@ -14,14 +14,16 @@
 			cellspacing="0">
 			<tr>
 				<td align="right" scope="col" width="65"><h:outputLabel
-					value="VOCÊ ESTA: " styleClass="TEXTO_11" /></td>
+						value="VOCÊ ESTA: " styleClass="TEXTO_11" />
+				</td>
 				<td><p:breadCrumb
-					style="height: 19px; background: transparent; border: hidden">
-					<p:menuitem value="home" url="/principal.mir" />
-					<p:menuitem value="CADASTRO" />
-					<p:menuitem value="CADASTRO DE DISCÍPULO"
-						action="#{discipuloBean.prepararDiscipulo}" ajax="false" />
-				</p:breadCrumb></td>
+						style="height: 19px; background: transparent; border: hidden">
+						<p:menuitem value="home" url="/principal.mir" />
+						<p:menuitem value="CADASTRO" />
+						<p:menuitem value="CADASTRO DE DISCÍPULO"
+							action="#{discipuloBean.prepararDiscipulo}" ajax="false" />
+					</p:breadCrumb>
+				</td>
 			</tr>
 		</table>
 	</ui:define>
@@ -36,109 +38,177 @@
 			<p:tabView orientation="top">
 				<p:tab id="tabDadosPessoais" title="Dados Pessoais">
 
-					<h:panelGrid columns="2" id="pnlGrid">
+									
+						<table width="100%">
+							<tbody>
+								<tr>
+									<td >
+										<table >
+											<tbody>
+												<tr>
+													<td  class="coluna1"><h:outputLabel
+															value="Nome:" styleClass="formulariosObrigatorio"
+															for="nomeTxt" /></td>
+													<td  class="coluna2"><h:inputText
+															styleClass="formularios2" maxlength="60" size="40"
+															tabindex="1" required="true" autocomplete="off"
+															id="nomeTxt" value="#{discipuloBean.discipulos.disnome}"
+															requiredMessage="Nome é obrigatório">
+														</h:inputText></td>
+												</tr>
+												<tr>
+													<td  class="coluna1"><h:outputLabel
+															value="Nome do pai:" styleClass="Texto_cpf_login"
+															for="paiTxt" />
+													</td>
+													<td class="coluna2"><h:inputText
+															styleClass="formularios2" maxlength="60" size="40"
+															value="#{discipuloBean.discipulos.dispai}"
+															required="false" id="paiTxt" tabindex="2">
+														</h:inputText>
+													</td>
+												</tr>
+												<tr>
+													<td class="coluna1"><h:outputLabel
+															value="Nome da mãe:" styleClass="Texto_cpf_login"
+															for="maeTxt" />
+													</td>
+													<td  class="coluna2"><h:inputText
+															styleClass="formularios2" maxlength="60" size="40"
+															tabindex="3" id="maeTxt"
+															value="#{discipuloBean.discipulos.dismae}"
+															requiredMessage="Nome da mãe é obrigatório">
+														</h:inputText>
+													</td>
+												</tr>
+												<tr>
+													<td  class="coluna1"><h:outputLabel
+															value="Data de nascimento:"
+															styleClass="formulariosObrigatorio" for="dtnasc" />
+													</td>
+													<td  class="coluna2"><p:inputMask
+															mask="99/99/9999" id="dtnasc"
+															value="#{discipuloBean.discipulos.disdatanascimento}"
+															size="15" styleClass="formularios2" required="true"
+															tabindex="4"
+															requiredMessage="Data de Nascimento é obrigatório">
+															<f:convertDateTime type="date" locale="pt_BR" />
+														</p:inputMask>
+													</td>
+												</tr>
+												<tr>
+													<td class="coluna1"><h:outputLabel
+															value="Estado civil:" styleClass="formulariosObrigatorio"
+															for="estcivil" />
+													</td>
+													<td  class="coluna2">
+													<h:selectOneMenu
+															id="estcivil" tabindex="5"
+															requiredMessage="Estado civil é obrigatório"
+															value="#{discipuloBean.estadocivil.estCod}"
+															styleClass="formularios" required="true">
+															<f:selectItems value="#{estadoCivilBean.estCivilCombo}" />
+															<f:ajax render="conjugecad conjuge" process="estcivil"
+																event="change" listener="#{discipuloBean.isCasado}" />
+														</h:selectOneMenu>
+													</td>
+												</tr>
+												<tr >
+													<td  class="coluna1">
+														<h:outputLabel
+															value="Cônjuge cadastrado  no PAIS:" escape="true"
+															styleClass="Texto_cpf_login" />
+													</td>
+													<td   class="coluna2">
+													<h:selectBooleanCheckbox
+															id="conjugecad" value="#{discipuloBean.conjugeCad}" tabindex="6"
+															disabled="#{discipuloBean.editar}" required="true">
+															<f:ajax render="conjugecad conjuge" process="@this" event="change"
+																listener="#{discipuloBean.isCasadoCad}" />
+														</h:selectBooleanCheckbox>
+													</td>
+												</tr>
 
-						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+												<tr>
+													<td  class="coluna1"><h:outputLabel
+															value="Nome do cônjuge:" styleClass="Texto_cpf_login" />
+													</td>
 
-							<h:outputLabel value="Nome:" styleClass="formulariosObrigatorio"
-								for="nomeTxt" />
-
-							<h:inputText styleClass="formularios2" maxlength="60" size="40"
-								tabindex="1" required="true" autocomplete="off" id="nomeTxt"
-								value="#{discipuloBean.discipulos.disnome}"
-								requiredMessage="Nome é obrigatório">
-							</h:inputText>
-
-							<h:outputLabel value="Nome do pai:" styleClass="Texto_cpf_login"
-								for="paiTxt" />
-							<h:inputText styleClass="formularios2" maxlength="60" size="40"
-								value="#{discipuloBean.discipulos.dispai}" required="false"
-								id="paiTxt" tabindex="2">
-							</h:inputText>
-
-							<h:outputLabel value="Nome da mãe:" styleClass="Texto_cpf_login"
-								for="maeTxt" />
-
-							<h:inputText styleClass="formularios2" maxlength="60" size="40"
-								tabindex="3" id="maeTxt"
-								value="#{discipuloBean.discipulos.dismae}"
-								requiredMessage="Nome da mãe é obrigatório">
-							</h:inputText>
-
-							<h:outputLabel value="Data de nascimento:"
-								styleClass="formulariosObrigatorio" for="dtnasc" />
-							<p:inputMask mask="99/99/9999" id="dtnasc"
-								value="#{discipuloBean.discipulos.disdatanascimento}" size="15"
-								styleClass="formularios2" required="true" tabindex="4"
-								requiredMessage="Data de Nascimento é obrigatório">
-								<f:convertDateTime type="date" locale="pt_BR" />
-							</p:inputMask>
-
-
-							<h:outputLabel value="Estado civil:"
-								styleClass="formulariosObrigatorio" for="estcivil" />
-							<h:selectOneMenu id="estcivil" tabindex="5"
-								requiredMessage="Estado civil é obrigatório"
-								value="#{discipuloBean.estadocivil.estCod}"
-								styleClass="formularios" required="true">
-								<f:selectItems value="#{estadoCivilBean.estCivilCombo}" />
-								<f:ajax render="pnlGrid" process="estcivil" event="change" listener="#{discipuloBean.isCasado}" />
-							</h:selectOneMenu>
-
-							<h:outputLabel value="Cônjuge cadastrado no PAIS:"
-								styleClass="Texto_cpf_login" />
-							<h:selectBooleanCheckbox id="conjugecad" value="#{discipuloBean.conjugeCad}" disabled="#{discipuloBean.editar}"
-								required="true">
-								<f:ajax render="pnlGrid" process="@this" event="change"
-									listener="#{discipuloBean.isCasadoCad}" />
-							</h:selectBooleanCheckbox>
-
-							<h:outputLabel value="Nome do cônjuge:"
-								styleClass="Texto_cpf_login" />
-
-							<p:autoComplete value="#{discipuloBean.conjugePesq}" rendered="#{discipuloBean.conjugeCad==true}"
-								requiredMessage="Nome do cônjuge é obrigatório" readonly="#{discipuloBean.conjugeCadEdit}"
-								styleClass="formularios2" maxlength="60" size="40" var="conjuge" minQueryLength="3" 
-								completeMethod="#{discipuloBean.completeDiscipulos}" onSelectUpdate="dlg"
-								converter="discipulosConverter" itemLabel="#{conjuge.disnome}"
-								itemValue="#{conjuge}" forceSelection="true" required="true" onchange="dlg1.show();"
-								id="conjugeCadTxt" selectListener="#{discipuloBean.handleSelect}"/>	
+													<td   class="coluna2">
 													
- 							
+												<h:panelGroup id="conjuge" style="background: transparent">
+												<p:autoComplete tabindex="7"
+															value="#{discipuloBean.conjugePesq}" 
+															rendered="#{discipuloBean.conjugeCad==true}"
+															requiredMessage="Nome do cônjuge é obrigatório"
+															readonly="#{discipuloBean.conjugeCadEdit}"
+															styleClass="formularios2" maxlength="60" size="40"
+															var="conjuge" minQueryLength="3"
+															completeMethod="#{discipuloBean.completeDiscipulos}"
+															onSelectUpdate="dlg" converter="discipulosConverter"
+															itemLabel="#{conjuge.disnome}" itemValue="#{conjuge}"
+															forceSelection="true" required="true"
+															onchange="dlg1.show();" id="conjugeCadTxt"
+															selectListener="#{discipuloBean.handleSelect}" />
+														<h:inputText  tabindex="8"
+															readonly="#{discipuloBean.conjugeCadEdit}"
+															value="#{discipuloBean.discipulos.disconjuge}"
+															rendered="#{discipuloBean.conjugeCad==false}"
+															requiredMessage="Nome do cônjuge é obrigatório"
+															styleClass="formularios2" maxlength="60"
+															size="40" required="true" id="conjugeTxt" />
+													</h:panelGroup>
+													</td>
+													
+												</tr>
+												<tr>
+													<td   class="coluna1"><h:outputLabel
+															value="Formação Acadêmica:"
+															styleClass="formulariosObrigatorio" for="formacademica" />
 
-							<h:inputText readonly="#{discipuloBean.conjugeCadEdit}"
-								value="#{discipuloBean.discipulos.disconjuge}" rendered="#{discipuloBean.conjugeCad==false}"
-								requiredMessage="Nome do cônjuge é obrigatório" tabindex="6" 
-								styleClass="formularios2" maxlength="60" size="40"
-								required="true" id="conjugeTxt" />
 
-							<h:outputLabel value="Formação Acadêmica:"
-								styleClass="formulariosObrigatorio" for="formacademica" />
-							<h:selectOneMenu id="formacademica"
-								value="#{discipuloBean.formacaoacademica.forAcCod}"
-								requiredMessage="Formação Acadêmica é obrigatória" tabindex="7"
-								styleClass="formularios" required="true">
-								<f:selectItems
-									value="#{formacaoAcademicaBean.formacaoAcademicaCombo}" />
-							</h:selectOneMenu>
-						</h:panelGrid>
+													</td>
+													<td  class="coluna2"><h:selectOneMenu
+															id="formacademica"
+															value="#{discipuloBean.formacaoacademica.forAcCod}"
+															requiredMessage="Formação Acadêmica é obrigatória"
+															tabindex="9" styleClass="formularios" required="true">
+															<f:selectItems
+																value="#{formacaoAcademicaBean.formacaoAcademicaCombo}" />
+														</h:selectOneMenu>
+													</td>
+												</tr>
 
-						<h:form prependId="false">
-							<center style="width: 300px;"><p:graphicImage id="foto"
-								value="#{discipuloBean.imagem}" width="120" height="116"
-								cache="false" /> <br />
+											</tbody>
+										</table> 
+											
+									</td>
+									<td style="vertical-align: center;"><h:form
+											prependId="false">
+											<center style="width: 300px;">
+												<p:graphicImage id="foto" value="#{discipuloBean.imagem}"
+													width="120" height="116" cache="false" />
+												<br />
 
-							<p:fileUpload sizeLimit="1048576" image="/img/but_anexar_foto.png"
-								width="118" customUI="true" auto="true" widgetVar="uploader"
-								fileUploadListener="#{discipuloBean.handleFileUpload}"
-								allowTypes="*.jpg;*.png;*.gif;" description="Imagens"
-								id="uploader" update="foto idarquivo" /> <h:outputText
-								value="Arquivo selecionado: " styleClass="Texto_cpf_login" /> <h:outputText
-								id="idarquivo" value="#{discipuloBean.nomeArquivoSelecionado}"
-								styleClass="Texto_cpf_login" /></center>
-						</h:form>
+												<p:fileUpload sizeLimit="1048576"
+													image="/img/but_anexar_foto.png" width="118"
+													customUI="true" auto="true" widgetVar="uploader"
+													fileUploadListener="#{discipuloBean.handleFileUpload}"
+													allowTypes="*.jpg;*.png;*.gif;" description="Imagens"
+													id="uploader" update="foto idarquivo" />
+												<h:outputText value="Arquivo selecionado: "
+													styleClass="Texto_cpf_login" />
+												<h:outputText id="idarquivo"
+													value="#{discipuloBean.nomeArquivoSelecionado}"
+													styleClass="Texto_cpf_login" />
+											</center>
+										</h:form></td>
+								</tr>
+							</tbody>
+						</table>
 
-					</h:panelGrid>
+						<br></br>
+				
 				</p:tab>
 			</p:tabView>
 			<br />
@@ -153,13 +223,13 @@
 
 						<h:outputLabel value="RG:" styleClass="Texto_cpf_login" for="rg" />
 						<h:inputText id="rg" styleClass="formularios2"
-							value="#{discipuloBean.discipulos.disRg}" tabindex="8" />
+							value="#{discipuloBean.discipulos.disRg}" />
 
 
 						<h:outputLabel value=" CPF:" styleClass="formulariosObrigatorio"
 							for="cpfMask" />
 						<p:inputMask id="cpfMask" mask="999.999.999-99" size="15"
-							tabindex="9" value="#{discipuloBean.discipulos.disCpf}"
+							 value="#{discipuloBean.discipulos.disCpf}"
 							maxlength="14" styleClass="formularios2" required="true"
 							requiredMessage="CPF é obrigatório">
 						</p:inputMask>
@@ -167,7 +237,7 @@
 						<h:outputLabel value="Título Eleitor:"
 							styleClass="Texto_cpf_login" for="TitEleitor1" />
 						<h:inputText rendered="true" id="TitEleitor1" maxlength="12"
-							value="#{discipuloBean.discipulos.disTitEleitor}" tabindex="10"
+							value="#{discipuloBean.discipulos.disTitEleitor}" 
 							styleClass="formularios2">
 						</h:inputText>
 
@@ -182,7 +252,7 @@
 						<h:outputLabel value="CEP:" styleClass="formulariosObrigatorio"
 							for="cep" />
 
-						<h:inputText id="cep" size="20" tabindex="11"
+						<h:inputText id="cep" size="20" tabindex="10"
 							requiredMessage="CEP é obrigatório"
 							value="#{discipuloBean.logradouro.cep}" maxlength="8"
 							styleClass="formularios2" required="true">
@@ -210,14 +280,14 @@
 							readonly="true" />
 						<h:outputLabel value="Número:" styleClass="Texto_cpf_login"
 							for="num" />
-						<p:inputMask mask="?9999" id="num" maxlength="4" tabindex="12"
+						<p:inputMask mask="?9999" id="num" maxlength="4" tabindex="11"
 							size="4" styleClass="formularios2"
 							value="#{discipuloBean.discipulos.disEndNumero}">
 						</p:inputMask>
 						<h:outputLabel value="Complemento:" styleClass="Texto_cpf_login"
 							for="complemento" />
 						<h:inputText id="complemento" maxlength="10" size="30"
-							styleClass="formularios2" tabindex="13"
+							styleClass="formularios2" tabindex="12"
 							value="#{discipuloBean.discipulos.disEndComplemento}" />
 						<h:outputLabel value="Bairro:" styleClass="formulariosObrigatorio"
 							for="bairro" />
@@ -245,7 +315,7 @@
 
 						<h:outputLabel value="Email:" styleClass="formulariosObrigatorio"
 							for="emailTxt" />
-						<h:inputText id="emailTxt" size="40" maxlength="60" tabindex="14"
+						<h:inputText id="emailTxt" size="40" maxlength="60" 
 							requiredMessage="Email é obrigatório" autocomplete="off"
 							value="#{discipuloBean.discipulos.disemail}"
 							styleClass="formularios2" required="true">
@@ -254,18 +324,18 @@
 
 						<h:outputLabel value="Tel. Fixo:" styleClass="Texto_cpf_login"
 							for="telTxt" />
-						<p:inputMask mask="(99) 9999-9999" id="telTxt" tabindex="15"
+						<p:inputMask mask="(99) 9999-9999" id="telTxt" 
 							value="#{discipuloBean.discipulos.disTelFixo}" autocomplete="off"
 							styleClass="formularios2" />
 
 						<h:outputLabel value="Tel. Celular:" styleClass="Texto_cpf_login"
 							for="telTxt2" />
-						<p:inputMask mask="(99) 9999-9999" id="telTxt2" tabindex="16"
+						<p:inputMask mask="(99) 9999-9999" id="telTxt2" 
 							value="#{discipuloBean.discipulos.disTelCelular}"
 							autocomplete="off" styleClass="formularios2" />
 						<h:outputLabel value="Tel. Comercial:"
 							styleClass="Texto_cpf_login" for="telTxt3" />
-						<p:inputMask mask="(99) 9999-9999" id="telTxt3" tabindex="17"
+						<p:inputMask mask="(99) 9999-9999" id="telTxt3" 
 							value="#{discipuloBean.discipulos.disTelComercial}"
 							autocomplete="off" styleClass="formularios2" />
 					</h:panelGrid>
@@ -291,7 +361,7 @@
 							<h:outputLabel value="Senha de Acesso:"
 								styleClass="formulariosObrigatorio" for="senha" />
 							<h:inputSecret id="senha" size="10" styleClass="formularios2"
-								required="true" tabindex="19"
+								required="true" 
 								value="#{discipuloBean.discipulos.disSenha}"
 								readonly="#{discipuloBean.editarSenha}"
 								requiredMessage="Senha é obrigatória" />
@@ -305,7 +375,7 @@
 							<h:outputLabel value="M12?:" styleClass="formulariosObrigatorio"
 								for="m12" />
 							<h:selectOneRadio id="m12" styleClass="Texto_cpf_login"
-								value="#{discipuloBean.discipulos.dism12}" tabindex="21"
+								value="#{discipuloBean.discipulos.dism12}" 
 								requiredMessage="M12 é obrigatório">
 								<f:selectItem itemLabel="Sim" itemValue="s" />
 								<f:selectItem itemLabel="Não" itemValue="n" />
@@ -320,7 +390,7 @@
 								rendered="#{discipuloBean.editarM12}"
 								value="#{discipuloBean.geracoes.gerCod}"
 								requiredMessage="Geração é obrigatória" styleClass="formularios"
-								required="true" tabindex="20">
+								required="true" >
 								<f:selectItems value="#{geracaoBean.geracaoCombo}" />
 							</h:selectOneMenu>
 
@@ -329,44 +399,47 @@
 					</p:outputPanel>
 				</p:tab>
 				<p:tab id="tbformacaoeclesiastica" title="Formação Eclesiástica">
-					<center><h:panelGrid columns="2"
-						columnClasses="coluna1, coluna2">
-						<center><p:pickList
-							value="#{discipuloBean.listaFormacaoEclesiasticas}"
-							styleClass="formulariosObrigatorio" var="formacaoEclesiasticas"
-							converter="formacaoEclesiasticaConverter"
-							itemLabel="#{formacaoEclesiasticas.forEcDescricao}"
-							itemValue="#{formacaoEclesiasticas}" tabindex="23"
-							addAllLabel="Adicionar Todos" addLabel="Adicionar"
-							removeAllLabel="Remover Todos" removeLabel="Remover"
-							effect="fade">
+					<center>
+						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+							<center>
+								<p:pickList value="#{discipuloBean.listaFormacaoEclesiasticas}"
+									styleClass="formulariosObrigatorio" var="formacaoEclesiasticas"
+									converter="formacaoEclesiasticaConverter"
+									itemLabel="#{formacaoEclesiasticas.forEcDescricao}"
+									itemValue="#{formacaoEclesiasticas}" 
+									addAllLabel="Adicionar Todos" addLabel="Adicionar"
+									removeAllLabel="Remover Todos" removeLabel="Remover"
+									effect="fade">
 
-							<f:facet name="sourceCaption">Formação Eclesiásticas</f:facet>
-							<f:facet name="targetCaption">Possui</f:facet>
+									<f:facet name="sourceCaption">Formação Eclesiásticas</f:facet>
+									<f:facet name="targetCaption">Possui</f:facet>
 
-						</p:pickList></center>
-					</h:panelGrid></center>
+								</p:pickList>
+							</center>
+						</h:panelGrid>
+					</center>
 				</p:tab>
 
 				<p:tab id="tbencontros" title="Tipos de Encontro">
-					<center><h:panelGrid columns="2"
-						columnClasses="coluna1, coluna2">
+					<center>
+						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 
-						<center><p:pickList
-							value="#{discipuloBean.listaEncontros}" var="encontros"
-							converter="encontrosConverter"
-							styleClass="formulariosObrigatorio"
-							itemLabel="#{encontros.encDescricao}" tabindex="24"
-							itemValue="#{encontros}" addAllLabel="Adicionar Todos"
-							addLabel="Adicionar" removeAllLabel="Remover Todos"
-							removeLabel="Remover" effect="fade">
+							<center>
+								<p:pickList value="#{discipuloBean.listaEncontros}"
+									var="encontros" converter="encontrosConverter"
+									styleClass="formulariosObrigatorio"
+									itemLabel="#{encontros.encDescricao}"
+									itemValue="#{encontros}" addAllLabel="Adicionar Todos"
+									addLabel="Adicionar" removeAllLabel="Remover Todos"
+									removeLabel="Remover" effect="fade">
 
-							<f:facet name="sourceCaption">Encontros</f:facet>
-							<f:facet name="targetCaption">Encontros que já participou</f:facet>
+									<f:facet name="sourceCaption">Encontros</f:facet>
+									<f:facet name="targetCaption">Encontros que já participou</f:facet>
 
-						</p:pickList>
+								</p:pickList>
+							</center>
+						</h:panelGrid>
 					</center>
-					</h:panelGrid></center>
 				</p:tab>
 			</p:tabView>
 
@@ -374,21 +447,28 @@
 
 			<h:commandButton value="Salvar..." styleClass="formularios"
 				tabindex="25" actionListener="#{discipuloBean.salvar}"></h:commandButton>
-	
-	<p:dialog  closeOnEscape="true" position="center" resizable="false" widgetVar="dlg1" header="Dados do discípulo">
-		<h:panelGrid id="dlg" columns="2" columnClasses="coluna1, coluna2">
-			<p:graphicImage id="dlgFoto" value="#{discipuloBean.conjugePesq.disfoto}" width="120" height="116" cache="false" />
-			
-			<h:outputLabel id="dlgNome" value="#{discipuloBean.conjugePesq.disnome}" styleClass="formularios2"/>
-		
-			<h:outputLabel value="CPF:" styleClass="Texto_cpf_login"/>
-			<h:outputLabel id="dlgCPF" value="#{discipuloBean.conjugePesq.disCpf}" styleClass="formularios2" />	
-		</h:panelGrid>
-	</p:dialog>	
-				
+
+			<p:dialog closeOnEscape="true" position="center" resizable="false"
+				widgetVar="dlg1" header="Dados do discípulo">
+				<h:panelGrid id="dlg" columns="2" columnClasses="coluna1, coluna2">
+					<p:graphicImage id="dlgFoto"
+						value="#{discipuloBean.conjugePesq.disfoto}" width="120"
+						height="116" cache="false" />
+
+					<h:outputLabel id="dlgNome"
+						value="#{discipuloBean.conjugePesq.disnome}"
+						styleClass="formularios2" />
+
+					<h:outputLabel value="CPF:" styleClass="Texto_cpf_login" />
+					<h:outputLabel id="dlgCPF"
+						value="#{discipuloBean.conjugePesq.disCpf}"
+						styleClass="formularios2" />
+				</h:panelGrid>
+			</p:dialog>
+
 		</h:form>
-		
-		
+
+
 	</ui:define>
 
 
