@@ -41,12 +41,12 @@ public class LoginBean {
 	private boolean cadCelulas = false;
 	private boolean menuBases = false;
 	//Controle Acesso Menu Financeiro
-	private boolean menuFazerRepasse;
-	private boolean menuReceberRepasse;
-	private boolean menuListarRecebidos;
-	private boolean menuListarEnviados;
-	
-	
+	private boolean menuFazerRepasse = false;
+	private boolean menuReceberRepasse = false;
+	private boolean menuListarRecebidos = false;
+	private boolean menuListarEnviados = false;
+	private boolean menuArvoreRepasse = false;
+
 	//List
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
 	private List<Discipulos> listaDiscipulos = new ArrayList<Discipulos>();
@@ -154,25 +154,36 @@ public class LoginBean {
 		boolean possuiCelula = false;
 		boolean funEclesiasticaMaiorDiscipulo = false;
 		
-		listaDiscipulos = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(discipuloDao.listarDiscipulosLiderPraCima(discipuloSessao.getDiscipulos().getDisCod()));
-		
-		if(listaDiscipulos.size() == 0) funEclesiasticaMaiorDiscipulo = false;
-		else funEclesiasticaMaiorDiscipulo = true;
-		
-		listaCelulas = new ArrayList<Celulas>();
-		listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
-		
-		if(listaCelulas.size() == 0) possuiCelula = false;
-		else possuiCelula = true;
-		
-		//Receber Repasse
-		if(possuiCelula == true && funEclesiasticaMaiorDiscipulo == true) menuReceberRepasse = true;
-		else menuReceberRepasse = false;
-		
-		menuFazerRepasse = possuiCelula;
-		menuListarEnviados = possuiCelula;
-		menuListarRecebidos = funEclesiasticaMaiorDiscipulo;
+		//Se ele for apostolo renner
+		if(discipuloSessao.getDiscipulos().getDiscipulos() == null){
+			menuArvoreRepasse = true;
+			menuFazerRepasse = false;
+			menuReceberRepasse = false;
+			menuListarRecebidos = false;
+			menuListarEnviados = false;
+		}
+		else{
+			listaDiscipulos = new ArrayList<Discipulos>();
+			listaDiscipulos.addAll(discipuloDao.listarDiscipulosLiderPraCima(discipuloSessao.getDiscipulos().getDisCod()));
+			
+			if(listaDiscipulos.size() == 0) funEclesiasticaMaiorDiscipulo = false;
+			else funEclesiasticaMaiorDiscipulo = true;
+			
+			listaCelulas = new ArrayList<Celulas>();
+			listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+			
+			if(listaCelulas.size() == 0) possuiCelula = false;
+			else possuiCelula = true;
+			
+			//Receber Repasse
+			if(possuiCelula == true && funEclesiasticaMaiorDiscipulo == true) menuReceberRepasse = true;
+			else menuReceberRepasse = false;
+			
+			menuArvoreRepasse = false;
+			menuFazerRepasse = possuiCelula;
+			menuListarEnviados = possuiCelula;
+			menuListarRecebidos = funEclesiasticaMaiorDiscipulo;
+		}
 	}
 
 	public String getCpf() {
@@ -252,6 +263,14 @@ public class LoginBean {
 	}
 	public void setMenuListarEnviados(boolean menuListarEnviados) {
 		this.menuListarEnviados = menuListarEnviados;
+	}
+	
+	public boolean isMenuArvoreRepasse() {
+		return menuArvoreRepasse;
+	}
+
+	public void setMenuArvoreRepasse(boolean menuArvoreRepasse) {
+		this.menuArvoreRepasse = menuArvoreRepasse;
 	}
 
 	/**

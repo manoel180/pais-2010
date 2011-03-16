@@ -10,22 +10,29 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.DateSelectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
+import br.com.pais.classe.nopersistence.ArvoreListarGeracoes;
+import br.com.pais.classe.nopersistence.MovimentoCheques;
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.GeracaoDao;
+import br.com.pais.dao.MovimentoChequeDao;
 import br.com.pais.dao.MovimentoDao;
 import br.com.pais.dao.RelatorioDao;
 import br.com.pais.dao.RepasseDao;
 import br.com.pais.dao.impl.CelulaDaoImp;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
 import br.com.pais.dao.impl.GeracaoDaoImp;
+import br.com.pais.dao.impl.MovimentoChequeDaoImp;
 import br.com.pais.dao.impl.MovimentoDaoImp;
 import br.com.pais.dao.impl.RelatorioDaoImp;
 import br.com.pais.dao.impl.RepasseDaoImp;
@@ -33,33 +40,53 @@ import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Geracoes;
 import br.com.pais.entities.Movimento;
+import br.com.pais.entities.Movimentocheque;
+import br.com.pais.entities.MovimentochequeId;
 import br.com.pais.entities.Repasse;
 import br.com.pais.entities.RepasseId;
 import br.com.pais.relatorio.Protocolo;
+import br.com.pais.relatorio.ProtocoloCheques;
 import br.com.pais.util.ApplicationSecurityManager;
+import br.com.pais.util.SendEMail;
 
 public class RepasseBean {
 	
 	private ApplicationSecurityManager discipuloSessao = new ApplicationSecurityManager();
 	private Movimento movimento = new Movimento();
+	private Movimento movimentoSelecionado = new Movimento();
+	private Movimento movimentoGerado = new Movimento();
+	private Movimentocheque movimentoCheque = new Movimentocheque();
+	private MovimentochequeId movimentoChequeId = new MovimentochequeId();
 	private Repasse repasse = new Repasse();
 	private RepasseId repasseId = new RepasseId();
 	private Celulas celulas = new Celulas();
 	private Protocolo protocolo = new Protocolo();
-	private Movimento movimentoGerado;
-	
+	private Discipulos discipuloLogado = new Discipulos();
+	private Discipulos discipuladorLogado = new Discipulos();
+
+	private Movimentocheque chequeSelecionado;
+	private MovimentoCheques movimentoChequeNoPersistence = new MovimentoCheques();
+	private ProtocoloCheques protocoloCheques = new ProtocoloCheques();
+	private List<ProtocoloCheques> listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
+
 	//List
 	private List<Discipulos> listaDiscipulos = new ArrayList<Discipulos>();
 	private List<Geracoes> listaGeracoes = new ArrayList<Geracoes>();
 	private List<Movimento> listaMovimentos = new ArrayList<Movimento>();
+	private List<Movimento> listaMovimentosFilhos = new ArrayList<Movimento>();
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
-	
+	private List<Movimentocheque> movimentoCheques = new ArrayList<Movimentocheque>();
+	private List<MovimentoCheques> listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+	private List<MovimentochequeId> listaMovimentoChequeId = new ArrayList<MovimentochequeId>();
+	private List<Protocolo> listaProtocolo = new ArrayList<Protocolo>();
+
 	//Daos
 	private MovimentoDao movimentoDao = new MovimentoDaoImp();
 	private RepasseDao repasseDao = new RepasseDaoImp();
 	private CelulaDao celulaDao = new CelulaDaoImp();
 	private  GeracaoDao geracaoDao = new GeracaoDaoImp();
 	private DiscipuloDao discipuloDao = new DiscipuloDaoImp();
+	private MovimentoChequeDao movimentoChequeDao = new MovimentoChequeDaoImp();
 	private RelatorioDao relatorioDao = new RelatorioDaoImp();
 	
 	private boolean dtM12 = false;
@@ -75,7 +102,200 @@ public class RepasseBean {
 	private int countLista = 0;
 	private Date primeiroDiaCorrente = null;
 	private Date ultimoDiaCorrente = null;
+	private int qtdCheques = 0;
 
+	private boolean dtMovimentoDinheiro = false;
+	private boolean dtMovimentoCheque = false;
+	private boolean dtMovimentoDinheiroCheque = false;
+	private boolean preDatado = false;
+	
+	private Double totalRepasse = 0.00;
+	private Double totalRepasseDinheiro = 0.00;
+	private Double totalRepasseCheques = 0.00;
+	private boolean dialogRepasseDinheiro = false; 
+	private boolean dialogRepasseDinheiroCheque = false;
+	private boolean dialogRepasseCheque = false;
+	private boolean enviarFinanceiro = false;
+	private boolean enviarDiscipulador = false;
+	private String repasseLocal;
+	private String headerDialogRepasse = "";
+	private String valueButtonRepasse = "";
+	private String valueButtonAbrirDialogRepasse = "";
+	
+	//ÁRVORE REPASSES
+	private int index;
+	private TreeNode root;
+	private DefaultTreeNode treeNode;
+	private ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
+	private ArvoreListarGeracoes arvoreLista = new ArvoreListarGeracoes();
+	private ArvoreListarGeracoes arvoreSelecionada;
+	private boolean dtRepasses = false;
+	
+	private int qtdRepassesRecebidos;
+	private boolean enviarEmailRepasseRecebido = false;
+
+	public String prepararArvoreDiscipulo() throws Exception{
+		root = new DefaultTreeNode("root", null);
+		movimento = new Movimento();
+		comboGeracao = -1;
+		PrimeiroUltimoDiaCorrente();
+		
+		return "/cad/repasseArvoresRepasses.mir";
+	}
+	
+	public void listarArvoreRepasses(AjaxBehaviorEvent event) throws Exception {	
+		criarArvoreRepasseDiscipulo();
+	}
+	
+	public void calendarInicioArvoreRepasses(DateSelectEvent event) {  
+		primeiroDiaCorrente = event.getDate();
+		criarArvoreRepasseDiscipulo();
+    }
+	
+	public void calendarFimArvoreRepasses(DateSelectEvent event) {  
+		primeiroDiaCorrente = event.getDate();
+		criarArvoreRepasseDiscipulo();
+    }
+	
+	public void criarArvoreRepasseDiscipulo(){
+		
+		if(comboGeracao < 0 
+		||	movimento.getMovTipo() == null || movimento.getMovTipo() == ""
+		|| movimento.getMovEspecie() == null || movimento.getMovEspecie() == ""){
+			dtRepasses = false;
+		}
+		else{
+			dtRepasses = true;
+		}
+		
+		if(dtRepasses == true){
+			listaMovimentos = new ArrayList<Movimento>();
+			listaMovimentos.addAll(movimentoDao.listarArvoreRepasses(arvoreSelecionada.getDiscipulo().getDisCod(),
+			comboGeracao, movimento.getMovTipo(), movimento.getMovEspecie(), primeiroDiaCorrente, ultimoDiaCorrente));
+			
+			root = new DefaultTreeNode("root", null);
+			nodes = new ArrayList<TreeNode>();		
+			index = 0;
+
+			//SETA A GERAÇÃO NO NODO
+			arvoreLista = new ArvoreListarGeracoes();
+			arvoreLista.setDiscipulo(null);
+			arvoreLista.setGeracao(arvoreSelecionada.getGeracao());
+			arvoreLista.setMovimento(null);
+			arvoreLista.setMostrarDetalhe(false);
+			arvoreLista.setMostrarFoto(false);
+			arvoreLista.setMostrarGeracao(true);
+			arvoreLista.setMostrarGeracao2(false);
+	    	treeNode = new DefaultTreeNode(arvoreLista, root);
+	    	nodes.add(treeNode);
+	    	index = nodes.indexOf(treeNode);
+		        	
+	        for(Movimento mov : listaMovimentos){
+	        	//SETA O MOVIMENTO NO NODO
+	        	arvoreLista = new ArvoreListarGeracoes();
+	    		arvoreLista.setDiscipulo(arvoreSelecionada.getDiscipulo());
+	    		arvoreLista.setGeracao(arvoreSelecionada.getGeracao());
+	    		arvoreLista.setMovimento(mov);
+	    		arvoreLista.setMostrarDetalhe(true);
+	    		arvoreLista.setMostrarFoto(true);
+	    		arvoreLista.setMostrarGeracao(false);
+	    		arvoreLista.setMostrarGeracao2(true);
+	    		
+	        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(index));
+	        	nodes.add(treeNode);
+		    	index = nodes.indexOf(treeNode);
+		    	
+		    	carregarMovimentosFilhos(mov, nodes.get(index));
+			}
+		}
+	}
+	
+	public void carregarMovimentosFilhos(Movimento movimento, TreeNode pai) {
+		//VERIFICA SE ESSE ESSE MOVIMENTO TEM FILHOS
+    	listaMovimentosFilhos = new ArrayList<Movimento>();
+    	listaMovimentosFilhos.addAll(retornaFilhosMovimento(movimento));
+
+    	for (Movimento mov : listaMovimentosFilhos) {
+			//SETA O MOVIMENTO NO NODO
+        	arvoreLista = new ArvoreListarGeracoes();
+    		arvoreLista.setDiscipulo(arvoreSelecionada.getDiscipulo());
+    		arvoreLista.setGeracao(arvoreSelecionada.getGeracao());
+    		arvoreLista.setMovimento(mov);
+    		arvoreLista.setMostrarDetalhe(true);
+    		arvoreLista.setMostrarFoto(true);
+    		arvoreLista.setMostrarGeracao(false);
+    		arvoreLista.setMostrarGeracao2(true);
+    		
+			treeNode = new DefaultTreeNode(arvoreLista,pai);
+			nodes.add(treeNode);
+			index = nodes.indexOf(treeNode);
+			if(!retornaFilhosMovimento(mov).isEmpty()) {
+				carregarMovimentosFilhos(mov, (nodes.get(index)));
+			}
+		}
+	}
+	
+	public List<Movimento> retornaFilhosMovimento(Movimento movimento){
+		listaMovimentosFilhos = new ArrayList<Movimento>();
+    	listaMovimentosFilhos.addAll(movimentoDao.listarRepassesFilhos(movimento.getMovProtocolo()));
+    	return listaMovimentosFilhos;
+	}
+	
+	public String prepararArvoreRepasses(){
+		criarArvoreDiscipulosGeracoes();
+		return "/cad/repasseArvores.mir";
+	}
+	
+	public void criarArvoreDiscipulosGeracoes(){
+		//SETA O LOGADO NO 1ºNODO
+		arvoreLista = new ArvoreListarGeracoes();
+		arvoreLista.setDiscipulo(discipuloSessao.getDiscipulos());
+		arvoreLista.setGeracao(null);
+		arvoreLista.setMostrarDetalhe(false);
+		arvoreLista.setMostrarFoto(true);
+		arvoreLista.setMostrarGeracao(false);
+		arvoreLista.setMostrarGeracao2(false);
+		
+		root = new DefaultTreeNode("root", null);
+		nodes = new ArrayList<TreeNode>();
+		nodes.add(new DefaultTreeNode(arvoreLista, root));
+		
+		listaGeracoes = new ArrayList<Geracoes>();
+		listaGeracoes.addAll(geracaoDao.listarGeracoes());
+		for(Geracoes ger: listaGeracoes){
+			index = 0;
+			listaDiscipulos = new ArrayList<Discipulos>();
+			listaDiscipulos.addAll(discipuloDao.listarM12(discipuloSessao.getDiscipulos().getDisCod(), ger.getGerCod()));
+			
+			if(listaDiscipulos.size() > 0){
+				//SETA A GERAÇÃO NO NODO
+				arvoreLista = new ArvoreListarGeracoes();
+	    		arvoreLista.setDiscipulo(null);
+	    		arvoreLista.setGeracao(ger);
+	    		arvoreLista.setMostrarDetalhe(false);
+	    		arvoreLista.setMostrarFoto(false);
+	    		arvoreLista.setMostrarGeracao(true);
+	    		arvoreLista.setMostrarGeracao2(false);
+	        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(0));
+	        	nodes.add(treeNode);
+	        	index = nodes.indexOf(treeNode);
+	        	
+		        for (Discipulos dis : listaDiscipulos) {
+		        	//SETA O DISCIPULO NO NODO
+		        	arvoreLista = new ArvoreListarGeracoes();
+		    		arvoreLista.setDiscipulo(dis);
+		    		arvoreLista.setGeracao(ger);
+		    		arvoreLista.setMostrarDetalhe(true);
+		    		arvoreLista.setMostrarFoto(true);
+		    		arvoreLista.setMostrarGeracao(false);
+		    		arvoreLista.setMostrarGeracao2(true);
+		    		
+		        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(index));
+				}
+			}
+		}
+	}
+	
 	public SelectItem[] getGeracaoCombo() {
 		listaGeracoes = new ArrayList<Geracoes>();
 		listaGeracoes.addAll(geracaoDao.listarGeracoes());
@@ -91,13 +311,45 @@ public class RepasseBean {
 		SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
+		repasseLocal = "";
+	
+		//Se ele for apostolo renner
+		if(discipuloSessao.getDiscipulos().getDiscipulos() == null){
+			discipuloLogado = null;
+		}
+		else{
+			//PEGO O DISCIPULADOR DO LOGADO
+			discipuladorLogado = new Discipulos();
+		    discipuladorLogado = discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()).get(0);
+		    
+		    //VERIFICO SE ESSE MEU DISCIPULADOR NÃO TEM DISCIPULADOR, ENTAUM EU SOU M12 DO RENNER
+		    if(discipuladorLogado.getDiscipulos() == null){
+				enviarFinanceiro = true;
+				enviarDiscipulador = false;
+				
+				headerDialogRepasse = "DADOS DO REPASSE Á SER ENVIADO AO FINANCEIRO";
+				valueButtonAbrirDialogRepasse = "Enviar ao Financeiro";
+				valueButtonRepasse = "Enviar ao Financeiro";
+			}
+		    else{
+		    	enviarFinanceiro = false;
+		    	enviarDiscipulador = true;
+				
+				headerDialogRepasse = "DADOS DO REPASSE";
+				valueButtonAbrirDialogRepasse = "Confirmar Recebimento";
+				valueButtonRepasse = "Confirmar";
+		    }
+		}
 		
-		totalNaoRecebido = 0.00;
+		//SETA O MOVIMENTO SELECIONADO NO FILTRO
+		movimentoSelecionado = new Movimento();
+		movimentoSelecionado = movimento;
 		
 		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosTodosPeriodo(movimento.getCelulas().getCelCod(),
-		movimento.getMovTipo(), "N", inicio, fim));
+		listaMovimentos.addAll(repasseDao.listarMovimentosTodosRecebidos(movimentoSelecionado.getCelulas().getCelCod(),
+		movimentoSelecionado.getMovTipo(), movimentoSelecionado.getMovEspecie(), "N", inicio, fim));
 		
+		totalNaoRecebido = 0.00;
 		for(Movimento mov : listaMovimentos){
 			totalNaoRecebido = (totalNaoRecebido + mov.getMovValor());
 		}
@@ -105,7 +357,70 @@ public class RepasseBean {
 		totalStringNaoRecebido =  NumberFormat.getCurrencyInstance().format(totalNaoRecebido);
 		totalStringNaoRecebido = totalStringNaoRecebido.replaceAll("[R$]", "");
 		
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			dtMovimentoDinheiro = true;
+			dtMovimentoCheque = false;
+			dtMovimentoDinheiroCheque = false;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(null);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				movimentoChequeNoPersistence.setQtdCheques(0);
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
+		
+		if(movimento.getMovEspecie().equals("Cheque")){
+			dtMovimentoDinheiro = false;
+			dtMovimentoCheque = true;
+			dtMovimentoDinheiroCheque = false;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(null);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(mov.getMovValor());
+				movimentoChequeNoPersistence.setQtdCheques(mov.getMovimentocheques().size());
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
+		
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			dtMovimentoDinheiro = false;
+			dtMovimentoCheque = false;
+			dtMovimentoDinheiroCheque = true;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				CalculaValorTotalEmDinheiroEmCheque(mov);
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalRepasseDinheiro);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(totalRepasseCheques);
+				movimentoChequeNoPersistence.setQtdCheques(mov.getMovimentocheques().size());
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
+		
 		return "/cad/repasseReceber.mir";
+	}
+	
+	public void CalculaValorTotalEmDinheiroEmCheque(Movimento movimento){
+		totalRepasseCheques = 0.00;
+		for(Movimentocheque cheq : movimento.getMovimentocheques()){
+			totalRepasseCheques = (totalRepasseCheques + cheq.getId().getValNum());
+		}
+		totalRepasseDinheiro = (movimento.getMovValor() - totalRepasseCheques);
+	}
+	
+	
+	public void detalheCheque(){
+		if(chequeSelecionado.getId().getPreDatado().equals("S"))preDatado = true;
+		else preDatado = false;
 	}
 	
 	public String prepararRecebidosDetalhe() throws Exception{ 
@@ -113,18 +428,69 @@ public class RepasseBean {
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
-		totalDetalhe = 0.00;
+		//Seta o Movimento Selecionado No Filtro
+		movimentoSelecionado = new Movimento();
+		movimentoSelecionado = movimento;
 		
 		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosTodosPeriodo(movimento.getCelulas().getCelCod(),
-		movimento.getMovTipo(), "S", inicio, fim));
+		listaMovimentos.addAll(repasseDao.listarMovimentosTodosRecebidos(movimento.getCelulas().getCelCod(),
+		movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim));
 		
+		totalNaoRecebido = 0.00;
 		for(Movimento mov : listaMovimentos){
-			totalDetalhe = (totalDetalhe + mov.getMovValor());
+			totalNaoRecebido = (totalNaoRecebido + mov.getMovValor());
+		}
+		totalStringNaoRecebido =  NumberFormat.getCurrencyInstance().format(totalNaoRecebido);
+		totalStringNaoRecebido = totalStringNaoRecebido.replaceAll("[R$]", "");
+		
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			dtMovimentoDinheiro = true;
+			dtMovimentoCheque = false;
+			dtMovimentoDinheiroCheque = false;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(null);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				movimentoChequeNoPersistence.setQtdCheques(0);
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
 		}
 		
-		totalStringDetalhe =  NumberFormat.getCurrencyInstance().format(totalDetalhe);
-		totalStringDetalhe = totalStringDetalhe.replaceAll("[R$]", "");
+		if(movimento.getMovEspecie().equals("Cheque")){
+			dtMovimentoDinheiro = false;
+			dtMovimentoCheque = true;
+			dtMovimentoDinheiroCheque = false;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(null);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(mov.getMovValor());
+				movimentoChequeNoPersistence.setQtdCheques(mov.getMovimentocheques().size());
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
+		
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			dtMovimentoDinheiro = false;
+			dtMovimentoCheque = false;
+			dtMovimentoDinheiroCheque = true;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				CalculaValorTotalEmDinheiroEmCheque(mov);
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalRepasseDinheiro);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(totalRepasseCheques);
+				movimentoChequeNoPersistence.setQtdCheques(mov.getMovimentocheques().size());
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
 		
 		return "/cad/repasseRecebidosDetalhe.mir";
 	}
@@ -134,127 +500,298 @@ public class RepasseBean {
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
-		totalDetalhe = 0.00;
+		//Seta o Movimento Selecionado No Filtro
+		movimentoSelecionado = new Movimento();
+		movimentoSelecionado = movimento;
 		
 		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosTodosPeriodoDetalhe(movimento.getCelulas().getCelCod(),
-		movimento.getMovTipo(), inicio, fim));
+		listaMovimentos.addAll(repasseDao.listarMovimentosTodosEnviados(movimento.getCelulas().getCelCod(),
+		movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
 		
+		totalNaoRecebido = 0.00;
 		for(Movimento mov : listaMovimentos){
-			totalDetalhe = (totalDetalhe + mov.getMovValor());
+			totalNaoRecebido = (totalNaoRecebido + mov.getMovValor());
+		}
+		totalStringNaoRecebido =  NumberFormat.getCurrencyInstance().format(totalNaoRecebido);
+		totalStringNaoRecebido = totalStringNaoRecebido.replaceAll("[R$]", "");
+		
+		if(movimento.getMovEspecie().equals("Dinheiro")){
+			dtMovimentoDinheiro = true;
+			dtMovimentoCheque = false;
+			dtMovimentoDinheiroCheque = false;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(null);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				movimentoChequeNoPersistence.setQtdCheques(0);
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
 		}
 		
-		totalStringDetalhe =  NumberFormat.getCurrencyInstance().format(totalDetalhe);
-		totalStringDetalhe = totalStringDetalhe.replaceAll("[R$]", "");
+		if(movimento.getMovEspecie().equals("Cheque")){
+			dtMovimentoDinheiro = false;
+			dtMovimentoCheque = true;
+			dtMovimentoDinheiroCheque = false;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(null);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(mov.getMovValor());
+				movimentoChequeNoPersistence.setQtdCheques(mov.getMovimentocheques().size());
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
+		
+		if(movimento.getMovEspecie().equals("Dinheiro e Cheque")){
+			dtMovimentoDinheiro = false;
+			dtMovimentoCheque = false;
+			dtMovimentoDinheiroCheque = true;
+			
+			listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			for(Movimento mov : listaMovimentos){
+				CalculaValorTotalEmDinheiroEmCheque(mov);
+				movimentoChequeNoPersistence = new MovimentoCheques();
+				movimentoChequeNoPersistence.setMovimento(mov);
+				movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalRepasseDinheiro);
+				movimentoChequeNoPersistence.setTotalRepasseCheques(totalRepasseCheques);
+				movimentoChequeNoPersistence.setQtdCheques(mov.getMovimentocheques().size());
+				listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			}
+		}
 		
 		return "/cad/repasseEnviadosDetalhe.mir";
 	}
 	
-	public String SalvarRepasse() throws Exception{	
-		Calendar data = Calendar.getInstance();
-		
-		//PEGA A CELULA DO LIDER LOGADO
-		listaCelulas = new ArrayList<Celulas>();
-		listaCelulas.addAll(celulaDao.listarCelulasGeracao(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao));
-		
-		//SALVAR O NOVO MOVIMENTO DO LIDER LOGADO
-		movimento = new Movimento();
-		movimento.setBases(null);
-		movimento.setCelulas(listaCelulas.get(0));
-		movimento.setMovData(pegaDataAtual());
-		movimento.setMovHora(data.getTime());
-		movimento.setMovProtocolo(gerarProtocolo());
-		movimento.setMovProtocoloPai(null);
-		movimento.setMovRecebido("N");
-		movimento.setMovTipo(listaMovimentos.get(0).getMovTipo());
-		movimento.setMovValor(totalNaoRecebido);
-		movimentoDao.salvar(movimento);
-		
-		movimentoGerado = movimento;
-		
-		//SALVA O REPASSE
-		repasseId.setDisCod(discipuloSessao.getDiscipulos().getDisCod());
-		repasseId.setMovCod(movimento.getMovCod());
-		repasse.setId(repasseId);
-		repasse.setResData(movimento.getMovData());
-		repasse.setResValor(movimento.getMovValor());
-		repasseDao.salvar(repasse);
-		
-		String protocoloPai = movimento.getMovProtocolo();
-		//ATUALIZA OS MOVIMENTOS QUE EST�O NO GRID DO DISCIPULO DELE
-		for(Movimento mov : listaMovimentos){
-			movimento = new Movimento();
-			movimento = mov;
-			movimento.setMovRecebido("S");
-			movimento.setMovProtocoloPai(protocoloPai);
-			movimentoDao.atualizar(movimento);
+	public void enviarEmailMensagemRepasseRecebido(String diretorioImg, String nomeEnviou, String nomeRecebe, 
+			String emailEnviar){
+		if(enviarEmailRepasseRecebido == true){
+			new SendEMail().sendSimpleMailEnviarRepasseRecebido(diretorioImg, nomeEnviou, nomeRecebe, emailEnviar);
 		}
+	}
+	
+	public String SalvarRepasse() throws Exception{	
+		FacesContext context = FacesContext.getCurrentInstance();		
+		Date dataAtual = new Date(System.currentTimeMillis());
+		Calendar data = Calendar.getInstance();
+		String diretorioImg = getDiretorioReal("/img/");
 		
-		preencheProtocoloGerado();
+		if(repasseLocal.length()<= 0){
+			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERRO!","Local do Repasse Obrigatório!"));
+			return null;
+		}
+		else{
+			//PEGA A CELULA DO LIDER LOGADO
+			listaCelulas = new ArrayList<Celulas>();
+			listaCelulas.addAll(celulaDao.listarCelulasGeracao(discipuloSessao.getDiscipulos().getDisCod(), 
+			comboGeracao));
+			
+			//SALVAR O NOVO MOVIMENTO DO LIDER LOGADO
+			movimento = new Movimento();
+			movimento.setBases(null);
+			movimento.setCelulas(listaCelulas.get(0));
+			movimento.setMovData(pegaDataAtual());
+			movimento.setMovDataCadastro(dataAtual);
+			movimento.setMovHoraCadastro(data.getTime());
+			movimento.setMovDataBaixa(null);
+			movimento.setMovHoraBaixa(null);
+			movimento.setMovProtocolo(gerarProtocolo());
+			movimento.setMovProtocoloPai(null);
+			movimento.setMovRecebido("N");
+			movimento.setMovTipo(movimentoSelecionado.getMovTipo());
+			movimento.setMovEspecie(movimentoSelecionado.getMovEspecie());
+			movimento.setMovValor(totalNaoRecebido);
+			movimentoDao.salvar(movimento);
+			
+			movimentoGerado = new Movimento();
+			movimentoGerado = movimento;
+			
+			//SALVA O REPASSE DO NOVO MOVIMENTO DO LIDER LOGADO
+			repasseId = new RepasseId();
+			repasseId.setDisCod(discipuloSessao.getDiscipulos().getDisCod());
+			repasseId.setMovCod(movimentoGerado.getMovCod());
+			repasse.setId(repasseId);
+			repasse.setResData(movimentoGerado.getMovData());
+			repasse.setResValor(movimentoGerado.getMovValor());
+			repasse.setResLocal(repasseLocal);
+			repasseDao.salvar(repasse);
+			
+			String protocoloPai = movimentoGerado.getMovProtocolo();
+			//ATUALIZA OS MOVIMENTOS QUE ESTÃO NO GRID DO DISCIPULO DELE
+			for(MovimentoCheques mov : listaMovimentoCheque){
+				movimento = new Movimento();
+				movimento = mov.getMovimento();
+				movimento.setMovDataBaixa(movimentoGerado.getMovData());
+				movimento.setMovHoraBaixa(movimentoGerado.getMovHoraCadastro());
+				movimento.setMovRecebido("S");
+				movimento.setMovProtocoloPai(protocoloPai);
+				movimentoDao.atualizar(movimento);
+			}
+			
+			listaMovimentoChequeId = new ArrayList<MovimentochequeId>();
+			//SALVA OS CHEQUES
+			for(MovimentoCheques mov : listaMovimentoCheque){
+				movimento = new Movimento();
+				movimento = mov.getMovimento();
+				
+				movimentoCheques = new ArrayList<Movimentocheque>();
+				movimentoCheques.addAll(movimento.getMovimentocheques());
+				
+				for(Movimentocheque cheq : movimentoCheques){
+					movimentoCheque = new Movimentocheque();
+					movimentoChequeId = new MovimentochequeId();
+					
+					movimentoChequeId = cheq.getId();
+					movimentoChequeId.setCodBanco(cheq.getBancos().getCodBanco());
+					movimentoChequeId.setCodMovimento(movimentoGerado.getMovCod());
+					movimentoCheque.setId(movimentoChequeId);
+					movimentoChequeDao.salvar(movimentoCheque);
+					
+					prencheChequeDialogRepasseGerado(movimentoChequeId);
+				}
+			}
+			preencheProtocoloGerado();
+			
+			enviarEmailMensagemRepasseRecebido(diretorioImg, discipuloSessao.getDiscipulos().getDisnome(), 
+					discipuloSessao.getDiscipulos().getDiscipulos().getDisnome(), 
+					discipuloSessao.getDiscipulos().getDiscipulos().getDisemail());
+			
+			return "/cad/repasseGerado.mir";
+		}
+	}
+	
+	public void prencheChequeDialogRepasseGerado(MovimentochequeId id){
+		movimentoChequeId = new MovimentochequeId();
+		movimentoChequeId = id;
 		
-		/*
-        PrimeiroUltimoDiaCorrente();
-		movimento = new Movimento();
-		repasse = new Repasse();
-		comboGeracao = 0;
-		dtM12 = false;
+		if(movimentoChequeId.getPreDatado().equals("S"))movimentoChequeId.setPreDatado("Sim");
+		else movimentoChequeId.setPreDatado("Não");
 		
-		return "/cad/repasseListarRecebidos.mir";
-		*/
-		return null;
+		listaMovimentoChequeId.add(movimentoChequeId);
 	}
 	
 	public void preencheProtocoloGerado() throws Exception{
-		listaDiscipulos = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
-        
+		totalRepasse = 0.00;
+		totalRepasseDinheiro = 0.00;
+		totalRepasseCheques = 0.00;
+		protocolo = new Protocolo();
 		PrimeiroUltimoDiaCorrente();
 		
-		String valor =  NumberFormat.getCurrencyInstance().format(movimentoGerado.getMovValor());
-		valor = valor.replaceAll("[R$]", "");
+		//ENVIAR PRO FINANCEIRO
+		if(enviarFinanceiro == true){
+			protocolo.setDiscipulador("FINANCEIRO");
+			protocolo.setFotoDiscipulador("/img/dinheiro.png");  
+		}
+		//ENVIAR AO DISCIPULADOR
+		else{
+			listaDiscipulos = new ArrayList<Discipulos>();
+			listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
+			
+			protocolo.setDiscipulador(listaDiscipulos.get(0).getDisnome());
+			protocolo.setFotoDiscipulador(listaDiscipulos.get(0).getDisfoto());
+		}
 		
-		SimpleDateFormat formatarDate = new SimpleDateFormat("dd/MM/yyyy");
-		String data = formatarDate.format(movimentoGerado.getMovData());
-		
-		String primeiroDiaCorrenteTemp = formatarDate.format(primeiroDiaCorrente);
-		String ultimoDiaCorrenteTemp = formatarDate.format(ultimoDiaCorrente);
-		
-		protocolo = new Protocolo();
 		protocolo.setDiscipulo(discipuloSessao.getDiscipulos().getDisnome());
 		protocolo.setFotoDiscipulo(discipuloSessao.getDiscipulos().getDisfoto());
-		protocolo.setDiscipulador(listaDiscipulos.get(0).getDisnome());
-		protocolo.setFotoDiscipulador(listaDiscipulos.get(0).getDisfoto());
 		protocolo.setTipo(movimentoGerado.getMovTipo());
-		//protocolo.setInicio(primeiroDiaCorrenteTemp);
-		//protocolo.setFim(ultimoDiaCorrenteTemp);
-		//protocolo.setValor(valor);
-		//protocolo.setData(data);
-		protocolo.setLocal(repasse.getResLocal());
+		protocolo.setInicio(primeiroDiaCorrente);
+		protocolo.setFim(ultimoDiaCorrente);
+		protocolo.setValormovimento(movimentoGerado.getMovValor());
+		protocolo.setData(movimentoGerado.getMovData());
+		protocolo.setLocal(repasseLocal);
 		protocolo.setProtocolo(movimentoGerado.getMovProtocolo());
+		protocolo.setEspecie(movimentoGerado.getMovEspecie());
+		protocolo.setListacheques(null);
+		protocolo.setValorcheques(null);
+		protocolo.setValordinheiro(null);
+		
+		//Seta os Valores Para O Repasse Gerado
+		totalRepasse = movimentoGerado.getMovValor();
+		
+		if(movimentoGerado.getMovEspecie().equals("Dinheiro")){
+			dialogRepasseDinheiro = true;
+			dialogRepasseDinheiroCheque = false;
+			dialogRepasseCheque = false;
+		}
+		
+		if(movimentoGerado.getMovEspecie().equals("Cheque")){
+			dialogRepasseDinheiro = true;
+			dialogRepasseDinheiroCheque = false;
+			dialogRepasseCheque = true;
+		}
+		
+		if(movimentoGerado.getMovEspecie().equals("Dinheiro e Cheque")){
+			dialogRepasseDinheiro = false;
+			dialogRepasseDinheiroCheque = true;
+			dialogRepasseCheque = false;
+			
+			//PEGA TODOS OS CHEQUES E SOMA OS VALORES DELES
+			for(MovimentochequeId cheq : listaMovimentoChequeId){
+				totalRepasseCheques = totalRepasseCheques + cheq.getValNum();
+			}
+			totalRepasseDinheiro = (totalRepasse - totalRepasseCheques);
+			
+			protocolo.setValorcheques(totalRepasseCheques);
+			protocolo.setValordinheiro(totalRepasseDinheiro);
+		}
 	}
 	
 	public void imprimirProtocolo(){
+		if(movimentoGerado.getMovEspecie().equals("Dinheiro")){
+			preencheProtocoloDinheiro();
+			relatorioDao.gerarProtocoloDinheiro(listaProtocolo);
+		}
+		
+		if(movimentoGerado.getMovEspecie().equals("Cheque")){
+			preencheProtocoloDinheiroCheque();
+			relatorioDao.gerarProtocoloCheque(listaProtocolo);
+		}
+		
+		if(movimentoGerado.getMovEspecie().equals("Dinheiro e Cheque")){
+			preencheProtocoloDinheiroCheque();
+			relatorioDao.gerarProtocoloDinheiroCheque(listaProtocolo);
+		}
+	}
+	
+	public void preencheProtocoloDinheiro(){
 		String logo = getDiretorioReal("/img/logoRelatorio.png");
-		String fotoDiscipulo = getDiretorioReal(discipuloSessao.getDiscipulos().getDisfoto());
-		String fotoDiscipulador = getDiretorioReal(listaDiscipulos.get(0).getDisfoto());
-		
+		//String fotoDiscipulo = getDiretorioReal(discipuloSessao.getDiscipulos().getDisfoto());
+		//String fotoDiscipulador = getDiretorioReal(listaDiscipulos.get(0).getDisfoto());
 		protocolo.setLogo(logo);
-		protocolo.setFotoDiscipulo(fotoDiscipulo);
-		protocolo.setFotoDiscipulador(fotoDiscipulador);
 		
-		List<Protocolo> listaProtocolo = new ArrayList<Protocolo>();
+		listaProtocolo = new ArrayList<Protocolo>();
 		listaProtocolo.add(protocolo);
-		//relatorioDao.gerarProtocolo(listaProtocolo);
+	}
+	
+	public void preencheProtocoloDinheiroCheque(){
+		String logo = getDiretorioReal("/img/logoRelatorio.png");
+		
+		//PEGA OS CHEQUES NA LISTA DE CHEQUES DO GRID E PREENCHE NO RELATORIO
+		listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
+		for(MovimentochequeId cheq : listaMovimentoChequeId) {
+			protocoloCheques = new ProtocoloCheques();
+			protocoloCheques.setDatacheque(cheq.getDataCheque());
+			protocoloCheques.setValorcheque(cheq.getValNum());
+			
+			if(cheq.getPreDatado().equals("Sim") || cheq.getPreDatado().equals("S"))protocoloCheques.setPredatadocheque("Sim");
+			else protocoloCheques.setPredatadocheque("Não");
+			
+			listaProtocoloCheques.add(protocoloCheques);
+		}
+		protocolo.setLogo(logo);
+		protocolo.setListacheques(listaProtocoloCheques);
+		
+		listaProtocolo = new ArrayList<Protocolo>();
+		listaProtocolo.add(protocolo);
 	}
 	
 	private String getDiretorioReal(String diretorio) {
 		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 		return session.getServletContext().getRealPath(diretorio);
-	}
-	
-	public void limparRepasseDialog(){
-		repasse = new Repasse();
 	}
 	
 	public String prepararListarRepasseRecebidos() throws Exception{
@@ -313,33 +850,28 @@ public class RepasseBean {
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
 		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentos(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao, "N", movimento.getMovTipo(), inicio, fim));
+		listaMovimentos.addAll(repasseDao.listarMovimentosReceber(discipuloSessao.getDiscipulos().getDisCod(), 
+		comboGeracao, "N", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
 		
 		totalNaoRecebido = 0.00;
 		countLista = 0;
 		
-		if(comboGeracao == 0 || movimento.getMovTipo() == "")dtM12  = false;
+		if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovEspecie() == "")dtM12  = false;
 		else dtM12 = true;
 	}
 	
 	
-	public Double calcularValorTotalMovimentoNaoRecebidos() {
-		totalNaoRecebido = 0.00;  
-		List<Movimento> listaMovimentosTemp = new ArrayList<Movimento>();
-		
+	public Double calcularValorTotalMovimentoNaoRecebidos(){
 		SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
+		totalNaoRecebido = 0.00;
 		
-		listaMovimentosTemp.addAll(repasseDao.totalMovimento(listaMovimentos.get(countLista).getCelulas().getCelCod(),
-		movimento.getMovTipo(), "N", inicio, fim));
-		
-		for(Movimento mov : listaMovimentosTemp){
-			totalNaoRecebido = (totalNaoRecebido + mov.getMovValor());
-		}
-
-		countLista++;
+		List<Object> obj = repasseDao.totalMovimentosReceber(listaMovimentos.get(countLista).getCelulas().getCelCod(),
+		movimento.getMovTipo(), movimento.getMovEspecie(), "N", inicio, fim); //[1, 2] retornou        
+		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+		totalNaoRecebido = (Double) objeto[0]; //transforma objeto[0] me Double
+	
         return totalNaoRecebido;
 	}          
 	
@@ -363,32 +895,27 @@ public class RepasseBean {
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
 		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentos(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao, "S", movimento.getMovTipo(), inicio, fim));
+		listaMovimentos.addAll(repasseDao.listarMovimentosRecebdidos(discipuloSessao.getDiscipulos().getDisCod(), 
+		comboGeracao, "S", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
 		
 		totalRecebido = 0.00;
 		countLista = 0;
 		
-		if(comboGeracao == 0 || movimento.getMovTipo() == "")dtM12  = false;
+		if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovEspecie() == "")dtM12  = false;
 		else dtM12 = true;
 	}
 	
 	public Double calcularValorTotalMovimentoRecebidos() {
-		totalRecebido = 0.00;  
-		List<Movimento> listaMovimentosTemp = new ArrayList<Movimento>();
-		
-		SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
+		totalRecebido = 0.00; 
 		
-		listaMovimentosTemp.addAll(repasseDao.totalMovimento(listaMovimentos.get(countLista).getCelulas().getCelCod(),
-		movimento.getMovTipo(), "S", inicio, fim));
-		
-		for(Movimento mov : listaMovimentosTemp){
-			totalRecebido = (totalRecebido + mov.getMovValor());
-		}
-
-		countLista++;
+		List<Object> obj = repasseDao.totalMovimentosRecebidos(listaMovimentos.get(countLista).getCelulas().getCelCod(),
+		movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim); //[1, 2] retornou        
+		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+		totalRecebido = (Double) objeto[0]; //transforma objeto[0] me Double
+	
         return totalRecebido;
 	}
 	
@@ -413,31 +940,26 @@ public class RepasseBean {
 		
 		listaMovimentos = new ArrayList<Movimento>();
 		listaMovimentos.addAll(repasseDao.listarMovimentosEnviados(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao, movimento.getMovTipo(), inicio, fim));
+		comboGeracao, movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
 		
 		totalRecebido = 0.00;
 		countLista = 0;
 		
-		if(comboGeracao == 0 || movimento.getMovTipo() == "")dtM12  = false;
+		if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovEspecie() == "")dtM12  = false;
 		else dtM12 = true;
 	}
 	
 	public Double calcularValorTotalMovimentoEnviados() {
-		totalEnviado = 0.00;  
-		List<Movimento> listaMovimentosTemp = new ArrayList<Movimento>();
-		
-		SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
+		totalEnviado = 0.00; 
 		
-		listaMovimentosTemp.addAll(repasseDao.totalMovimentoEnviados(listaMovimentos.get(countLista).getCelulas().getCelCod(),
-		movimento.getMovTipo(), inicio, fim));
-		
-		for(Movimento mov : listaMovimentosTemp){
-			totalEnviado = (totalEnviado + mov.getMovValor());
-		}
-
-		countLista++;
+		List<Object> obj = repasseDao.totalMovimentosEnviados(listaMovimentos.get(countLista).getCelulas().getCelCod(),
+		movimento.getMovTipo(), movimento.getMovEspecie(), "N", inicio, fim); //[1, 2] retornou        
+		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+		totalEnviado = (Double) objeto[0]; //transforma objeto[0] me Double
+	
         return totalEnviado;
 	}
 	
@@ -457,14 +979,21 @@ public class RepasseBean {
 		//GERA A CHAVE UNICA 
 		UUID uuid = UUID.randomUUID();  
 		String chaveUnica = uuid.toString();
-		String chave = chaveUnica.substring(0, 13).toUpperCase();
+		String chave = chaveUnica.substring(0, 8).toUpperCase();
 		
 		//PEGA O CPF DO LOGADO
+		/*
 		String cpf = discipuloSessao.getDiscipulos().getDisCpf().toString();
 		cpf = cpf.replaceAll("[.]", "");
 		cpf = cpf.replaceAll("[-]", "");
 		
-        return (cpf + "-" +chave);
+		return (cpf + "-" +chave);
+		*/
+		
+		//PEGA O CÓDIGO DO LOGADO
+		String codigo = discipuloSessao.getDiscipulos().getDisCod().toString();
+
+        return (codigo + "-" +chave);
 	}
 	
 	public void PrimeiroUltimoDiaCorrente() throws Exception {   
@@ -474,12 +1003,12 @@ public class RepasseBean {
 		String dataAtual = formatarDate.format(pegadataAtual);
 		
 		GregorianCalendar cal = new GregorianCalendar(); 
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH)); 
-		int primeiroDia = cal.get(Calendar.DAY_OF_MONTH);
+		//cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH)); 
+		//int primeiroDia = cal.get(Calendar.DAY_OF_MONTH);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)); 
 		int ultimoDia = cal.get(Calendar.DAY_OF_MONTH);
 		
-		String primeiroDiaCorrenteTemp = ("0" + primeiroDia + dataAtual.substring(2, 10));
+		String primeiroDiaCorrenteTemp = ("01" + dataAtual.substring(2, 10));
 		String ultimoDiaCorrenteTemp = (+ ultimoDia + dataAtual.substring(2, 10));
 		
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
@@ -629,10 +1158,336 @@ public class RepasseBean {
 	public void setProtocolo(Protocolo protocolo) {
 		this.protocolo = protocolo;
 	}
+	public Movimento getMovimentoSelecionado() {
+		return movimentoSelecionado;
+	}
+
+	public void setMovimentoSelecionado(Movimento movimentoSelecionado) {
+		this.movimentoSelecionado = movimentoSelecionado;
+	}
+	
+	public List<Movimentocheque> getMovimentoCheques() {
+		return movimentoCheques;
+	}
+
+	public void setMovimentoCheques(List<Movimentocheque> movimentoCheques) {
+		this.movimentoCheques = movimentoCheques;
+	}
+	
+	public int getQtdCheques() {
+		qtdCheques = movimento.getMovimentocheques().size();
+		return qtdCheques;
+	}
+
+	public void setQtdCheques(int qtdCheques) {
+		this.qtdCheques = qtdCheques;
+	}
+	
+	public boolean isDtMovimentoDinheiro() {
+		return dtMovimentoDinheiro;
+	}
+
+	public void setDtMovimentoDinheiro(boolean dtMovimentoDinheiro) {
+		this.dtMovimentoDinheiro = dtMovimentoDinheiro;
+	}
+
+	public boolean isDtMovimentoCheque() {
+		return dtMovimentoCheque;
+	}
+
+	public void setDtMovimentoCheque(boolean dtMovimentoCheque) {
+		this.dtMovimentoCheque = dtMovimentoCheque;
+	}
+
+	public boolean isDtMovimentoDinheiroCheque() {
+		return dtMovimentoDinheiroCheque;
+	}
+
+	public void setDtMovimentoDinheiroCheque(boolean dtMovimentoDinheiroCheque) {
+		this.dtMovimentoDinheiroCheque = dtMovimentoDinheiroCheque;
+	}
+	
+	public Movimentocheque getChequeSelecionado() {
+		return chequeSelecionado;
+	}
+
+	public void setChequeSelecionado(Movimentocheque chequeSelecionado) {
+		this.chequeSelecionado = chequeSelecionado;
+	}
+	
+	public boolean isPreDatado() {
+		return preDatado;
+	}
+
+	public void setPreDatado(boolean preDatado) {
+		this.preDatado = preDatado;
+	}
+	
+	public Double getTotalRepasseDinheiro() {
+		return totalRepasseDinheiro;
+	}
+
+	public void setTotalRepasseDinheiro(Double totalRepasseDinheiro) {
+		this.totalRepasseDinheiro = totalRepasseDinheiro;
+	}
+
+	public Double getTotalRepasseCheques() {
+		return totalRepasseCheques;
+	}
+
+	public void setTotalRepasseCheques(Double totalRepasseCheques) {
+		this.totalRepasseCheques = totalRepasseCheques;
+	}
+	
+	public List<MovimentoCheques> getListaMovimentoCheque() {
+		return listaMovimentoCheque;
+	}
+
+	public void setListaMovimentoCheque(List<MovimentoCheques> listaMovimentoCheque) {
+		this.listaMovimentoCheque = listaMovimentoCheque;
+	}
+	public MovimentoCheques getMovimentoChequeNoPersistence() {
+		return movimentoChequeNoPersistence;
+	}
+
+	public void setMovimentoChequeNoPersistence(
+			MovimentoCheques movimentoChequeNoPersistence) {
+		this.movimentoChequeNoPersistence = movimentoChequeNoPersistence;
+	}
+	
 	public Movimento getMovimentoGerado() {
 		return movimentoGerado;
 	}
+
 	public void setMovimentoGerado(Movimento movimentoGerado) {
 		this.movimentoGerado = movimentoGerado;
+	}
+	
+	public Movimentocheque getMovimentoCheque() {
+		return movimentoCheque;
+	}
+
+	public void setMovimentoCheque(Movimentocheque movimentoCheque) {
+		this.movimentoCheque = movimentoCheque;
+	}
+
+	public MovimentochequeId getMovimentoChequeId() {
+		return movimentoChequeId;
+	}
+
+	public void setMovimentoChequeId(MovimentochequeId movimentoChequeId) {
+		this.movimentoChequeId = movimentoChequeId;
+	}
+	
+	public Double getTotalRepasse() {
+		return totalRepasse;
+	}
+
+	public void setTotalRepasse(Double totalRepasse) {
+		this.totalRepasse = totalRepasse;
+	}
+	
+	public boolean isDialogRepasseDinheiro() {
+		return dialogRepasseDinheiro;
+	}
+
+	public void setDialogRepasseDinheiro(boolean dialogRepasseDinheiro) {
+		this.dialogRepasseDinheiro = dialogRepasseDinheiro;
+	}
+
+	public boolean isDialogRepasseDinheiroCheque() {
+		return dialogRepasseDinheiroCheque;
+	}
+
+	public void setDialogRepasseDinheiroCheque(boolean dialogRepasseDinheiroCheque) {
+		this.dialogRepasseDinheiroCheque = dialogRepasseDinheiroCheque;
+	}
+
+	public boolean isDialogRepasseCheque() {
+		return dialogRepasseCheque;
+	}
+
+	public void setDialogRepasseCheque(boolean dialogRepasseCheque) {
+		this.dialogRepasseCheque = dialogRepasseCheque;
+	}
+	
+	public List<MovimentochequeId> getListaMovimentoChequeId() {
+		return listaMovimentoChequeId;
+	}
+
+	public void setListaMovimentoChequeId(
+			List<MovimentochequeId> listaMovimentoChequeId) {
+		this.listaMovimentoChequeId = listaMovimentoChequeId;
+	}
+	
+	public List<Protocolo> getListaProtocolo() {
+		return listaProtocolo;
+	}
+
+	public void setListaProtocolo(List<Protocolo> listaProtocolo) {
+		this.listaProtocolo = listaProtocolo;
+	}
+	
+	public ProtocoloCheques getProtocoloCheques() {
+		return protocoloCheques;
+	}
+
+	public void setProtocoloCheques(ProtocoloCheques protocoloCheques) {
+		this.protocoloCheques = protocoloCheques;
+	}
+
+	public List<ProtocoloCheques> getListaProtocoloCheques() {
+		return listaProtocoloCheques;
+	}
+
+	public void setListaProtocoloCheques(
+			List<ProtocoloCheques> listaProtocoloCheques) {
+		this.listaProtocoloCheques = listaProtocoloCheques;
+	}
+	
+	public Discipulos getDiscipuloLogado() {
+		return discipuloLogado;
+	}
+
+	public void setDiscipuloLogado(Discipulos discipuloLogado) {
+		this.discipuloLogado = discipuloLogado;
+	}
+	
+	public Discipulos getDiscipuladorLogado() {
+		return discipuladorLogado;
+	}
+
+	public void setDiscipuladorLogado(Discipulos discipuladorLogado) {
+		this.discipuladorLogado = discipuladorLogado;
+	}
+	
+	public boolean isEnviarFinanceiro() {
+		return enviarFinanceiro;
+	}
+
+	public void setEnviarFinanceiro(boolean enviarFinanceiro) {
+		this.enviarFinanceiro = enviarFinanceiro;
+	}
+	
+	public boolean isEnviarDiscipulador() {
+		return enviarDiscipulador;
+	}
+
+	public void setEnviarDiscipulador(boolean enviarDiscipulador) {
+		this.enviarDiscipulador = enviarDiscipulador;
+	}
+
+	public String getHeaderDialogRepasse() {
+		return headerDialogRepasse;
+	}
+
+	public void setHeaderDialogRepasse(String headerDialogRepasse) {
+		this.headerDialogRepasse = headerDialogRepasse;
+	}
+
+	public String getRepasseLocal() {
+		return repasseLocal;
+	}
+
+	public void setRepasseLocal(String repasseLocal) {
+		this.repasseLocal = repasseLocal;
+	}
+
+	public String getValueButtonRepasse() {
+		return valueButtonRepasse;
+	}
+
+	public void setValueButtonRepasse(String valueButtonRepasse) {
+		this.valueButtonRepasse = valueButtonRepasse;
+	}
+
+	public String getValueButtonAbrirDialogRepasse() {
+		return valueButtonAbrirDialogRepasse;
+	}
+
+	public void setValueButtonAbrirDialogRepasse(
+			String valueButtonAbrirDialogRepasse) {
+		this.valueButtonAbrirDialogRepasse = valueButtonAbrirDialogRepasse;
+	}
+	
+	public TreeNode getRoot() {
+		return root;
+	}
+
+	public void setRoot(TreeNode root) {
+		this.root = root;
+	}
+	
+	public DefaultTreeNode getTreeNode() {
+		return treeNode;
+	}
+
+	public void setTreeNode(DefaultTreeNode treeNode) {
+		this.treeNode = treeNode;
+	}
+
+	public ArrayList<TreeNode> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(ArrayList<TreeNode> nodes) {
+		this.nodes = nodes;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	
+	public ArvoreListarGeracoes getArvoreLista() {
+		return arvoreLista;
+	}
+
+	public void setArvoreLista(ArvoreListarGeracoes arvoreLista) {
+		this.arvoreLista = arvoreLista;
+	}
+	
+	public ArvoreListarGeracoes getArvoreSelecionada() {
+		return arvoreSelecionada;
+	}
+
+	public void setArvoreSelecionada(ArvoreListarGeracoes arvoreSelecionada) {
+		this.arvoreSelecionada = arvoreSelecionada;
+	}
+	
+	public boolean isDtRepasses() {
+		return dtRepasses;
+	}
+
+	public void setDtRepasses(boolean dtRepasses) {
+		this.dtRepasses = dtRepasses;
+	}
+	
+	public List<Movimento> getListaMovimentosFilhos() {
+		return listaMovimentosFilhos;
+	}
+
+	public void setListaMovimentosFilhos(List<Movimento> listaMovimentosFilhos) {
+		this.listaMovimentosFilhos = listaMovimentosFilhos;
+	}
+	
+	public int getQtdRepassesRecebidos() {
+		qtdRepassesRecebidos = repasseDao.listarMovimentosLembrarPrincipal(discipuloSessao.getDiscipulos().getDisCod()).size();
+		return qtdRepassesRecebidos;
+	}
+
+	public void setQtdRepassesRecebidos(int qtdRepassesRecebidos) {
+		this.qtdRepassesRecebidos = qtdRepassesRecebidos;
+	}
+	
+	public boolean isEnviarEmailRepasseRecebido() {
+		return enviarEmailRepasseRecebido;
+	}
+
+	public void setEnviarEmailRepasseRecebido(boolean enviarEmailRepasseRecebido) {
+		this.enviarEmailRepasseRecebido = enviarEmailRepasseRecebido;
 	}
 }

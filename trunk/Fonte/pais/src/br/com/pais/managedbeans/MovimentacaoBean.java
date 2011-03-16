@@ -42,6 +42,7 @@ import br.com.pais.entities.RepasseId;
 import br.com.pais.relatorio.Protocolo;
 import br.com.pais.relatorio.ProtocoloCheques;
 import br.com.pais.util.ApplicationSecurityManager;
+import br.com.pais.util.SendEMail;
 
 public class MovimentacaoBean {
 	
@@ -100,6 +101,16 @@ public class MovimentacaoBean {
 	private String btnUpdateRepasseDialog = "outPnlImprimir";
 	private String btnOnCompleteRepasseDialog = "repasseDialog.hide(); imprimirDialog.show()";
 	
+	private Discipulos discipuloLogado = new Discipulos();
+	private Discipulos discipuladorLogado = new Discipulos();
+	private boolean enviarFinanceiro = false;
+	private boolean enviarDiscipulador = false;
+	private String repasseLocal;
+	private String headerDialogRepasse = "";
+	private String valueButtonRepasse = "";
+	private String valueButtonAbrirDialogRepasse = "";
+	private boolean enviarEmailRepasseRecebido = false;
+
 	public SelectItem[] getBancosCombo() {
 		listaBancos = new ArrayList<Bancos>();
 		listaBancos.addAll(bancosDao.listarBancosAtivos());
@@ -110,7 +121,7 @@ public class MovimentacaoBean {
 		}
 		return itens.toArray(new SelectItem[itens.size()]);
 	}
-	
+
 	public void comboBancoSelecionado(AjaxBehaviorEvent event) throws Exception {	
 		if(comboBancos > 0){
 		listaBancoSelecionado = new ArrayList<Bancos>();
@@ -344,6 +355,34 @@ public class MovimentacaoBean {
 		dialogRepasseMovimentoCheque = false;
 		dialogRepasseMovimentoDinheiroCheque = false;
 		
+		//Se ele for apostolo renner
+		if(discipuloSessao.getDiscipulos().getDiscipulos() == null){
+			discipuloLogado = null;
+		}
+		else{
+			//PEGO O DISCIPULADOR DO LOGADO
+			discipuladorLogado = new Discipulos();
+		    discipuladorLogado = discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()).get(0);
+		    
+		    //VERIFICO SE ESSE MEU DISCIPULADOR NÃO TEM DISCIPULADOR, ENTAUM EU SOU M12 DO RENNER
+		    if(discipuladorLogado.getDiscipulos() == null){
+				enviarFinanceiro = true;
+				enviarDiscipulador = false;
+				
+				headerDialogRepasse = "DADOS DO REPASSE Á SER ENVIADO AO FINANCEIRO";
+				valueButtonAbrirDialogRepasse = "Enviar ao Financeiro";
+				valueButtonRepasse = "Enviar ao Financeiro";
+			}
+		    else{
+		    	enviarFinanceiro = false;
+		    	enviarDiscipulador = true;
+				
+				headerDialogRepasse = "DADOS DO REPASSE";
+				valueButtonAbrirDialogRepasse = "Fazer Repasse";
+				valueButtonRepasse = "Confirmar";
+		    }
+		}
+		
 		return "/cad/movimentoCadastro";
 	}
 	
@@ -358,24 +397,48 @@ public class MovimentacaoBean {
 		}
 	}
 	
-	public void salvarMovimento() throws Exception {
+	public String salvarMovimento() throws Exception {
+		FacesContext context = FacesContext.getCurrentInstance();
+		
 		//Se For Tudo Validado
 		if(validarSalvarRepasse2() == true){
-			if(movimento.getMovEspecie().equals("Dinheiro"))salvarMovimentoDinheiro();
-			if(movimento.getMovEspecie().equals("Cheque"))salvarMovimentoCheque();
-			if(movimento.getMovEspecie().equals("Dinheiro e Cheque"))salvarMovimentoDinheiroCheque();
+			
+			if(repasse.getResLocal().length() <= 0){
+				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Local do Repasse Obrigatório!"));
+				return null;
+			}
+			else{
+				if(movimento.getMovEspecie().equals("Dinheiro"))salvarMovimentoDinheiro();
+				if(movimento.getMovEspecie().equals("Cheque"))salvarMovimentoCheque();
+				if(movimento.getMovEspecie().equals("Dinheiro e Cheque"))salvarMovimentoDinheiroCheque();
+				
+				return "/cad/movimentoGerado";
+			}
+		}
+		else{
+			return null;
+		}
+	}
+	
+	public void enviarEmailMensagemRepasseRecebido(String diretorioImg, String nomeEnviou, String nomeRecebe, 
+			String emailEnviar){
+		if(enviarEmailRepasseRecebido == true){
+			new SendEMail().sendSimpleMailEnviarRepasseRecebido(diretorioImg, nomeEnviou, nomeRecebe, emailEnviar);
 		}
 	}
 	
 	public void salvarMovimentoDinheiro() throws Exception{
+		Date dataAtual = new Date(System.currentTimeMillis());
 		Calendar data = Calendar.getInstance();
+		String diretorioImg = getDiretorioReal("/img/");
 		
 		movimento.setCelulas(celulaSelecionada);
 		movimento.setMovRecebido("N");
 		movimento.setBases(null);
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
-		movimento.setMovHora(data.getTime());
+		movimento.setMovDataCadastro(dataAtual);
+		movimento.setMovHoraCadastro(data.getTime());
 		if (movimentoDao.salvar(movimento) == (true)) {
 			//SALVA O REPASSE
 			repasseId.setDisCod(discipuloSessao.getDiscipulos().getDisCod());
@@ -386,11 +449,17 @@ public class MovimentacaoBean {
 			repasseDao.salvar(repasse);
 		}
 		preencheProtocoloGerado();
+		
+		enviarEmailMensagemRepasseRecebido(diretorioImg, discipuloSessao.getDiscipulos().getDisnome(), 
+		discipuloSessao.getDiscipulos().getDiscipulos().getDisnome(), 
+		discipuloSessao.getDiscipulos().getDiscipulos().getDisemail());
 	}
 	
 	public void salvarMovimentoCheque() throws Exception{
+		Date dataAtual = new Date(System.currentTimeMillis());
 		Calendar data = Calendar.getInstance();
 		Double valorMovimento = 0.00;
+		String diretorioImg = getDiretorioReal("/img/");
 		
 		for(Movimentocheque mov : listaMovimentoCheque) {
 			valorMovimento = valorMovimento + mov.getId().getValNum();
@@ -401,7 +470,8 @@ public class MovimentacaoBean {
 		movimento.setBases(null);
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
-		movimento.setMovHora(data.getTime());
+		movimento.setMovDataCadastro(dataAtual);
+		movimento.setMovHoraCadastro(data.getTime());
 		movimento.setMovValor(valorMovimento);
 		if (movimentoDao.salvar(movimento) == (true)) {
 			//SALVA OS CHEQUES
@@ -428,11 +498,17 @@ public class MovimentacaoBean {
 			repasseDao.salvar(repasse);
 		}
 		preencheProtocoloGerado();
+		
+		enviarEmailMensagemRepasseRecebido(diretorioImg, discipuloSessao.getDiscipulos().getDisnome(), 
+				discipuloSessao.getDiscipulos().getDiscipulos().getDisnome(), 
+				discipuloSessao.getDiscipulos().getDiscipulos().getDisemail());
 	}
 	
 	public void salvarMovimentoDinheiroCheque() throws Exception{
+		Date dataAtual = new Date(System.currentTimeMillis());
 		Calendar data = Calendar.getInstance();
 		Double valorMovimento = movimento.getMovValor();
+		String diretorioImg = getDiretorioReal("/img/");
 		
 		for(Movimentocheque mov : listaMovimentoCheque) {
 			valorMovimento = valorMovimento + mov.getId().getValNum();
@@ -443,7 +519,8 @@ public class MovimentacaoBean {
 		movimento.setBases(null);
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
-		movimento.setMovHora(data.getTime());
+		movimento.setMovDataCadastro(dataAtual);
+		movimento.setMovHoraCadastro(data.getTime());
 		movimento.setMovValor(valorMovimento);
 		if (movimentoDao.salvar(movimento) == (true)) {
 			//SALVA OS CHEQUES
@@ -468,6 +545,10 @@ public class MovimentacaoBean {
 			repasseDao.salvar(repasse);
 		}
 		preencheProtocoloGerado();
+		
+		enviarEmailMensagemRepasseRecebido(diretorioImg, discipuloSessao.getDiscipulos().getDisnome(), 
+				discipuloSessao.getDiscipulos().getDiscipulos().getDisnome(), 
+				discipuloSessao.getDiscipulos().getDiscipulos().getDisemail());
 	}
 	
 	public boolean validarSalvarRepasse1(){
@@ -571,15 +652,27 @@ public class MovimentacaoBean {
 		valorTotalMovimentoDinheiro = 0.00;
 		valorTotalMovimentoCheque = 0.00;
 		PrimeiroUltimoDiaCorrente();
+		protocolo = new Protocolo();
+		
+		//ENVIAR PRO FINANCEIRO
+		if(enviarFinanceiro == true){
+			protocolo.setDiscipulador("FINANCEIRO");
+			protocolo.setFotoDiscipulador("/img/dinheiro.png");  
+		}
+		//ENVIAR AO DISCIPULADOR
+		else{
+			listaDiscipulos = new ArrayList<Discipulos>();
+			listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
+			
+			protocolo.setDiscipulador(listaDiscipulos.get(0).getDisnome());
+			protocolo.setFotoDiscipulador(listaDiscipulos.get(0).getDisfoto());
+		}
 		
 		listaDiscipulos = new ArrayList<Discipulos>();
 		listaDiscipulos.addAll(discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()));
 		
-		protocolo = new Protocolo();
 		protocolo.setDiscipulo(discipuloSessao.getDiscipulos().getDisnome());
 		protocolo.setFotoDiscipulo(discipuloSessao.getDiscipulos().getDisfoto());
-		protocolo.setDiscipulador(listaDiscipulos.get(0).getDisnome());
-		protocolo.setFotoDiscipulador(listaDiscipulos.get(0).getDisfoto());
 		protocolo.setTipo(movimento.getMovTipo());
 		protocolo.setInicio(primeiroDiaCorrente);
 		protocolo.setFim(ultimoDiaCorrente);
@@ -640,7 +733,7 @@ public class MovimentacaoBean {
 		}
 		
 		if(movimento.getMovEspecie().equals("Cheque")){
-			preencheProtocoloCheque();
+			preencheProtocoloDinheiroCheque();
 			relatorioDao.gerarProtocoloCheque(listaProtocolo);
 		}
 		
@@ -661,44 +754,22 @@ public class MovimentacaoBean {
 		listaProtocolo.add(protocolo);
 	}
 	
-	public void preencheProtocoloCheque(){
-		String logo = getDiretorioReal("/img/logoRelatorio.png");
-		
-		protocolo.setLogo(logo);
-		
-		listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
-		for(MovimentochequeId cheq : listaMovimentoChequeId) {
-			protocoloCheques = new ProtocoloCheques();
-			protocoloCheques.setDatacheque(cheq.getDataCheque());
-			
-			if(cheq.getPreDatado().equals("Sim") || cheq.getPreDatado().equals("S"))protocoloCheques.setPredatadocheque("Sim");
-			else protocoloCheques.setPredatadocheque("Não");
-
-			protocoloCheques.setValorcheque(cheq.getValNum());
-			listaProtocoloCheques.add(protocoloCheques);
-		}
-		protocolo.setListacheques(listaProtocoloCheques);
-		
-		listaProtocolo = new ArrayList<Protocolo>();
-		listaProtocolo.add(protocolo);
-	}
-	
 	public void preencheProtocoloDinheiroCheque(){
-		String logo = getDiretorioReal("/img/logoRelatorio.png");
+        String logo = getDiretorioReal("/img/logoRelatorio.png");
 		
-		protocolo.setLogo(logo);
-		
+		//PEGA OS CHEQUES NA LISTA DE CHEQUES DO GRID E PREENCHE NO RELATORIO
 		listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
 		for(MovimentochequeId cheq : listaMovimentoChequeId) {
 			protocoloCheques = new ProtocoloCheques();
 			protocoloCheques.setDatacheque(cheq.getDataCheque());
+			protocoloCheques.setValorcheque(cheq.getValNum());
 			
 			if(cheq.getPreDatado().equals("Sim") || cheq.getPreDatado().equals("S"))protocoloCheques.setPredatadocheque("Sim");
 			else protocoloCheques.setPredatadocheque("Não");
 			
-			protocoloCheques.setValorcheque(cheq.getValNum());
 			listaProtocoloCheques.add(protocoloCheques);
 		}
+		protocolo.setLogo(logo);
 		protocolo.setListacheques(listaProtocoloCheques);
 		
 		listaProtocolo = new ArrayList<Protocolo>();
@@ -717,12 +788,12 @@ public class MovimentacaoBean {
 		String dataAtual = formatarDate.format(pegadataAtual);
 		
 		GregorianCalendar cal = new GregorianCalendar(); 
-		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH)); 
-		int primeiroDia = cal.get(Calendar.DAY_OF_MONTH);
+		//cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH)); 
+		//int primeiroDia = cal.get(Calendar.DAY_OF_MONTH);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)); 
 		int ultimoDia = cal.get(Calendar.DAY_OF_MONTH);
 		
-		String primeiroDiaCorrenteTemp = ("0" + primeiroDia + dataAtual.substring(2, 10));
+		String primeiroDiaCorrenteTemp = ("01" + dataAtual.substring(2, 10));
 		String ultimoDiaCorrenteTemp = (+ ultimoDia + dataAtual.substring(2, 10));
 		
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
@@ -737,14 +808,21 @@ public class MovimentacaoBean {
 		//GERA A CHAVE UNICA 
 		UUID uuid = UUID.randomUUID();  
 		String chaveUnica = uuid.toString();
-		String chave = chaveUnica.substring(0, 13).toUpperCase();
+		String chave = chaveUnica.substring(0, 8).toUpperCase();
 		
 		//PEGA O CPF DO LOGADO
+		/*
 		String cpf = discipuloSessao.getDiscipulos().getDisCpf().toString();
 		cpf = cpf.replaceAll("[.]", "");
 		cpf = cpf.replaceAll("[-]", "");
 		
-        return (cpf + "-" +chave);
+		return (cpf + "-" +chave);
+		*/
+		
+		//PEGA O CÓDIGO DO LOGADO
+		String codigo = discipuloSessao.getDiscipulos().getDisCod().toString();
+
+        return (codigo + "-" +chave);
 	}
 	
 	public ApplicationSecurityManager getDiscipuloSessao() {
@@ -1039,5 +1117,78 @@ public class MovimentacaoBean {
 	public void setDialogRepasseMovimentoDinheiro(
 			boolean dialogRepasseMovimentoDinheiro) {
 		this.dialogRepasseMovimentoDinheiro = dialogRepasseMovimentoDinheiro;
+	}
+	
+	public Discipulos getDiscipuloLogado() {
+		return discipuloLogado;
+	}
+
+	public void setDiscipuloLogado(Discipulos discipuloLogado) {
+		this.discipuloLogado = discipuloLogado;
+	}
+
+	public Discipulos getDiscipuladorLogado() {
+		return discipuladorLogado;
+	}
+
+	public void setDiscipuladorLogado(Discipulos discipuladorLogado) {
+		this.discipuladorLogado = discipuladorLogado;
+	}
+
+	public boolean isEnviarFinanceiro() {
+		return enviarFinanceiro;
+	}
+
+	public void setEnviarFinanceiro(boolean enviarFinanceiro) {
+		this.enviarFinanceiro = enviarFinanceiro;
+	}
+
+	public boolean isEnviarDiscipulador() {
+		return enviarDiscipulador;
+	}
+
+	public void setEnviarDiscipulador(boolean enviarDiscipulador) {
+		this.enviarDiscipulador = enviarDiscipulador;
+	}
+
+	public String getRepasseLocal() {
+		return repasseLocal;
+	}
+
+	public void setRepasseLocal(String repasseLocal) {
+		this.repasseLocal = repasseLocal;
+	}
+
+	public String getHeaderDialogRepasse() {
+		return headerDialogRepasse;
+	}
+
+	public void setHeaderDialogRepasse(String headerDialogRepasse) {
+		this.headerDialogRepasse = headerDialogRepasse;
+	}
+
+	public String getValueButtonRepasse() {
+		return valueButtonRepasse;
+	}
+
+	public void setValueButtonRepasse(String valueButtonRepasse) {
+		this.valueButtonRepasse = valueButtonRepasse;
+	}
+
+	public String getValueButtonAbrirDialogRepasse() {
+		return valueButtonAbrirDialogRepasse;
+	}
+
+	public void setValueButtonAbrirDialogRepasse(
+			String valueButtonAbrirDialogRepasse) {
+		this.valueButtonAbrirDialogRepasse = valueButtonAbrirDialogRepasse;
+	}
+
+	public boolean isEnviarEmailRepasseRecebido() {
+		return enviarEmailRepasseRecebido;
+	}
+
+	public void setEnviarEmailRepasseRecebido(boolean enviarEmailRepasseRecebido) {
+		this.enviarEmailRepasseRecebido = enviarEmailRepasseRecebido;
 	}
 }
