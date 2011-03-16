@@ -7,6 +7,7 @@ import br.com.pais.entities.Mensagem;
 
 public interface MensagemDao extends DaoGenerico<Mensagem, Integer>{
 	List<Mensagem> listarMensagensRecebidas(Discipulos discipulo);
-	List<Mensagem> listarCaixaEntrada(Discipulos discipulo);
-	List<Mensagem> listarCaixaSaida(Discipulos discipulo);
+	List<Mensagem> listarCaixaEntrada(int discipulo);
+	List<Mensagem> listarCaixaSaida(int discipulo);
+	List<Object> discipulosEnviaRecebeMensagem(int mensagem);
 }
