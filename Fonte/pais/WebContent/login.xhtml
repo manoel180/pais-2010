@@ -8,25 +8,24 @@
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
 <f:view contentType="text/html">
 
-	<h:head>
-		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/theme/skin.css" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/css/css_forms.css" />
-			
-<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
+<h:head>
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/theme/skin.css" />
+    <link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/css_forms.css" />
+    
+    <script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
 
-<script>
-jQuery(function($){
-	  jQuery("#maskCPF").mask("999.999.999-99");
-});
-</script>
+	<script>
+	jQuery(function($){
+		  jQuery("#maskCPF").mask("999.999.999-99");
+	});
+	</script>
 </h:head>
 
 	<p:dialog header="ESQUECI A SENHA!!!" underlay="shadow" visible="none"
-		position="center" modal="true" effect="fade" fixedCenter="true"
-		widgetVar="dlg" width="250" height="150">
+		position="center" modal="true" effect="fade" fixedCenter="true" resizable="false"
+		widgetVar="dlg" width="380" height="200">
 		<h:form id="form3">
 			<h:panelGrid columns="2" cellspacing="5">
-
 				<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login"
 					for="cpfMaskDialog" />
 				<p:inputMask id="cpfMaskDialog" validatorMessage="CPF"
@@ -40,7 +39,6 @@ jQuery(function($){
 					validatorMessage="Email inválido" required="true">
 					<f:attribute name="fieldRef" value="EMAIL:" />
 					<mj:regexValidator pattern=".+@.+\.[a-z]+" />
-
 				</h:inputText>
 			</h:panelGrid>
 			<br />
@@ -51,14 +49,13 @@ jQuery(function($){
 	<div id="pgCentralizado">
 	<center>
 	<p:outputPanel id="panel" rendered="true" styleClass="fundo">
-		<mj:focus for="maskCPF" />
 		<h:form id="form1" prependId="false">
 			<h:graphicImage value="/img/logo.png" width="380" height="145" />
-			<p:growl id="msg" sticky="true" showDetail="true" showSummary="true" />
-			<p:focus />
+			<p:growl id="msg" sticky="true" showDetail="true" showSummary="false" />
+			<p:focus for="maskCPF"/>
 
-			<table background="#{request.contextPath}/img/barra_cpf_senha.png"
-				border="0" cellpadding="0" cellspacing="0" width="471" height="57">
+			<table border="0" cellpadding="0" cellspacing="0" width="471"
+			style="background-image:url(/pais/img/barra_cpf_senha.png); height: 57px;">
 				<tr>
 					<td scope="col" align="center" valign="middle" width="471">
 					<h:outputLabel value="SEU CPF:" styleClass="Texto_cpf_login"/> <span/>
@@ -72,9 +69,8 @@ jQuery(function($){
 				    </td>
 				</tr>
 			</table>
-			
-
 		</h:form>
+		
 		<h:form id="form2">
 			<div align="center">
 			<h:graphicImage value="/img/esqueci_senha.png" onclick="dlg.show()" /> 
@@ -84,6 +80,5 @@ jQuery(function($){
 	</p:outputPanel>
 	</center>
 	</div>
-	
 </f:view>
 </html>
