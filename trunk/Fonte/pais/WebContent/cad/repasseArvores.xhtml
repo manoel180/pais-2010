@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="FINANCEIRO"/>  
+         <p:menuitem value="ÁRVORE DE REPASSES GERADOS" action="#{repasseBean.prepararArvoreRepasses}" ajax="false" />   
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+		<h:form prependId="false">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			<p:tabView orientation="top">
+				<p:tab title="Árvores de Repasses Gerados">
+				
+				<p:treeTable value="#{repasseBean.root}" var="node">  
+                    <p:column>
+						<f:facet name="header">
+						<center>Nome</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarFoto}"/>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarFoto}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>Geração</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>  
+			            <f:facet name="header">  
+			            <center>Ver Repasses</center>  
+			            </f:facet>  
+			            <center>
+			            <p:commandLink title="Ver Repasses Deste Discipulo" rendered="#{node.mostrarDetalhe}"
+			            action="#{repasseBean.prepararArvoreDiscipulo}" ajax="false">  
+			                <p:graphicImage value="/img/detalhe.png"/>   
+			                <f:setPropertyActionListener value="#{node}" target="#{repasseBean.arvoreSelecionada}" />  
+			            </p:commandLink> 
+			            </center> 
+			        </p:column>
+                </p:treeTable>
+    
+				</p:tab>
+			</p:tabView> 
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="FINANCEIRO"/>
+	     <p:menuitem value="ÁRVORE DE REPASSES GERADOS" action="#{repasseBean.prepararArvoreRepasses}" ajax="false" />   
+         <p:menuitem value="ÁRVORE DE REPASSES #{repasseBean.arvoreSelecionada.discipulo.disnome}" action="#{repasseBean.prepararArvoreDiscipulo}" ajax="false" />   
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br/>
+		<h:form prependId="false">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			<p:tabView orientation="top">
+				<p:tab title="Dados do Díscipulo">
+				   <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				      <p:graphicImage value="#{repasseBean.arvoreSelecionada.discipulo.disfoto}" width="41" height="40"/>
+				      <h:outputText value="#{repasseBean.arvoreSelecionada.discipulo.disnome}" styleClass="formulariosObrigatorio"/>
+				      <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/>
+				      <h:outputText value="#{repasseBean.arvoreSelecionada.geracao.gerDescricao}" styleClass="formulariosFonteNormal"/>
+				   </h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			<br />
+			<p:tabView orientation="top">
+				<p:tab title="Filtro Repasses">
+				<p:outputPanel id="outPnlFiltro">
+				   <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
+				    <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/>
+					<h:selectOneMenu id="selGeracao" value="#{repasseBean.comboGeracao}" styleClass="formularios">
+						<f:selectItem itemValue="-1" itemLabel="Selecione..."/>
+						<f:selectItem itemValue="0" itemLabel="Todas Gerações"/>
+						<f:selectItems value="#{repasseBean.geracaoCombo}"/>
+						<f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
+						render="outPnlFiltro outPnlDtRepasses"/>
+					</h:selectOneMenu>
+					<h:outputLabel value="" />
+	                <h:outputLabel value="" />
+					<h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
+				    <h:selectOneMenu id="selTipo" value="#{repasseBean.movimento.movTipo}"
+						styleClass="formularios">
+						<f:selectItem itemValue="" itemLabel="Selecione..."/>
+						<f:selectItem itemValue="Todos" itemLabel="Todos Tipos"/>
+						<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
+						<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
+						<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
+						<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
+						<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
+						<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
+						<f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
+				        render="outPnlFiltro outPnlDtRepasses"/>
+					</h:selectOneMenu>
+					<h:outputLabel value="" />
+	                <h:outputLabel value="" />
+					<h:outputText value="Espécie:" styleClass="formulariosObrigatorio"/>
+					<h:selectOneMenu id="selTipoEspecie" value="#{repasseBean.movimento.movEspecie}" styleClass="formularios">
+						<f:selectItem itemValue="" itemLabel="Selecione..."/>
+						<f:selectItem itemValue="Todos" itemLabel="Todas Espécies"/>
+						<f:selectItem itemValue="Dinheiro" itemLabel="Dinheiro"/>
+						<f:selectItem itemValue="Cheque" itemLabel="Cheque"/>
+						<f:selectItem itemValue="Dinheiro e Cheque" itemLabel="Dinheiro e Cheque"/>
+					    <f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
+				        render="outPnlFiltro outPnlDtRepasses"/>
+					</h:selectOneMenu>
+					</h:panelGrid>
+					
+					<h:panelGrid columns="6" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2">
+					<h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
+					<p:calendar id="movDataInicio" value="#{repasseBean.primeiroDiaCorrente}" size="12"
+                    inputStyleClass="formularios" navigator="true" showOn="button" 
+                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+				    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+				    onSelectUpdate="outPnlFiltro outPnlDtRepasses" selectListener="#{repasseBean.calendarInicioArvoreRepasses}"/>
+	                <h:outputLabel value="" />
+	                <h:outputLabel value="" />
+				    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
+					<p:calendar id="movDataFim" value="#{repasseBean.ultimoDiaCorrente}" size="12"
+                    inputStyleClass="formularios" navigator="true" showOn="button" 
+                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+				    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+                    onSelectUpdate="outPnlFiltro outPnlDtRepasses" selectListener="#{repasseBean.calendarFimArvoreRepasses}"/>
+				    </h:panelGrid>
+				</p:outputPanel>
+				</p:tab>
+			</p:tabView>
+			<br />
+			<p:outputPanel id="outPnlDtRepasses">
+			<p:treeTable value="#{repasseBean.root}" var="node" rendered="#{repasseBean.dtRepasses}">  
+                    <p:column>
+						<f:facet name="header">
+						<center>Nome</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.movimento.celulas.discipulos.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarFoto}"/>
+						<h:outputText value="#{node.movimento.celulas.discipulos.disnome}" rendered="#{node.mostrarFoto}"/>
+						<h:outputText value="#{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>Geração</center> 
+						</f:facet>
+						<center>
+						<h:outputText value="#{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>Data</center> 
+						</f:facet>
+						<center>
+						<h:outputText value="#{node.movimento.movData}">
+						   <f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>Tipo Movimento</center> 
+						</f:facet>
+						<center>
+						<h:outputText value="#{node.movimento.movTipo}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>Espécie Movimento</center> 
+						</f:facet>
+						<center>
+						<h:outputText value="#{node.movimento.movEspecie}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>Valor R$</center> 
+						</f:facet>
+						<center>
+						<h:outputText value="#{node.movimento.movValor}">
+						    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column>  
+			            <f:facet name="header">  
+			            <center>Ver Repasses</center>  
+			            </f:facet>  
+			            <center>
+			            <p:commandLink title="Ver Repasses Deste Discipulo" rendered="#{node.mostrarDetalhe}"
+			            action="#{repasseBean.prepararArvoreDiscipulo}" ajax="false">  
+			                <p:graphicImage value="/img/detalhe.png"/>   
+			                <f:setPropertyActionListener value="#{node}" target="#{repasseBean.arvoreSelecionada}" />  
+			            </p:commandLink> 
+			            </center> 
+			        </p:column>
+                </p:treeTable>
+              </p:outputPanel>
+		</h:form>
+	</ui:define>
+</ui:composition>
