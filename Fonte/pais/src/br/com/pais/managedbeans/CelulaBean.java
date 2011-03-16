@@ -1,5 +1,6 @@
 package br.com.pais.managedbeans;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,6 +205,7 @@ public class CelulaBean {
 	public String salvar() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		
+		celulas.setCelNome(null);
 		celulas.setDiscipulos(discipuloSessao.getDiscipulos());
 		celulas.setBases(null);
 		celulas.setLogradouro(logradouro);
@@ -218,7 +220,6 @@ public class CelulaBean {
 		} else {
 			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "ERRO!!!","Célula não cadastrada!"));
 		}
-		
 		return "/cad/celulasListar.mir";
 	}
 	
