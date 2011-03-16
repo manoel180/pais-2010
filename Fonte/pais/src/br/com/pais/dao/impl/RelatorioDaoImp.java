@@ -20,10 +20,15 @@ import br.com.pais.relatorio.Protocolo;
 @SuppressWarnings("deprecation")
 public class RelatorioDaoImp implements RelatorioDao {
 	
-	@SuppressWarnings({ "static-access" })
 	@Override
 	public void gerarProtocoloDinheiro(List<Protocolo> listaProtocolo) {
-		String jasper = getDiretorioReal("/jasper/protocoloDinheiro.jasper");
+		String jasper = "";
+		if(listaProtocolo.get(0).getDiscipulador().equals("FINANCEIRO")){
+			jasper = getDiretorioReal("/jasper/financeiro/protocoloFinanceiroDinheiro.jasper");
+		}
+		else{
+			jasper = getDiretorioReal("/jasper/protocolo/protocoloDinheiro.jasper");
+		}
 		String nomeRelatorioProtocolo = listaProtocolo.get(0).getProtocolo();
         String path = getDiretorioReal("//relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
 		
@@ -42,8 +47,7 @@ public class RelatorioDaoImp implements RelatorioDao {
 			JasperPrint impressao = JasperFillManager.fillReport(jasper, parametros, ds);
 			
 			// Grava o relatorio em disco em pdf	
-			JasperManager manager = new JasperManager();
-			manager.printReportToPdfFile(impressao, path);
+			JasperManager.printReportToPdfFile(impressao, path);
 			// Redireciona para o pdf gerado
 			response.sendRedirect("/pais/relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
 		} catch (Exception e) {
@@ -51,13 +55,21 @@ public class RelatorioDaoImp implements RelatorioDao {
 		}
 	}
 	
-	@SuppressWarnings("static-access")
 	@Override
 	public void gerarProtocoloCheque(List<Protocolo> listaProtocolo) {
-		String jasper = getDiretorioReal("/jasper/protocoloCheque.jasper");
+		String jasper = "";
+		String pathSubRelatorio = "";
+		if(listaProtocolo.get(0).getDiscipulador().equals("FINANCEIRO")){
+			jasper = getDiretorioReal("/jasper/financeiro/protocoloFinanceiroCheque.jasper");
+			pathSubRelatorio = getDiretorioReal("/jasper/financeiro/cheques.jasper");
+		}
+		else{
+			jasper = getDiretorioReal("/jasper/protocolo/protocoloCheque.jasper");
+			pathSubRelatorio = getDiretorioReal("/jasper/protocolo/cheques.jasper");
+		}
+		
 		String nomeRelatorioProtocolo = listaProtocolo.get(0).getProtocolo();
         String path = getDiretorioReal("//relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
-        String pathSubRelatorio = getDiretorioReal("/jasper/cheques.jasper");
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 	    HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
@@ -77,8 +89,7 @@ public class RelatorioDaoImp implements RelatorioDao {
 			JasperPrint impressao = JasperFillManager.fillReport(jasper, parametros, ds);
 			
 			// Grava o relatorio em disco em pdf	
-			JasperManager manager = new JasperManager();
-			manager.printReportToPdfFile(impressao, path);
+			JasperManager.printReportToPdfFile(impressao, path);
 			// Redireciona para o pdf gerado
 			response.sendRedirect("/pais/relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
 		} catch (Exception e) {
@@ -87,13 +98,21 @@ public class RelatorioDaoImp implements RelatorioDao {
 		}
 	}
 	
-	@SuppressWarnings("static-access")
 	@Override
 	public void gerarProtocoloDinheiroCheque(List<Protocolo> listaProtocolo) {
-		String jasper = getDiretorioReal("/jasper/protocoloDinheiroCheque.jasper");
+		String jasper = "";
+		String pathSubRelatorio = "";
+		if(listaProtocolo.get(0).getDiscipulador().equals("FINANCEIRO")){
+			jasper = getDiretorioReal("/jasper/financeiro/protocoloFinanceiroDinheiroCheque.jasper");
+			pathSubRelatorio = getDiretorioReal("/jasper/financeiro/cheques.jasper");
+		}
+		else{
+			jasper = getDiretorioReal("/jasper/protocolo/protocoloDinheiroCheque.jasper");
+			pathSubRelatorio = getDiretorioReal("/jasper/protocolo/cheques.jasper");
+		}
+		
 		String nomeRelatorioProtocolo = listaProtocolo.get(0).getProtocolo();
         String path = getDiretorioReal("//relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
-        String pathSubRelatorio = getDiretorioReal("/jasper/cheques.jasper");
 		
 		FacesContext context = FacesContext.getCurrentInstance();
 	    HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
@@ -113,8 +132,7 @@ public class RelatorioDaoImp implements RelatorioDao {
 			JasperPrint impressao = JasperFillManager.fillReport(jasper, parametros, ds);
 			
 			// Grava o relatorio em disco em pdf	
-			JasperManager manager = new JasperManager();
-			manager.printReportToPdfFile(impressao, path);
+			JasperManager.printReportToPdfFile(impressao, path);
 			// Redireciona para o pdf gerado
 			response.sendRedirect("/pais/relatorio/protocolo/"+nomeRelatorioProtocolo.concat(".pdf")+"");
 		} catch (Exception e) {

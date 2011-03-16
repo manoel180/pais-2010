@@ -30,11 +30,11 @@ public class MensagemDaoImp extends DaoGenericoImp<Mensagem, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Mensagem> listarCaixaEntrada(Discipulos discipulo) {
+	public List<Mensagem> listarCaixaEntrada(int discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Mensagem where discipulosByMensDisCodRecebe = :discipulo " +
-					"and mensCaixa = 'E' order by mensData ASC, mensCod DESC");
+					"From Mensagem m where m.discipulosByMensDisCodRecebe.disCod = :discipulo "+
+					"and m.mensCaixa = 'E' order by m.mensData DESC, m.mensCod DESC");
 			query.setParameter("discipulo", discipulo);
 			return query.getResultList();
 		} catch (NoResultException nre) {
@@ -47,12 +47,29 @@ public class MensagemDaoImp extends DaoGenericoImp<Mensagem, Integer> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Mensagem> listarCaixaSaida(Discipulos discipulo) {
+	public List<Mensagem> listarCaixaSaida(int discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Mensagem where discipulosByMensDisCod = :discipulo " +
-					"and mensCaixa = 'S' order by mensData ASC, mensCod DESC");
+					"From Mensagem m where m.discipulosByMensDisCod.disCod = :discipulo " +
+					"and m.mensCaixa = 'S' order by m.mensData DESC, m.mensCod DESC");
 			query.setParameter("discipulo", discipulo);
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> discipulosEnviaRecebeMensagem(int mensagem){
+		try {
+			Query query = getEntityManager().createQuery(
+					"select m.discipulosByMensDisCod.disCod, m.discipulosByMensDisCodRecebe.disCod " +
+			        "from Mensagem m where m.mensCod = :mensagem");
+			query.setParameter("mensagem", mensagem);
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
