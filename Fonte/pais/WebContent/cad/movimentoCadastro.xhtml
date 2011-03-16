@@ -79,7 +79,7 @@
 							<p:calendar id="movData" value="#{movimentacaoBean.movimento.movData}"
 				                    inputStyleClass="formularios" navigator="true" showOn="button" 
 				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
-								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"/>						
+								    maxlength="10" pattern="dd/MM/yyyy"/>						
 						    <h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
 						    <h:selectOneMenu id="selTipoOferta" value="#{movimentacaoBean.movimento.movTipo}" styleClass="formularios">
 								<f:selectItem itemValue="Selecione" itemLabel="Selecione..."/>
@@ -166,7 +166,7 @@
 						</f:facet>
 						<center>
 						<h:outputText value="#{cheq.id.dataCheque}" styleClass="Fonte_13">
-						<f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+						<f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-3"/>
 						</h:outputText>
 						</center>
 					</p:column>
@@ -218,19 +218,15 @@
 			</p:tabView>
 			<br/>
 			<p:outputPanel id="outBtnCadastrar">
-			<p:commandButton value="Cadastrar" styleClass="formularios"
-			                 update="outPnlRepasse"
-			                 oncomplete="repasseDialog.show()"
-			                 rendered="#{movimentacaoBean.mostraCadastrar}"
-			                 action="#{movimentacaoBean.repasseDialog}" /> 
-			&nbsp;
-			<p:commandButton value="Cancelar" styleClass="formularios" 
-			action="#{movimentacaoBean.prepararMovimento}" ajax="false"/>
+			<p:commandButton value="#{movimentacaoBean.valueButtonAbrirDialogRepasse}" styleClass="formularios"
+			update="outPnlRepasse" oncomplete="repasseDialog.show()"
+			rendered="#{movimentacaoBean.mostraCadastrar}" action="#{movimentacaoBean.repasseDialog}"/> 
+			<p:commandButton value="Cancelar" styleClass="formularios" action="#{movimentacaoBean.prepararMovimento}" 
+			ajax="false"/>
 			</p:outputPanel>
 			
 			<p:dialog header="VALOR R$" widgetVar="valorDinheiroDialog" resizable="false"
-			              modal="true" width="400" showEffect="slide" hideEffect="slide"
-			              onShow="eventComboTipoEspecie()">
+			              modal="true" width="400" onShow="eventComboTipoEspecie()">
 			            <p:outputPanel id="outPnlvalorDinheiro">
 			            <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 						<h:outputText value="Valor R$:" styleClass="formulariosObrigatorio" />
@@ -244,7 +240,7 @@
 			  </p:dialog>
 			
 			<p:dialog header="EXCLUIR CHEQUE" widgetVar="chequeExcluirDialog" resizable="false"
-			              modal="true" width="500" showEffect="slide" hideEffect="slide">
+			              modal="true" width="500">
 			            <p:outputPanel id="outPnlChequeExcluir">
 			            <h:panelGrid columns="3" columnClasses="coluna1, coluna2, coluna1">
 				        <h:outputText value="Deseja realmente excluir esse cheque no valor de" styleClass="formulariosObrigatorio"/> 
@@ -263,8 +259,7 @@
 			  </p:dialog>
 			
 			<p:dialog header="INCLUIR CHEQUE" widgetVar="chequeDialog" resizable="false"
-		              modal="true" width="820" minHeight="500" showEffect="slide" hideEffect="slide"
-		              onShow="dialogCheque()">
+		              modal="true" width="820" minHeight="500" onShow="dialogCheque()">
 		    <p:outputPanel id="outPnlCheque">
 		            <div id="cheque">
 					    <div id="cheque_comp">
@@ -411,7 +406,7 @@
 						<p:calendar id="movDataCheque" value="#{movimentacaoBean.movimentoChequeId.dataCheque}" size="10"
 			                    inputStyleClass="formularios" navigator="true" showOn="button" 
 			                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
-							    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+							    maxlength="10" pattern="dd/MM/yyyy"
 							    onSelectUpdate="outPnlDataCheque" selectListener="#{movimentacaoBean.selecionadoCalendarDataCheque}"/>
 		                </h:panelGrid>
 		                
@@ -444,147 +439,22 @@
 		    </p:outputPanel>
 		    </p:dialog>
 			
-			<p:dialog header="DADOS DO REPASSE" widgetVar="repasseDialog" resizable="false"
-		              modal="true" width="450" showEffect="slide" hideEffect="slide">
+			<p:dialog header="#{movimentacaoBean.headerDialogRepasse}" widgetVar="repasseDialog" resizable="false"
+		              modal="true" width="450">
 		    <p:outputPanel id="outPnlRepasse">
 		            <h:panelGrid columns="1">                                                                                                                 
 			        <h:outputText value="Informe o Local do Repasse:" styleClass="formulariosObrigatorio"/>  
 			        <h:inputTextarea rows="10" cols="50" value="#{movimentacaoBean.repasse.resLocal}" styleClass="formularios2"/>
 			        </h:panelGrid>
 		            <h:panelGrid columns="2" cellpadding="2">
-		                <p:commandButton value="Confirmar" styleClass="formularios" 
-		                action="#{movimentacaoBean.salvarMovimento}"
-		                oncomplete="#{movimentacaoBean.btnOnCompleteRepasseDialog}"
-		                update="#{movimentacaoBean.btnUpdateRepasseDialog}"/>                                                           
+		                <p:commandButton value="#{movimentacaoBean.valueButtonRepasse}" styleClass="formularios" 
+		                action="#{movimentacaoBean.salvarMovimento}" ajax="false"/>                                                           
 		                <p:commandButton value="Cancelar" styleClass="formularios" 
 		                onclick="repasseDialog.hide()" />
 		            </h:panelGrid>  
 		    </p:outputPanel>
 		    </p:dialog>
-		    
-		    <p:dialog header="DADOS DO REPASSE GERADO" widgetVar="imprimirDialog" resizable="false"
-		    closable="false" modal="true" width="700" showEffect="slide" hideEffect="slide">
-		    <p:outputPanel id="outPnlImprimir">
-		            <p:panel> 
-				        <h:panelGrid columns="14" columnClasses="coluna1,coluna2,coluna2">
-				        <h:outputText value="Discipulo:" styleClass="formulariosObrigatorio"/> 
-				        <p:graphicImage value="#{movimentacaoBean.protocolo.fotoDiscipulo}" width="41" height="40"/>
-				        <h:outputText value="#{movimentacaoBean.protocolo.discipulo}" styleClass="Texto_cpf_login"/>
-				        <h:outputText value=""/> 
-				        <h:outputText value=""/> 
-				        <h:outputText value=""/> 
-				        <h:outputText value=""/>
-				        <h:outputText value=""/> 
-				        <h:outputText value=""/> 
-				        <h:outputText value=""/> 
-				        <h:outputText value=""/> 
-				        <h:outputText value="Discipulador:" styleClass="formulariosObrigatorio"/> 
-				        <p:graphicImage value="#{movimentacaoBean.protocolo.fotoDiscipulador}" width="41" height="40"/>
-				        <h:outputText value="#{movimentacaoBean.protocolo.discipulador}" styleClass="Texto_cpf_login"/>  
-				        </h:panelGrid>
-				    </p:panel>
-				    <hr/>
-				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
-				        <h:outputText value="Tipo de Movimento:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.protocolo.tipo}" styleClass="Texto_cpf_login"/>
-				        <h:outputText value="Espécie do Movimento:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.protocolo.especie}" styleClass="Texto_cpf_login"/>
-				    </h:panelGrid>
-				    
-				    <h:panelGrid columns="4" columnClasses="coluna1, coluna2, coluna2, coluna2" style="margin-left:90px;">
-				        <h:outputText value="Período:" styleClass="formulariosObrigatorio"/>
-				        <h:outputText value="#{movimentacaoBean.protocolo.inicio}" styleClass="Texto_cpf_login">
-						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-						</h:outputText>
-				        <h:outputText value="á " styleClass="Texto_cpf_login"/>
-				        <h:outputText value="#{movimentacaoBean.protocolo.fim}" styleClass="Texto_cpf_login">
-						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-						</h:outputText>
-				    </h:panelGrid>    
-				    
-				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left:15px;" rendered="#{movimentacaoBean.dialogRepasseMovimentoDinheiro}">
-				        <h:outputText value="Valor do Movimento:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.valorTotalMovimento}" styleClass="Texto_cpf_login">
-						 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
-						</h:outputText>
-				        </h:panelGrid>
-						
-						<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left: 5px;" rendered="#{movimentacaoBean.dialogRepasseMovimentoCheque}">			
-				        <h:outputText value="Cheques Adicionados:" styleClass="formulariosObrigatorio"/>
-				        <p:dataList value="#{movimentacaoBean.listaMovimentoChequeId }" var="rpCheque1" itemType="disc">  
-						    <h:outputText value="Valor: " styleClass="formulariosObrigatorio" />
-							<h:outputText value="#{rpCheque1.valNum}" styleClass="Fonte_13">
-							 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
-							</h:outputText> ,
-							<h:outputText value="Data: " styleClass="formulariosObrigatorio" />
-							<h:outputText value="#{rpCheque1.dataCheque}" styleClass="Fonte_13">
-							 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-							</h:outputText> ,
-							<h:outputText value="Pré-Datado: " styleClass="formulariosObrigatorio" />
-							<h:outputText value="#{rpCheque1.preDatado}" styleClass="Fonte_13">
-							 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-							</h:outputText>
-						</p:dataList>
-						</h:panelGrid>
-						
-				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left: 5px;" rendered="#{movimentacaoBean.dialogRepasseMovimentoDinheiroCheque}">
-				        <h:outputText value="Valor em R$:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.valorTotalMovimentoDinheiro}" styleClass="Texto_cpf_login">
-						 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
-						</h:outputText>
-				        <h:outputText value="Valor em Cheques:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.valorTotalMovimentoCheque}" styleClass="Texto_cpf_login">
-						 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
-						</h:outputText>
-						<h:outputText value="Valor do Movimento:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.valorTotalMovimento}" styleClass="Texto_cpf_login">
-						 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
-						</h:outputText>
-				        <h:outputText value="Cheques Adicionados:" styleClass="formulariosObrigatorio"/>
-				        <p:dataList value="#{movimentacaoBean.listaMovimentoChequeId }" var="rpCheque2" itemType="disc">  
-						    <h:outputText value="Valor: " styleClass="formulariosObrigatorio" />
-							<h:outputText value="#{rpCheque2.valNum}" styleClass="Fonte_13">
-							 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
-							</h:outputText> ,
-							<h:outputText value="Data: " styleClass="formulariosObrigatorio" />
-							<h:outputText value="#{rpCheque2.dataCheque}" styleClass="Fonte_13">
-							 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-							</h:outputText> ,
-							<h:outputText value="Pré-Datado: " styleClass="formulariosObrigatorio" />
-							<h:outputText value="#{rpCheque2.preDatado}" styleClass="Fonte_13">
-							 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-							</h:outputText>
-						</p:dataList>
-						</h:panelGrid>
-				        
-				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left: 30px;">
-				        <h:outputText value="Local do Repasse:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.protocolo.local}" styleClass="Texto_cpf_login"/>
-				        <h:outputText value="Data do Repasse:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.protocolo.data}" styleClass="Texto_cpf_login">
-						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
-						</h:outputText>
-				        <h:outputText value="Protocolo Gerado:" styleClass="formulariosObrigatorio"/> 
-				        <h:outputText value="#{movimentacaoBean.protocolo.protocolo}" styleClass="Texto_cpf_login"/>
-				    </h:panelGrid>
-				    <br/>
-		            <h:panelGrid columns="4" cellpadding="2">
-		            <h:commandLink action="#{movimentacaoBean.imprimirProtocolo}" target="_blank">  
-                        <center>
-                        <p:graphicImage value="/img/but_imprimir.png"/>     
-                        </center>  
-                    </h:commandLink>
-                    <h:outputText value=""/> 
-				    <h:outputText value=""/>
-                    <h:commandLink action="#{movimentacaoBean.prepararMovimento}">  
-                        <center>
-                        <p:graphicImage value="/img/but_fechar.png"/>     
-                        </center>  
-                    </h:commandLink>
-		            </h:panelGrid>
-		    </p:outputPanel>
-		    </p:dialog>
-		</h:form>
-		    
+
+		</h:form>		    
 	</ui:define>
 </ui:composition>

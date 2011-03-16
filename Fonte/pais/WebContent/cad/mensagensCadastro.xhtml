@@ -39,7 +39,7 @@
 				 <h:panelGrid columns="6" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2">
 				    <h:outputLabel value="Tipo Envio:" styleClass="Texto_cpf_login" for="tipo"/>
 					<h:selectOneMenu id="selTipo" value="#{mensagemBean.tipoEnvio}" styleClass="formularios">
-						<f:selectItem itemValue="0" itemLabel="Selecione"/>
+						<f:selectItem itemValue="0" itemLabel="Selecione..."/>
 						<f:selectItems value="#{mensagemBean.tipoCombo}"/>
 						<f:ajax event="change" listener="#{mensagemBean.ajaxComboTipo}" execute="selTipo selGeracao"  
 				                render="pnlMensagens"/>
@@ -74,7 +74,11 @@
 					selection="#{mensagemBean.discipuloSelecionados}"
 					value="#{mensagemBean.listaDiscipulos}"
 					width="100%"
-					emptyMessage="Nenhum Discipulo Cadastrado nesta Geração">
+					emptyMessage="Nenhum Discipulo Cadastrado nesta Geração"
+					rowSelectListener="#{mensagemBean.onRowSelectNavigate}"
+					rowUnselectListener="#{mensagemBean.onRowUnselect}"
+					onRowSelectUpdate="msg"
+					onRowUnselectUpdate="msg">
 					
 					<f:facet name="header">
 							<h:outputText value="&nbsp;SELECIONE OS DÍSCIPULOS PARA ENVIAR A MENSAGEM" styleClass="Fonte_12"/>
@@ -104,20 +108,26 @@
 				</p:tab>
 			    
 			    <p:tab title="Mensagem" rendered="#{mensagemBean.tabMensagem}">
-				<p:editor width="920" value="#{mensagemBean.mensagem.mensTexto}"/>
+				<p:editor width="920" value="#{mensagemBean.mensagem.mensTexto}"
+				required="true" requiredMessage="Mensagem em branco!"/>
 				</p:tab>
 				
 				<p:tab title="Anexo de Arquivos" rendered="#{mensagemBean.tabAnexos}">
 				    <h:panelGrid columns="1">
-				    <h:outputText value="Arquivos Suportados jpg, jpeg, png, gif, doc, docx, txt, pdf, rar, zip com Tamanho Máximo 10MB." />
+				    
+				    <h:panelGrid columns="2" columnClasses="coluna1,coluna2"> 
+				    <h:outputText value="Arquivos Suportados: " styleClass="formulariosObrigatorio"/>
+				    <h:outputText value="jpg, jpeg, png, gif, doc, docx, txt, pdf, rar, zip com Tamanho Máximo 10MB cada arquivo." styleClass="formulariosFonteNormal"/>
+				    </h:panelGrid>
 				 
-					<p:fileUpload sizeLimit="10485760" image="/img/but_enviar.jpg"
-						width="68" auto="true"
+					<p:fileUpload sizeLimit="10485760" image="/img/but_anexar_arquivo.png"
+						width="139" auto="true"
 						fileUploadListener="#{mensagemBean.handleFileUpload}"
 						allowTypes="*.jpg;*.jpeg;*.png;*.gif;*.doc;*.docx;*.txt;*.pdf;*.rar;*.zip" 
 						description="Imagens e Documentos" 
-						update="outAnexos" />
+						update="msg outAnexos" />
 					</h:panelGrid>
+					<br/>
 					
 					<p:outputPanel id="outAnexos">
 					<p:dataTable

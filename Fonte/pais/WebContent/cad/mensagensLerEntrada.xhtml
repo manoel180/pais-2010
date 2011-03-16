@@ -98,21 +98,26 @@
 				    </p:dataTable>
 				</p:tab>
 				
-				<p:tab title="Responder" rendered="false">
+				<p:tab title="Responder">
 				  <p:editor width="920" value="#{mensagemBean.mensagem.mensTexto}"/>
 				</p:tab>
 				
-				<p:tab title="Enviar Novos Arquivos" rendered="false">
+				<p:tab title="Enviar Novos Arquivos">
 				    <h:panelGrid columns="1">
-				    <h:outputText value="Arquivos Suportados jpg, jpeg, png, gif, doc, docx, txt, pdf, rar, zip com Tamanho Máximo 10MB." />
+				    
+				    <h:panelGrid columns="2" columnClasses="coluna1,coluna2"> 
+				    <h:outputText value="Arquivos Suportados: " styleClass="formulariosObrigatorio"/>
+				    <h:outputText value="jpg, jpeg, png, gif, doc, docx, txt, pdf, rar, zip com Tamanho Máximo 10MB cada arquivo." styleClass="formulariosFonteNormal"/>
+				    </h:panelGrid>
 				 
-					<p:fileUpload sizeLimit="10485760" image="/img/but_enviar.jpg"
-						width="68" auto="true"
+					<p:fileUpload sizeLimit="10485760" image="/img/but_anexar_arquivo.png"
+						width="139" auto="true"
 						fileUploadListener="#{mensagemBean.handleFileUploadEnviar}"
 						allowTypes="*.jpg;*.jpeg;*.png;*.gif;*.doc;*.docx;*.txt;*.pdf;*.rar;*.zip" 
 						description="Imagens e Documentos" 
 						update="outAnexos" />
 					</h:panelGrid>
+					<br/>
 					
 					<p:outputPanel id="outAnexos">
 					<p:dataTable
@@ -168,8 +173,7 @@
 			</p:tabView>
 			<br />
 			<p:commandButton value="Responder Mensagem" update="outPrincipal"
-			                 action="#{mensagemBean.responderMensagem}" ajax="false" rendered="false"/> 
-	
+			                 action="#{mensagemBean.responderMensagem}" ajax="false"/> 
 			</p:outputPanel>
 			</h:form>
 	</ui:define>

@@ -28,7 +28,6 @@
 	<ui:define name="conteudo">
 		<br/>
 		<h:form prependId="false">	
-		<p:outputPanel id="outPrincipal">	
 		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
 		
 			<p:tabView orientation="top">
@@ -37,7 +36,6 @@
 				   <p:dataTable
 					id="dtEnviadas" 
 					var="mens" 
-					selection="#{mensagemBean.mensagemSelecionada}"
 					value="#{mensagemBean.listaEnviadas}" 
 					paginator="true"
 					firstPageLinkLabel="&lt;&lt; Primeiro"
@@ -107,21 +105,13 @@
 				</p:tab>
 			</p:tabView>
 			
-			<p:dialog header="EXCLUIR MENSAGEM ENVIADA" widgetVar="mensagemExcluir" resizable="false"
-			              modal="true" width="400">
-			            <h:panelGrid columns="3" columnClasses="coluna1, coluna1">
-				        <h:outputText value="Deseja realmente excluir está mensagem" styleClass="formulariosObrigatorio"/>
-				        <h:outputText value="?" styleClass="formulariosObrigatorio"/>  
-				        </h:panelGrid>
-				        
-			            <h:panelGrid columns="2" cellpadding="2">
-			                <p:commandButton value="Sim" actionListener="#{mensagemBean.ExcluirMensagemSaida}" 
-			                                 update="dtEnviadas" oncomplete="mensagemExcluir.hide()" />
-			                <p:commandButton value="Não" onclick="mensagemExcluir.hide()" />
-			            </h:panelGrid>  
-			</p:dialog>
-			
-			</p:outputPanel> 
+			<p:confirmDialog message="Deseja realmente excluir esta mensagem?"
+				header="EXCLUIR MENSAGEM ENVIADA" severity="alert" widgetVar="mensagemExcluir">
+		            <p:commandButton value="Sim" update="dtEnviadas" oncomplete="mensagemExcluir.hide()"
+					actionListener="#{mensagemBean.ExcluirMensagemSaida}" />
+		            <p:commandButton value="Não" onclick="mensagemExcluir.hide()" type="button" /> 
+	        </p:confirmDialog>
+			 
 			</h:form>
 	</ui:define>
 </ui:composition>

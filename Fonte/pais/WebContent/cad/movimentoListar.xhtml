@@ -52,9 +52,9 @@
 					    filterStyleClass="formularios" resizable="true"
 						sortBy="#{cel.celNome}">
 						<f:facet name="header">
-							<h:outputText value="&nbsp;NOME DA CÉLULA" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;CÓDIGO DA CÉLULA" styleClass="Fonte_12"/>
 						</f:facet>
-						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.celNome}"/>
+						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.celCod}"/>
 					</p:column>
 					<p:column id="dtDia"
 						filterStyleClass="formularios" resizable="true"
@@ -101,7 +101,7 @@
 				</p:dataTable>
 				
 				<p:dialog header="DETALHES DA CÉLULA" widgetVar="celulaDetalhe" resizable="false"  
-                          modal="true" width="450" showEffect="slide" hideEffect="slide"> 
+                          modal="true" width="450"> 
                 <p:outputPanel id="pnlCelulaDetalhe"> 
                     
                     <p:panel> 
