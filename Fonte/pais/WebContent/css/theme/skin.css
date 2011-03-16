@@ -10,11 +10,8 @@
 /* Layout helpers
 ----------------------------------*/
 /*
-/*
  required comment for clearfix to work in Opera \
-*/
-
-* html .ui-helper-clearfix {
+*/* html .ui-helper-clearfix {
 	height: 1%;
 }
 
@@ -1208,36 +1205,11 @@
 .ui-autocomplete {
 	position: absolute;
 	cursor: default;
-	font-family: Trebuchet MS;
-	font-size: 12px;
-	font-style: 1;
-	font-weight: 1;
-	color: #56778B;
-	background-color: #E4ECEF;
-	border: 1px solid #CEDBE1;
 }
-.ui-autocomplete-input{
-
-	font-family: Trebuchet MS !important;
-	font-size: 12px !important;
-	font-style: 1 !important;
-	font-weight: 1 !important;
-	color: #56778B !important;
-	background-color: #E4ECEF !important;
-	border: 1px solid #CEDBE1  !important;
-}
-
 
 /* workarounds */
 * html .ui-autocomplete {
 	width: 1px;
-	font-family: Trebuchet MS;
-	font-size: 12px;
-	font-style: 1;
-	font-weight: 1;
-	color: #56778B;
-	background-color: #E4ECEF;
-	border: 1px solid #CEDBE1;
 }  /* without this, the menu expands to 100% in IE6 */
 /*
  * jQuery UI Menu 1.8.7
@@ -1496,7 +1468,7 @@ button.ui-button::-moz-focus-inner {
 	position: relative;
 	border: 0;
 	padding: .5em 1em;
-	background: none;
+	background: #D9E4E9;
 	overflow: auto;
 	zoom: 1;
 }
