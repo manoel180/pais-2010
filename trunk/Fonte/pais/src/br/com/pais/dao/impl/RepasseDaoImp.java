@@ -13,13 +13,14 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Movimento> listarMovimentos(int lider, int geracao, String recebido, String tipo, String DataInicio, String DataFim) {
+	public List<Movimento> listarMovimentosReceber(int lider, int geracao, String recebido, String tipo, String especie, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
 			"From Movimento m where " +
 			" m.celulas.discipulos.discipulos.disCod = "+ lider +"" +
-			" and m.celulas.geracoes.gerCod = "+ geracao +"" +
+			" and m.celulas.discipulos.geracoes.gerCod = "+ geracao +"" +
 			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
 			" and m.movRecebido = '"+ recebido +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'" +
 			" group by m.celulas.celCod");
@@ -31,15 +32,16 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			getEntityManager().close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Movimento> totalMovimento(int celula, String tipo, String recebido, String DataInicio, String DataFim) {
+	public List<Object> totalMovimentosReceber(int celula, String tipo, String especie, String recebido, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
-			"From Movimento m where" +
+			"select sum(m.movValor) from Movimento m where " +
 			" m.celulas.celCod = "+ celula +"" +
 			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
 			" and m.movRecebido = '"+ recebido +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
 			return query.getResultList();
@@ -50,16 +52,17 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			getEntityManager().close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Movimento> listarMovimentosTodosPeriodo(int celula,
-			String tipo, String recebido, String DataInicio, String DataFim) {
+	public List<Movimento> listarMovimentosTodosReceber(int celula,
+			String tipo, String especie, String recebido, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
 			"From Movimento m where" +
 			" m.celulas.celCod = "+ celula +"" +
 			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
 			" and m.movRecebido = '"+ recebido +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
 			return query.getResultList();
@@ -70,16 +73,17 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			getEntityManager().close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Movimento> listarMovimentosEnviados(int lider, int geracao, String tipo, String DataInicio, String DataFim) {
+	public List<Movimento> listarMovimentosEnviados(int lider, int geracao, String tipo, String especie, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
 			"From Movimento m where " +
 			" m.celulas.discipulos.disCod = "+ lider +"" +
 			" and m.celulas.geracoes.gerCod = "+ geracao +"" +
 			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'" +
 			" group by m.celulas.celCod");
 			return query.getResultList();
@@ -90,15 +94,17 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			getEntityManager().close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Movimento> totalMovimentoEnviados(int celula, String tipo, String DataInicio, String DataFim) {
+	public List<Object> totalMovimentosEnviados(int celula, String tipo, String especie, String recebido, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
-			"From Movimento m where" +
+			"select sum(m.movValor) from Movimento m where " +
 			" m.celulas.celCod = "+ celula +"" +
 			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
+			" and m.movRecebido = '"+ recebido +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
 			return query.getResultList();
 		} catch (NoResultException nre) {
@@ -108,16 +114,79 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			getEntityManager().close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Movimento> listarMovimentosTodosPeriodoDetalhe(int celula,
-			String tipo, String DataInicio, String DataFim) {
+	public List<Movimento> listarMovimentosTodosEnviados(int celula, String tipo, String especie, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
 			"From Movimento m where" +
 			" m.celulas.celCod = "+ celula +"" +
 			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
+			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Movimento> listarMovimentosRecebdidos(int lider, int geracao, String recebido, String tipo, String especie, String DataInicio, String DataFim) {
+		try {
+			Query query = getEntityManager().createQuery(
+			"From Movimento m where " +
+			" m.celulas.discipulos.discipulos.disCod = "+ lider +"" +
+			" and m.celulas.discipulos.geracoes.gerCod = "+ geracao +"" +
+			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
+			" and m.movRecebido = '"+ recebido +"'" +
+			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'" +
+			" group by m.celulas.celCod");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> totalMovimentosRecebidos(int celula, String tipo, String especie, String recebido, String DataInicio, String DataFim) {
+		try {
+			Query query = getEntityManager().createQuery(
+			"select sum(m.movValor) from Movimento m where " +
+			" m.celulas.celCod = "+ celula +"" +
+			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
+			" and m.movRecebido = '"+ recebido +"'" +
+			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Movimento> listarMovimentosTodosRecebidos(int celula,
+			String tipo, String especie, String recebido, String DataInicio, String DataFim) {
+		try {
+			Query query = getEntityManager().createQuery(
+			"From Movimento m where" +
+			" m.celulas.celCod = "+ celula +"" +
+			" and m.movTipo = '"+ tipo +"'" +
+			" and m.movEspecie = '"+ especie +"'" +
+			" and m.movRecebido = '"+ recebido +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
 			return query.getResultList();
 		} catch (NoResultException nre) {
@@ -135,6 +204,23 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			Query query = getEntityManager().createQuery(
 			"From Movimento m where" +
 			" m.movCod = "+ movimento +"");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Movimento> listarMovimentosLembrarPrincipal(int discipulo) {
+		try {
+			Query query = getEntityManager().createQuery(
+			"from Movimento m where" +
+			" m.celulas.discipulos.discipulos.disCod = "+ discipulo +
+			" and m.movRecebido = 'N'");
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
