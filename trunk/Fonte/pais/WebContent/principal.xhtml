@@ -32,6 +32,8 @@
 		
 		<p:tabView orientation="top" style="text-align:center;">
 			<p:tab title="Principal">
+			<h:panelGrid columns="2" cellspacing="10">
+			 
 			<p:panel id="pnlMensagens" header="Mensagens" toggleable="true" closable="true"
 		        style="width:200px"   
 			    toggleSpeed="500" widgetVar="panelMensagens">
@@ -40,6 +42,17 @@
 			        <p:commandButton value="Listar/Todas" action="#{mensagemBean.caixaEntrada}" ajax="false"/> 
 			    </h:panelGrid> 
 			</p:panel>
+			
+			<p:panel id="pnlRepasses" header="Repasses" toggleable="true" closable="true"
+		        style="width:200px" rendered="#{loginBean.menuReceberRepasse}"
+			    toggleSpeed="500" widgetVar="panelRepasses">
+			    <h:panelGrid columns="1">
+			        <h:outputText value="Voçê recebeu #{repasseBean.qtdRepassesRecebidos} repasses" />
+			        <p:commandButton value="Listar/Todos" action="#{repasseBean.prepararRepasse}" ajax="false"/> 
+			    </h:panelGrid> 
+			</p:panel>
+			
+			</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 						
