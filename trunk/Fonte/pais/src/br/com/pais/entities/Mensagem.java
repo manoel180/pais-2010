@@ -30,23 +30,33 @@ public class Mensagem implements java.io.Serializable {
 	private Discipulos discipulosByMensDisCod;
 	private String mensTexto;
 	private Date mensData;
-	private char mensLida;
-	private char mensCaixa;
-
+	private String mensLida;
+	private String mensCaixa;
 	private List<Mensagemanexos> mensagemanexoses = new ArrayList<Mensagemanexos>();
 
 	public Mensagem() {
 	}
 
 	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
-			Discipulos discipulosByMensDisCod, String mensTexto, Date mensData,
-			char mensLida, char mensCaixa, List<Mensagemanexos> mensagemanexoses) {
+			Discipulos discipulosByMensDisCod, String mensCaixa, Date mensData,
+			String mensLida, String mensTexto) {
 		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
 		this.discipulosByMensDisCod = discipulosByMensDisCod;
-		this.mensTexto = mensTexto;
+		this.mensCaixa = mensCaixa;
 		this.mensData = mensData;
 		this.mensLida = mensLida;
+		this.mensTexto = mensTexto;
+	}
+
+	public Mensagem(Discipulos discipulosByMensDisCodRecebe,
+			Discipulos discipulosByMensDisCod, String mensCaixa, Date mensData,
+			String mensLida, String mensTexto, List<Mensagemanexos> mensagemanexoses) {
+		this.discipulosByMensDisCodRecebe = discipulosByMensDisCodRecebe;
+		this.discipulosByMensDisCod = discipulosByMensDisCod;
 		this.mensCaixa = mensCaixa;
+		this.mensData = mensData;
+		this.mensLida = mensLida;
+		this.mensTexto = mensTexto;
 		this.mensagemanexoses = mensagemanexoses;
 	}
 
@@ -102,20 +112,20 @@ public class Mensagem implements java.io.Serializable {
 	}
 
 	@Column(name = "mensLida", nullable = false, length = 1)
-	public char getMensLida() {
+	public String getMensLida() {
 		return this.mensLida;
 	}
 
-	public void setMensLida(char mensLida) {
+	public void setMensLida(String mensLida) {
 		this.mensLida = mensLida;
 	}
 	
 	@Column(name = "mensCaixa", nullable = false, length = 1)
-	public char getMensCaixa() {
+	public String getMensCaixa() {
 		return mensCaixa;
 	}
 
-	public void setMensCaixa(char mensCaixa) {
+	public void setMensCaixa(String mensCaixa) {
 		this.mensCaixa = mensCaixa;
 	}
 

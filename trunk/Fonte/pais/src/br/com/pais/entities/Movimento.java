@@ -2,8 +2,10 @@ package br.com.pais.entities;
 
 // Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,27 +31,35 @@ public class Movimento implements java.io.Serializable {
 	private Celulas celulas;
 	private Bases bases;
 	private Date movData;
-	private Date movHora;
+	private Date movDataCadastro;
+	private Date movHoraCadastro;
+	private Date movDataBaixa;
+	private Date movHoraBaixa;
 	private String movTipo;
 	private String movEspecie;
 	private Double movValor;
 	private String movRecebido;
 	private String movProtocolo;
 	private String movProtocoloPai;
-	private Set<Repasse> repasses = new HashSet<Repasse>(0);
-	private Set<Movimentocheque> movimentocheques = new HashSet<Movimentocheque>(0);
+	private List<Repasse> repasses = new ArrayList<Repasse>();
+	private List<Movimentocheque> movimentocheques = new ArrayList<Movimentocheque>();
 
 	public Movimento() {
 	}
 
-	public Movimento(Celulas celulas, Bases bases, Date movData, Date movHora,
+	public Movimento(Celulas celulas, Bases bases, Date movData, 
+			Date movDataCadastro, Date movHoraCadastro,
+			Date movDataBaixa, Date movHoraBaixa,
 			String movTipo, String movEspecie, Double movValor,
 			String movRecebido, String movProtocolo, String movProtocoloPai,
-			Set<Repasse> repasses, Set<Movimentocheque> movimentocheques) {
+			List<Repasse> repasses, List<Movimentocheque> movimentocheques) {
 		this.celulas = celulas;
 		this.bases = bases;
 		this.movData = movData;
-		this.movHora = movHora;
+		this.movDataCadastro = movDataCadastro;
+		this.movHoraCadastro = movHoraCadastro;
+		this.movDataBaixa = movData;
+		this.movHoraBaixa = movHoraCadastro;
 		this.movTipo = movTipo;
 		this.movEspecie = movEspecie;
 		this.movValor = movValor;
@@ -101,14 +111,44 @@ public class Movimento implements java.io.Serializable {
 		this.movData = movData;
 	}
 
-	@Temporal(TemporalType.TIME)
-	@Column(name = "movHora", length = 8)
-	public Date getMovHora() {
-		return this.movHora;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "movDataCadastro", length = 10)
+	public Date getMovDataCadastro() {
+		return movDataCadastro;
 	}
 
-	public void setMovHora(Date movHora) {
-		this.movHora = movHora;
+	public void setMovDataCadastro(Date movDataCadastro) {
+		this.movDataCadastro = movDataCadastro;
+	}
+
+	@Temporal(TemporalType.TIME)
+	@Column(name = "movHoraCadastro", length = 8)
+	public Date getMovHoraCadastro() {
+		return movHoraCadastro;
+	}
+
+	public void setMovHoraCadastro(Date movHoraCadastro) {
+		this.movHoraCadastro = movHoraCadastro;
+	}
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "movDataBaixa", length = 10)
+	public Date getMovDataBaixa() {
+		return movDataBaixa;
+	}
+
+	public void setMovDataBaixa(Date movDataBaixa) {
+		this.movDataBaixa = movDataBaixa;
+	}
+
+	@Temporal(TemporalType.TIME)
+	@Column(name = "movHoraBaixa", length = 8)
+	public Date getMovHoraBaixa() {
+		return movHoraBaixa;
+	}
+
+	public void setMovHoraBaixa(Date movHoraBaixa) {
+		this.movHoraBaixa = movHoraBaixa;
 	}
 
 	@Column(name = "movTipo", length = 60)
@@ -166,20 +206,20 @@ public class Movimento implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
-	public Set<Repasse> getRepasses() {
+	public List<Repasse> getRepasses() {
 		return this.repasses;
 	}
 
-	public void setRepasses(Set<Repasse> repasses) {
+	public void setRepasses(List<Repasse> repasses) {
 		this.repasses = repasses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "movimento")
-	public Set<Movimentocheque> getMovimentocheques() {
+	public List<Movimentocheque> getMovimentocheques() {
 		return this.movimentocheques;
 	}
 
-	public void setMovimentocheques(Set<Movimentocheque> movimentocheques) {
+	public void setMovimentocheques(List<Movimentocheque> movimentocheques) {
 		this.movimentocheques = movimentocheques;
 	}
 }
