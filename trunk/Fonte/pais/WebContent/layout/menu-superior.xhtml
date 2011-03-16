@@ -32,6 +32,7 @@
 		</p:submenu>
 		
 		<p:submenu  label="FINANCEIRO"  align="left">
+		    <p:menuitem value="&nbsp;Ver Árvore de Repasses &nbsp;" action="#{repasseBean.prepararArvoreRepasses}" rendered="#{loginBean.menuArvoreRepasse}" ajax="false"/>
 		    <p:menuitem value="&nbsp;Fazer Repasse &nbsp;" action="#{movimentacaoBean.prepararMovimento}" rendered="#{loginBean.menuFazerRepasse}" ajax="false"/>
 			<p:menuitem value="&nbsp;Receber Repasse &nbsp;" action="#{repasseBean.prepararRepasse}"  rendered="#{loginBean.menuReceberRepasse}" ajax="false" />
 			<p:submenu rendered="#{loginBean.menuFazerRepasse}">  
