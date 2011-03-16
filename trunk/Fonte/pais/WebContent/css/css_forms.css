@@ -41,6 +41,33 @@ img{
 	text-align: left;
 }
 
+.valorTotalDinheiro {
+	position: relative;
+	right: 80px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.valorTotalCheque {
+	position: relative;
+	right: 210px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.valorTotalDinheiroCheque {
+	position: relative;
+	right: 150px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
 a:link {
 	text-decoration: none;
 }
@@ -133,6 +160,15 @@ a:active {
 	font-size: 13px;
 	font-weight: bold;
 	color: #466273;
+}
+
+.formulariosFonteNormal {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	color: #56778B;
+	background-color: #DBE4E9;
 }
 
 .borda_meio {
