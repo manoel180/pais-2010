@@ -18,7 +18,7 @@
 	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
 	     <p:menuitem value="home" url="/principal.mir" />
 	     <p:menuitem value="FINANCEIRO"/>  
-         <p:menuitem value="RECEBER REPASSE" action="#{repasseBean.prepararRepasse}" ajax="false" />
+         <p:menuitem value="FILTRAR REPASSES Á RECEBER" action="#{repasseBean.prepararRepasse}" ajax="false" />
 	    </p:breadCrumb> 
 	   </td>
 	 </tr>
@@ -30,48 +30,61 @@
 		<p:outputPanel id="pnlMensagens">
 		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
 		
-			<p:tabView orientation="" style="margin-top:18px;">
+			<p:tabView style="margin-top:18px;">
 				<p:tab id="tabListarDiscipulos" title="Movimentos">
-				<h:panelGrid columns="6" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2">
-				    <h:outputLabel value="Geração:" styleClass="formulariosObrigatorio"/>
+				    <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
+				    <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/>
 					<h:selectOneMenu id="selGeracao" value="#{repasseBean.comboGeracao}" styleClass="formularios">
-						<f:selectItem itemValue="0" itemLabel="Selecione"/>
+						<f:selectItem itemValue="0" itemLabel="Selecione..."/>
 						<f:selectItems value="#{repasseBean.geracaoCombo}"/>
-						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo movDataInicio movDataFim"  
+						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
 						render="pnlMensagens"/>
 					</h:selectOneMenu>
 					<h:outputLabel value="" />
-					<h:outputLabel value="" />
+	                <h:outputLabel value="" />
 					<h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
 				    <h:selectOneMenu id="selTipo" value="#{repasseBean.movimento.movTipo}"
 						styleClass="formularios">
-						<f:selectItem itemValue="" itemLabel="Selecione"/>
+						<f:selectItem itemValue="" itemLabel="Selecione..."/>
 						<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
 						<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
 						<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
 						<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
 						<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
 						<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
-						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo movDataInicio movDataFim"  
+						<f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
 				        render="pnlMensagens"/>
 					</h:selectOneMenu>
-						
+					<h:outputLabel value="" />
+	                <h:outputLabel value="" />
+					<h:outputText value="Espécie:" styleClass="formulariosObrigatorio"/>
+					<h:selectOneMenu id="selTipoEspecie" value="#{repasseBean.movimento.movEspecie}" styleClass="formularios">
+						<f:selectItem itemValue="" itemLabel="Selecione..."/>
+						<f:selectItem itemValue="Dinheiro" itemLabel="Dinheiro"/>
+						<f:selectItem itemValue="Cheque" itemLabel="Cheque"/>
+						<f:selectItem itemValue="Dinheiro e Cheque" itemLabel="Dinheiro e Cheque"/>
+					    <f:ajax event="change" listener="#{repasseBean.listarM12PorGeracaoNaoRecebidos}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
+				        render="pnlMensagens"/>
+					</h:selectOneMenu>
+					</h:panelGrid>
+					
+					<h:panelGrid columns="6" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2">
 					<h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
-							<p:calendar id="movDataInicio" value="#{repasseBean.primeiroDiaCorrente}" size="12"
-				                    inputStyleClass="formularios" navigator="true" showOn="button" 
-				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
-								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
-								    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarInicioNaoRecebidos}"/>
+					<p:calendar id="movDataInicio" value="#{repasseBean.primeiroDiaCorrente}" size="12"
+		                    inputStyleClass="formularios" navigator="true" showOn="button" 
+		                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+						    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+						    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarInicioNaoRecebidos}"/>
 	                <h:outputLabel value="" />
 	                <h:outputLabel value="" />
 				    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
-							<p:calendar id="movDataFim" value="#{repasseBean.ultimoDiaCorrente}" size="12"
-				                    inputStyleClass="formularios" navigator="true" showOn="button" 
-				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
-								    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
-                                    onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarFimNaoRecebidos}"/>
-				</h:panelGrid>
-				<br/>
+					<p:calendar id="movDataFim" value="#{repasseBean.ultimoDiaCorrente}" size="12"
+		                    inputStyleClass="formularios" navigator="true" showOn="button" 
+		                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+						    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
+                            onSelectUpdate="dtDiscipulos" selectListener="#{repasseBean.selecionadoCalendarFimNaoRecebidos}"/>
+				    </h:panelGrid>
+				    <br/>
 				   
 				   <p:dataTable
 					id="dtDiscipulos" 
@@ -115,10 +128,17 @@
 					
 					<p:column>
 						<f:facet name="header">
+							<h:outputText value="&nbsp;ESPÉCIE DO MOVIMENTO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{mov.movEspecie}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
 							<h:outputText value="&nbsp;VALOR R$" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText styleClass="Fonte_13" value="#{repasseBean.totalNaoRecebido}">
-						<f:convertNumber type="currency" pattern="#,##0.00" minFractionDigits="2"  />
+						    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
 						</h:outputText>
 					</p:column>
 					

@@ -40,14 +40,12 @@
 						<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 							<h:outputLabel value="Lider da Célula:" styleClass="formulariosObrigatorio" for="nomeDiscipulador" />
 							<h:inputText id="nomeDiscipulador" size="40" styleClass="formularios2" value="#{loginBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
-							<h:outputLabel value="Nome da Célula:" styleClass="Texto_cpf_login" for="nomeCelula" />
-							<h:inputText id="nomeCelula" size="30" styleClass="formularios2" required="true" value="#{celulaBean.celulas.celNome}" requiredMessage="Nome da célula é obrigatório"/>
 							<h:outputLabel value="Hora da Reunião:" styleClass="Texto_cpf_login" for="hrReuniao" />
 							<p:inputMask mask="99:99" id="hrReuniao"
 								value="#{celulaBean.celulas.celHorarioReuniao}" size="8"
 								styleClass="formularios2" required="true" tabindex="4"
 								requiredMessage="Hora da Reunião é obrigatória">
-							<f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+							<f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-3"/>
 							</p:inputMask>
 
 							<h:outputLabel value="Dia da Reunião:" styleClass="Texto_cpf_login" for="diaReuniao" />
