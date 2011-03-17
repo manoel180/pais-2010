@@ -43,15 +43,14 @@
 			<br />
 			<p:tabView orientation="top">
 				<p:tab title="Filtro Repasses">
-				<p:outputPanel id="outPnlFiltro">
 				   <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
 				    <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/>
 					<h:selectOneMenu id="selGeracao" value="#{repasseBean.comboGeracao}" styleClass="formularios">
 						<f:selectItem itemValue="-1" itemLabel="Selecione..."/>
 						<f:selectItem itemValue="0" itemLabel="Todas Gerações"/>
 						<f:selectItems value="#{repasseBean.geracaoCombo}"/>
-						<f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
-						render="outPnlFiltro outPnlDtRepasses"/>
+						<f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao"  
+						render="outPnlDtRepasses"/>
 					</h:selectOneMenu>
 					<h:outputLabel value="" />
 	                <h:outputLabel value="" />
@@ -66,8 +65,8 @@
 						<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
 						<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
 						<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
-						<f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
-				        render="outPnlFiltro outPnlDtRepasses"/>
+						<f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selTipo"  
+				        render="outPnlDtRepasses"/>
 					</h:selectOneMenu>
 					<h:outputLabel value="" />
 	                <h:outputLabel value="" />
@@ -78,8 +77,8 @@
 						<f:selectItem itemValue="Dinheiro" itemLabel="Dinheiro"/>
 						<f:selectItem itemValue="Cheque" itemLabel="Cheque"/>
 						<f:selectItem itemValue="Dinheiro e Cheque" itemLabel="Dinheiro e Cheque"/>
-					    <f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selGeracao selTipo selTipoEspecie movDataInicio movDataFim"  
-				        render="outPnlFiltro outPnlDtRepasses"/>
+					    <f:ajax event="change" listener="#{repasseBean.listarArvoreRepasses}" execute="selTipoEspecie"  
+				        render="outPnlDtRepasses"/>
 					</h:selectOneMenu>
 					</h:panelGrid>
 					
@@ -89,7 +88,7 @@
                     inputStyleClass="formularios" navigator="true" showOn="button" 
                     yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
 				    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
-				    onSelectUpdate="outPnlFiltro outPnlDtRepasses" selectListener="#{repasseBean.calendarInicioArvoreRepasses}"/>
+				    onSelectUpdate="outPnlDtRepasses" selectListener="#{repasseBean.calendarInicioArvoreRepasses}"/>
 	                <h:outputLabel value="" />
 	                <h:outputLabel value="" />
 				    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
@@ -97,14 +96,20 @@
                     inputStyleClass="formularios" navigator="true" showOn="button" 
                     yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
 				    effect="slide"  maxlength="10" pattern="dd/MM/yyyy"
-                    onSelectUpdate="outPnlFiltro outPnlDtRepasses" selectListener="#{repasseBean.calendarFimArvoreRepasses}"/>
+                    onSelectUpdate="outPnlDtRepasses" selectListener="#{repasseBean.calendarFimArvoreRepasses}"/>
 				    </h:panelGrid>
-				</p:outputPanel>
 				</p:tab>
 			</p:tabView>
 			<br />
 			<p:outputPanel id="outPnlDtRepasses">
-			<p:treeTable value="#{repasseBean.root}" var="node" rendered="#{repasseBean.dtRepasses}">  
+			
+			<p:tabView orientation="top" rendered="#{repasseBean.mostrarMensagemArvorePasses}">
+			<p:tab title="Mensagem">
+			    <h:outputText value="Nenhum Repasse Encontrado deste díscipulo com esse filtro!" />
+			</p:tab>
+			</p:tabView>
+			
+			<p:treeTable value="#{repasseBean.root}" var="node" rendered="#{repasseBean.mostrarDtArvoreRepasses}">  
                     <p:column>
 						<f:facet name="header">
 						<center>Nome</center>  
@@ -164,14 +169,272 @@
 			            </f:facet>  
 			            <center>
 			            <p:commandLink title="Ver Repasses Deste Discipulo" rendered="#{node.mostrarDetalhe}"
-			            action="#{repasseBean.prepararArvoreDiscipulo}" ajax="false">  
+			            action="#{repasseBean.detalheArvoreSelecionada}"
+			            oncomplete="detalheRepasseDialog.show()"
+			            update="outPnlDetalheRepasse">  
 			                <p:graphicImage value="/img/detalhe.png"/>   
-			                <f:setPropertyActionListener value="#{node}" target="#{repasseBean.arvoreSelecionada}" />  
+			                <f:setPropertyActionListener value="#{node}" target="#{repasseBean.repasseSelecionadoArvore}"/>  
 			            </p:commandLink> 
 			            </center> 
 			        </p:column>
                 </p:treeTable>
               </p:outputPanel>
+              
+            <p:dialog header="DETALHE REPASSE" widgetVar="detalheRepasseDialog" resizable="false" modal="true" width="800">
+		    <p:outputPanel id="outPnlDetalheRepasse">
+		    
+		    <p:panel>
+		     <h:panelGrid columns="14" columnClasses="coluna1,coluna2,coluna2" style="margin-left:65px;"
+		     rendered="#{repasseBean.mostrarPnlGrdRepasseFinanceiro}">
+		        <h:outputText value="Discipulo:" styleClass="formulariosObrigatorio"/> 
+		        <p:graphicImage value="#{repasseBean.repasseSelecionadoArvore.discipulo.disfoto}" width="41" height="40"/>
+		        <h:outputText value="#{repasseBean.repasseSelecionadoArvore.discipulo.disnome}" styleClass="Texto_cpf_login"/>
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/>
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value="Enviou:" styleClass="formulariosObrigatorio"/> 
+		        <p:graphicImage value="/img/dinheiro.png"/>  
+		        <h:outputText value="Financeiro" styleClass="Texto_cpf_login"/>  
+		     </h:panelGrid>
+				        
+		     <h:panelGrid columns="14" columnClasses="coluna1,coluna2,coluna2" style="margin-left:65px;"
+		     rendered="#{repasseBean.mostrarPnlGrdRepasseDiscipulador}">
+		        <h:outputText value="Discipulo:" styleClass="formulariosObrigatorio"/> 
+		        <p:graphicImage value="#{repasseBean.repasseSelecionadoArvore.discipulo.disfoto}" width="41" height="40"/>
+		        <h:outputText value="#{repasseBean.repasseSelecionadoArvore.discipulo.disnome}" styleClass="Texto_cpf_login"/>
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/>
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value=""/> 
+		        <h:outputText value="Enviou:" styleClass="formulariosObrigatorio"/> 
+		        <p:graphicImage value="#{repasseBean.discipuloArvoreSelecionada.discipulos.disfoto}" width="41" height="40"/>
+		        <h:outputText value="#{repasseBean.discipuloArvoreSelecionada.discipulos.disnome}" styleClass="Texto_cpf_login"/>  
+		     </h:panelGrid>
+		    </p:panel> 
+		    
+		    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+		        <h:outputText value="Tipo de Movimento:" styleClass="formulariosObrigatorio"/> 
+		        <h:outputText value="#{repasseBean.repasseSelecionadoArvore.movimento.movTipo}" styleClass="Texto_cpf_login"/>
+		        <h:outputText value="Espécie do Movimento:" styleClass="formulariosObrigatorio"/> 
+		        <h:outputText value="#{repasseBean.repasseSelecionadoArvore.movimento.movEspecie}" styleClass="Texto_cpf_login"/>
+		    </h:panelGrid>
+		    
+		    <h:panelGrid columns="4" columnClasses="coluna1, coluna2, coluna2, coluna2" style="margin-left:90px;">
+		        <h:outputText value="Período:" styleClass="formulariosObrigatorio"/>
+		        <h:outputText value="#{repasseBean.primeiroDiaCorrente}" styleClass="Texto_cpf_login">
+				 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+				</h:outputText>
+		        <h:outputText value="á " styleClass="Texto_cpf_login"/>
+		        <h:outputText value="#{repasseBean.ultimoDiaCorrente}" styleClass="Texto_cpf_login">
+				 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+				</h:outputText>
+		    </h:panelGrid> 
+		    
+		    <h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left:15px;"
+		    rendered="#{repasseBean.mostrarGrdRepasseFinanceiroDinheiro}">
+		        <h:outputText value="Valor do Movimento:" styleClass="formulariosObrigatorio"/> 
+		        <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.movimento.movValor}" styleClass="Texto_cpf_login">
+				 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+				</h:outputText>
+		    </h:panelGrid>
+		    
+		    <h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left: 15px;" 
+		    rendered="#{repasseBean.mostrarGrdRepasseFinanceiroCheque}">			
+	          <h:outputText value="Protocolo:" styleClass="formulariosObrigatorio"/>
+		      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.movimento.movProtocolo}" styleClass="formulariosFonteNormal"/>
+		      <h:outputText value="Qtd. Cheques:" styleClass="formulariosObrigatorio"/>
+		      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.qtdCheques}" styleClass="formulariosFonteNormal"/>
+		      <h:outputText value="Valor Total Cheques:" styleClass="formulariosObrigatorio"/>
+		      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.movimento.movValor}" styleClass="formulariosFonteNormal">
+		          <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+		      </h:outputText>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2"
+			   rendered="#{repasseBean.mostrarGrdRepasseFinanceiroDinheiroCheque}" style="margin-left: 30px;">
+			      <h:outputText value="Protocolo:" styleClass="formulariosObrigatorio"/>
+			      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.movimento.movProtocolo}" styleClass="formulariosFonteNormal"/>
+			      <h:outputText value="Qtd. Cheques:" styleClass="formulariosObrigatorio"/>
+			      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.qtdCheques}" styleClass="formulariosFonteNormal"/>
+			      <h:outputText value="Total em Cheques:" styleClass="formulariosObrigatorio"/>
+			      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.totalRepasseCheques}" styleClass="formulariosFonteNormal">
+			          <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			      </h:outputText>
+			      <h:outputText value="Total em R$:" styleClass="formulariosObrigatorio"/>
+			      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.totalRepasseDinheiro}" styleClass="formulariosFonteNormal">
+			          <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			      </h:outputText>
+			 </h:panelGrid>
+			 <hr />
+			 <h:panelGrid columns="2" columnClasses="coluna1, coluna2"
+			   rendered="#{repasseBean.mostrarGrdRepasseFinanceiroDinheiroCheque}" style="margin-left: 45px;">
+			      <h:outputText value="Valor Total = " styleClass="formulariosObrigatorio"/>
+			      <h:outputText value="#{repasseBean.movimentoChequeNoPersistence.movimento.movValor}" styleClass="formulariosFonteNormal">
+			          <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			      </h:outputText>
+			  </h:panelGrid>
+			  
+			<br/>
+	        <p:dataTable
+			id="dtCheque" 
+			var="cheq1"
+			rendered="#{repasseBean.mostrarDtArvoreRepassesDetalhe}"
+			value="#{repasseBean.movimentoCheques}"
+			paginator="true"
+			firstPageLinkLabel="&lt;&lt; Primeiro"
+			lastPageLinkLabel="Ultimo &gt;&gt;"
+			previousPageLinkLabel="&lt; Voltar"
+			nextPageLinkLabel="Avançar &gt;" 
+			width="100%"
+			sortAscMessage="Ordena em ordem crescente"
+			sortDescMessage="Ordena em ordem descrecente" 
+			rows="5"
+			dynamic="true" 
+			emptyMessage="Nenhum Cheque Adicionado"
+			paginatorPosition="bottom">
+			<f:facet name="header">
+				<center>
+					<h:outputText value="&nbsp;CHEQUES ADICIONADOS" styleClass="Fonte_12"/>
+				</center>
+		    </f:facet>
+			<p:column>
+				<f:facet name="header">
+				<center>
+					<h:outputText value="&nbsp;BANCO" styleClass="Fonte_12"/>
+				</center>
+				</f:facet>
+				<center>
+				<p:graphicImage value="#{cheq1.bancos.logoBanco}"/>
+				</center>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+				<center>
+					<h:outputText value="&nbsp;DATA" styleClass="Fonte_12"/>
+			    </center>
+				</f:facet>
+				<center>
+				<h:outputText value="#{cheq1.id.dataCheque}" styleClass="Fonte_13">
+				<f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR" timeZone="GMT-3"/>
+				</h:outputText>
+				</center>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+				<center>
+					<h:outputText value="&nbsp;VALOR R$" styleClass="Fonte_12"/>
+			    </center>
+				</f:facet>
+				<center>
+				<h:outputText styleClass="Fonte_13" value="#{cheq1.id.valNum}">
+				<f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+				</h:outputText>
+				</center>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+				<center>
+					<h:outputText value="&nbsp;DETALHE" styleClass="Fonte_12" />
+				</center>
+				</f:facet>
+				<p:commandLink title="Detalhe Deste Cheque" action="#{repasseBean.detalheCheque}"
+				update="outPnlDetalheCheque" oncomplete="detalheRepasseDialog.hide(); chequeDetalheDialog.show();">  
+                      <center>
+                      <p:graphicImage value="/img/listar_repasse.png"/>   
+                      </center>
+                      <f:setPropertyActionListener value="#{cheq1}" target="#{repasseBean.chequeSelecionado}" />
+                      </p:commandLink>
+			</p:column>
+		    </p:dataTable>
+		    <br />
+		    <p:commandButton value="Fechar" onclick="detalheRepasseDialog.hide();" />
+		    </p:outputPanel>
+		    </p:dialog>
+		    
+		    <p:dialog header="DETALHE CHEQUE" widgetVar="chequeDetalheDialog" resizable="false" modal="true" width="820">
+		    <p:outputPanel id="outPnlDetalheCheque">
+		            <div id="cheque">
+					    <div id="cheque_comp">
+					    <h:outputText id="comp" value="#{repasseBean.chequeSelecionado.id.comp}" />
+					    </div>
+					    <div id="cheque_banco">
+                        <h:outputText id="banco" value="#{repasseBean.chequeSelecionado.id.banco}" />
+                        </div>
+					    <div id="cheque_agencia">
+					    <h:outputText id="agencia" value="#{repasseBean.chequeSelecionado.id.agencia}" />
+                        </div>
+					    <div id="cheque_c1">
+					    <h:outputText id="c1" value="#{repasseBean.chequeSelecionado.id.campoC1}" />
+					    </div>
+					    <div id="cheque_conta">
+					    <h:outputText id="conta" value="#{repasseBean.chequeSelecionado.id.conta}" />
+					    </div>
+					    <div id="cheque_c2">
+					    <h:outputText id="c2" value="#{repasseBean.chequeSelecionado.id.campoC2}" />
+					    </div>
+					    <div id="cheque_logo_banco">
+					    <p:graphicImage value="#{repasseBean.chequeSelecionado.bancos.logoBanco}"/>
+					    </div>
+					    <div id="cheque_numCheque">
+                        <h:outputText id="numCheque" value="#{repasseBean.chequeSelecionado.id.numCheque}" />
+                        </div>
+					    <div id="cheque_c3">
+                        <h:outputText id="c3" value="#{repasseBean.chequeSelecionado.id.campoC3}" />
+                        </div>
+					    <div id="cheque_valNum">
+		                <h:outputText id="valNum" value="#{repasseBean.chequeSelecionado.id.valNum}">
+							 <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+						</h:outputText>
+                        </div>
+					    <div id="cheque_valExtenso">
+					    <h:outputText id="valExtenso" value="#{repasseBean.chequeSelecionado.id.valExtenso}" />
+					    </div>
+					    <div id="cheque_pagoA">
+                        <h:outputText value="#{repasseBean.chequeSelecionado.id.pagoPara}" />
+                        </div>
+					    <div id="cheque_DataCidade">
+                        <h:outputText value="#{repasseBean.chequeSelecionado.id.dataCidade}" />
+                        </div>
+					    <div id="cheque_DataDia">
+					    <h:outputText value="#{repasseBean.chequeSelecionado.id.dataDia}" />
+					    </div>
+					    <div id="cheque_DataMes">
+                        <h:outputText value="#{repasseBean.chequeSelecionado.id.dataMes}" />
+                        </div>
+					    <div id="cheque_DataAno">
+                        <h:outputText value="#{repasseBean.chequeSelecionado.id.dataAno}" />
+                        </div>
+					    <div id="cheque_NomePagante">
+					    <h:outputText id="nomPagante" value="#{repasseBean.chequeSelecionado.id.nomPagante}" />
+                        </div>
+					    <div id="cheque_CpfPagante">
+					    <h:outputText id="cpfPagante" value="#{repasseBean.chequeSelecionado.id.cpfPagante}" />
+                        </div>
+					    <div id="cheque_ClienteDesde">
+					    <h:outputText id="clienteDesde" value="#{repasseBean.chequeSelecionado.id.clienteDesdeMes}/#{repasseBean.chequeSelecionado.id.clienteDesdeAno}" />
+                        </div>
+					    <div id="cheque_PreDatado">
+					    <u> <h:outputText value="Pré-Datado" rendered="#{repasseBean.preDatado}"/> </u>
+					    </div>
+					    <div id="cheque_NumAutenticacao">
+                        <h:outputText id="numAutenticacao" value="#{repasseBean.chequeSelecionado.id.numAutenticacao}" />
+                        </div>
+					</div>
+					<h:panelGrid columns="2" style="margin-top: 345px;">
+					  <p:commandButton value="Voltar" onclick="detalheRepasseDialog.show(); chequeDetalheDialog.hide();" />
+					  <p:commandButton value="Fechar" onclick="chequeDetalheDialog.hide();" />
+					</h:panelGrid>
+		    </p:outputPanel>
+		    </p:dialog>
 		</h:form>
 	</ui:define>
 </ui:composition>
