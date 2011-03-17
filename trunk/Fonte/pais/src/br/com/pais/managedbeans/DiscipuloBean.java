@@ -46,6 +46,7 @@ import br.com.pais.entities.Logradouro;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.exception.ValidarTEException;
 import br.com.pais.util.ApplicationSecurityManager;
+import br.com.pais.util.Criptografia;
 import br.com.pais.util.SendEMail;
 import br.com.pais.util.ValidarCPF;
 import br.com.pais.util.ValidarTituloEleitor;
@@ -255,6 +256,9 @@ public class DiscipuloBean {
 	
 	
 	public String prepararDiscipulo() {
+		estadocivil = new Estadocivil();
+		
+		
 		conjugePesq = new Discipulos();
 		isConjugeCad = false;
 		listaFuncaoEclesiasticas = funcaoeclesiasticasDao.listarFuncaoPorSexo(
@@ -361,6 +365,78 @@ public class DiscipuloBean {
 		return "/editar/discipulos.mir";
 	}
 
+
+	public String prepararEdicaoMeusDados() {
+		nomeArquivoSelecionado = "";
+		fotoEdit = false;
+		source = new ArrayList<Encontros>();
+		target = new ArrayList<Encontros>();
+		sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
+		targetFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
+		isConjugeCad = false;
+		conjugeCadEdit = true;
+		conjugePesq = null;
+		editar = true;
+		discipulos = discipuloSessao.getDiscipulos();
+		editarM12 = discipulos.getDism12() == 's';
+		
+		source.addAll(new EncontrosDaoImp().todos());
+		target = discipulos.getEncontroses();
+		
+		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp().todos());
+		targetFormacaoEclesiasticas = discipulos.getFormacaoeclesiasticases();
+		
+		for (Formacaoeclesiasticas fe : targetFormacaoEclesiasticas){
+			for (Formacaoeclesiasticas fe2: sourceFormacaoEclesiasticas)
+				if(fe2.getForEcCod() == fe.getForEcCod()){
+					sourceFormacaoEclesiasticas.remove(fe2);
+					break;
+				}
+		}
+		 
+		for (Encontros e : target){
+			for (Encontros e2: source)
+				if(e2.getEncCod()== e.getEncCod()){
+					source.remove(e2);
+					break;
+				}
+		}
+		 		
+		
+		ListaFormacaoEclesiasticas = new DualListModel<Formacaoeclesiasticas>(sourceFormacaoEclesiasticas, targetFormacaoEclesiasticas);
+		ListaEncontros = new DualListModel<Encontros>(source, target);
+		
+		listaFuncaoEclesiasticas = funcaoeclesiasticasDao.listarFuncaoPorSexo(
+				discipuloSessao.getDiscipulos().getDisSexo(), discipuloSessao
+						.getDiscipulos().getFuncaoeclesiasticas().getFunCod());
+		
+		
+		logradouro = new Logradouro();
+		estadocivil = discipulos.getEstadocivil();
+		logradouro = discipulos.getLogradouro();
+		formacaoacademica = discipulos.getFormacaoacademica();
+		funcaoeclesiasticas = discipulos.getFuncaoeclesiasticas();
+		geracoes = discipulos.getGeracoes();
+		
+		
+		if(discipulos.getEstadocivil().getEstCod()==2){
+			if(discipulos.getDiscipulosByDisConjugecad()==(null)){
+				isConjugeCad = false;
+				conjugeCadEdit = false;
+				conjugePesq = null;
+				editar = false;
+			}else{
+				editar = false;
+				isConjugeCad = true;
+				conjugeCadEdit = false;
+				conjugePesq = discipulos.getDiscipulosByDisConjugecad();
+				
+			}
+		}	
+		 		
+		return "/editar/editarmeusdados.mir";
+	}
+
 	public void editar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (fotoEdit == true) {
@@ -384,6 +460,7 @@ public class DiscipuloBean {
 			validartituloeleitor(null);
 		}
 		
+		discipulos.setDisSenha(new Criptografia().criptografar(discipulos.getDisSenha()));
 		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
 		discipulos.setEncontroses(ListaEncontros.getTarget());
 		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
@@ -464,11 +541,15 @@ public class DiscipuloBean {
 		if(estadocivil.getEstCod()==2 && isConjugeCad==true){
 			discipulos.setDiscipulosByDisConjugecad(conjugePesq);
 		}
-		
+		if(discipulos.getDisSenha()!= null) {
+			discipulos.setDisSenha(new Criptografia().criptografar(discipulos.getDisSenha()));
+		}
 		discipulos.setFormacaoacademica(formacaoacademica);
 		discipulos.setFuncaoeclesiasticas(funcaoeclesiasticas);
 		discipulos.setGeracoes(geracoes);
 
+	
+		
 		if (discipuloDao.salvar(discipulos) == (true)) {
 			if(estadocivil.getEstCod()==2 && isConjugeCad==true){
 				conjugePesq.setDiscipulosByDisConjugecad(discipulos);
@@ -492,7 +573,11 @@ public class DiscipuloBean {
 						funcaoeclesiasticas.getFunDescricao(),
 						discipulos.getDisnome(), discipulos.getDisemail(),
 						discipulos.getDisSenha(), discipulos.getDisCpf());
-			} 
+			}
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, "SUCESSO!!!",
+					discipulos.getDisnome() + " cadastrado com sucesso!"));
+			prepararDiscipulo();
 		} else {
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "ERRO!!!",

@@ -1,13 +1,14 @@
 package br.com.pais.dao;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 
 public interface DaoGenerico<T, ID extends Serializable> {
 	public Class<T> getObjectClass();
-	public boolean salvar(T object);
+	public boolean salvar(T object) ;
 	public T pesquisarPorId(ID id);
 	public boolean atualizar(T object);
 	void excluir(T object, ID id);
