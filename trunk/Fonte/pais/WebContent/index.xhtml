@@ -44,7 +44,10 @@
 												class="Fonte_13_Logado" scope="col"><strong>Bem
 											Vindo,</strong><br />
 											SR(A): <h:outputLabel value="#{loginBean.discipuloSessao.discipulos.disnome}"
-												   styleClass="Fonte_13_Logado" />
+												   styleClass="Fonte_13_Logado" /><br/>
+												   <h:form>
+												   	<h:commandLink value="Editar meus dados" action="#{discipuloBean.prepararEdicaoMeusDados}" />
+												   </h:form>
 												   </td>
 										</tr>
 										<tr>
