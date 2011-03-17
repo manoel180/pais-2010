@@ -2,6 +2,8 @@ package br.com.pais.dao.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +15,10 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+
+import org.hibernate.HibernateException;
+import org.hibernate.PersistentObjectException;
+import org.hibernate.exception.SQLExceptionConverterFactory;
 
 import br.com.pais.dao.DaoGenerico;
 import br.com.pais.mensagens.MessageManagerImpl;
@@ -42,7 +48,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 		this.entityManager = em;
 	}
 
-	// Não Mecher
+	// NÃ£o Mecher
 	@SuppressWarnings("unchecked")
 	public DaoGenericoImp() {
 		this.oClass = (Class<T>) ((ParameterizedType) getClass()
@@ -110,7 +116,8 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	}
 
 	@Override
-	public boolean salvar(T object) {
+	
+	public boolean salvar(T object)  {
 		EntityManager em = getEntityManager();
 		
 		try {
@@ -118,15 +125,26 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 			em.persist(object);
 			em.getTransaction().commit();
 		}
+		
 		catch (PersistenceException e) {
 			// TODO: handle exception
+			
 			e.getCause();
+			
+			em.getTransaction().rollback();
 			return false;
-		} catch (Exception ex) {
+		}
+		/*catch (SQLException e) {
+			// TODO: handle exception
+			e.getErrorCode();
+		}
+		*/
+		/*catch (Exception ex) {
 			ex.printStackTrace();
 			em.getTransaction().rollback();
 			return false;
-		} finally {
+		}*/
+		finally {
 			em.close();
 		}
 		return true;

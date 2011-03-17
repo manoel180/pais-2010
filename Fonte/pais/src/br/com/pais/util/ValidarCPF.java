@@ -7,7 +7,6 @@ import javax.faces.application.FacesMessage;
 
 import br.com.caelum.stella.validation.CPFValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
-import br.com.caelum.stella.validation.TituloEleitoralValidator;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.mensagens.MessageManagerImpl;
 
@@ -34,7 +33,7 @@ public class ValidarCPF {
 					|| cpf.equals("000.000.000-00")) {
 				valido=false;
 				MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR,	"erro", "erro.cpf.invalido");
-				throw new ValidarCPFException("CPF Inválido");  
+				
 			} else {
 				validator.assertValid(cpf);
 

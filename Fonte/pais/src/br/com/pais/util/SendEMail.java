@@ -37,9 +37,12 @@ public class SendEMail {
 
 		String html = "";
 		html += conteudo;
-
+		
 		BodyPart mainPart = new MimeBodyPart();
 		mainPart.setContent(html, "text/html; charset=UTF-8;"); // Adiciona conteúdo HTML
+		mainPart.setHeader("X-Priority","1");
+		mainPart.setHeader("Priority","Urgent");
+		mainPart.setHeader("Importance","high");
 		multipart.addBodyPart(mainPart);
 
 		BodyPart imagePart = new MimeBodyPart();
@@ -97,13 +100,13 @@ public class SendEMail {
 
 			transport.sendMessage(msg, msg.getAllRecipients());
 			transport.close();
-			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "info",
-			"sucesso.email_detail");
+			/*MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "info",
+			"sucesso.email_detail");*/
 		} catch (AddressException e) {
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro",
 			"erro.emailDestinarioinvalido_detail");
 			throw new IllegalArgumentException(
-					"Email de destinatário inválido!");		
+					"Email de destinat�rio inv�lido!");		
 		} catch (MessagingException e) {
 			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro",
 			"erro.email_detail");
@@ -219,56 +222,6 @@ public class SendEMail {
 		}
 	}
 	
-	public void sendSimpleMailEnviarRepasseRecebido(String diretorioImg, String nomeEnviou, String nomeRecebe, String emailEnviar) {
-		String html = "";
-		html += "<html>" + 
-				"<meta charset=\"UTF-8\">"+
-				"<body>"	+ 
-				"<img src='cid:image'></img>" + 
-				"<hr/>" + 
-				"Graça e Paz <b> "+ nomeRecebe +" </b> <br/>" +
-				"Você Recebeu um repasse de <b> "+ nomeEnviou +" </b> <br/>" +
-				"Para ver o repasse acesse <b> <a href='http://www.pais12.com'>http://www.pais12.com</a> </b><br/>" +
-				
-				"<hr/>" + 
-				"<br/>"	+ 
-				"</body>" + 
-				"<br/>"+ 
-				"<footer>" +
-				"<b>OBS:</b> Favor não responder essa mensagem."+ 
-				"</footer>" + 
-				"</html>";
-		
-		Properties config = new Properties();
-		config.setProperty("mail.debug", "false"); // Mostrar passo-a-passo no console
-		config.setProperty("mail.transport.protocol", "smtp"); // Indica que será usado SMTPS
-		config.setProperty("mail.smtp.host", "mail.pais12.com"); // Host do servidor de envio 
-		config.setProperty("mail.smtp.port", "25"); // Porta do servidor de envio
-		config.setProperty("mail.smtp.auth", "true"); // Usa uma conta autenticada
-		
-		Session session = Session.getInstance(config);
-		try {
-			
-			MimeMessage msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress("info@pais12.com"));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(emailEnviar));
-			msg.setSubject("Mensagem do PAIS!");
-			msg.setContent(createHtmlContentEmail(html, diretorioImg));
-
-			Transport transport = session.getTransport();
-			transport.connect("info@pais12.com", "06112218");
-
-			transport.sendMessage(msg, msg.getAllRecipients());
-			transport.close();
-			//MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "info","sucesso.email_detail");
-		} catch (AddressException e) {
-			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro","erro.emailDestinarioinvalido_detail");
-			throw new IllegalArgumentException("Email de destinatario invalido!");		
-		} catch (MessagingException e) {
-			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_INFO, "erro","erro.email_detail");
-		}
-	}
-	
 	private static Multipart createHtmlContentEmail(String conteudo, String diretorio)throws MessagingException {
 		MimeMultipart multipart = new MimeMultipart("related");
 
@@ -281,7 +234,7 @@ public class SendEMail {
 		
 	    //Anexa a Logo no HTML
 		BodyPart imagePart = new MimeBodyPart();
-		DataSource imgFds = new FileDataSource(diretorio + "/logoEmail.png");
+		DataSource imgFds = new FileDataSource(diretorio + "\\logoEmail.png");
 		imagePart.setDataHandler(new DataHandler(imgFds));
 		imagePart.setHeader("Content-ID", "<image>"); // Adiciona a imagem ao email
 		multipart.addBodyPart(imagePart);
