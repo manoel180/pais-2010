@@ -20,6 +20,7 @@ import org.primefaces.event.DateSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import br.com.pais.classe.nopersistence.ArvoreGeracoesNodos;
 import br.com.pais.classe.nopersistence.ArvoreListarGeracoes;
 import br.com.pais.classe.nopersistence.MovimentoCheques;
 import br.com.pais.dao.CelulaDao;
@@ -126,21 +127,106 @@ public class RepasseBean {
 	private int index;
 	private TreeNode root;
 	private DefaultTreeNode treeNode;
-	private ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
+	private List<TreeNode> nodes = new ArrayList<TreeNode>();
+	private ArvoreGeracoesNodos arvoreGeracoesNodos = new ArvoreGeracoesNodos();
+	private List<ArvoreGeracoesNodos> indexGeracoesNodos = new ArrayList<ArvoreGeracoesNodos>();
 	private ArvoreListarGeracoes arvoreLista = new ArvoreListarGeracoes();
 	private ArvoreListarGeracoes arvoreSelecionada;
+	private ArvoreListarGeracoes repasseSelecionadoArvore;
+	private Discipulos discipuloArvoreSelecionada;
+	private Movimento movimentoArvoreSelecionada;
+	private Geracoes geracaoArvoreSelecionada;
 	private boolean dtRepasses = false;
-	
+
 	private int qtdRepassesRecebidos;
 	private boolean enviarEmailRepasseRecebido = false;
+	private boolean mostrarMensagemArvorePasses = false;
+	private boolean mostrarDtArvoreRepasses = false;
+	private boolean mostrarPnlGrdRepasseFinanceiro = false;
+	private boolean mostrarPnlGrdRepasseDiscipulador = false;
+	private boolean mostrarGrdRepasseFinanceiroDinheiro = false;
+	private boolean mostrarGrdRepasseFinanceiroCheque = false;
+	private boolean mostrarGrdRepasseFinanceiroDinheiroCheque = false;
+	private boolean mostrarDtArvoreRepassesDetalhe = false;
 
 	public String prepararArvoreDiscipulo() throws Exception{
 		root = new DefaultTreeNode("root", null);
+		nodes = new ArrayList<TreeNode>();
+		indexGeracoesNodos = new ArrayList<ArvoreGeracoesNodos>();
 		movimento = new Movimento();
 		comboGeracao = -1;
+		mostrarMensagemArvorePasses = false;
+		mostrarDtArvoreRepasses = false;
 		PrimeiroUltimoDiaCorrente();
 		
 		return "/cad/repasseArvoresRepasses.mir";
+	}
+	
+	public void detalheArvoreSelecionada(){
+		
+		List<Object> obj = repasseDao.trasCodigoDiscipuloRepasse(repasseSelecionadoArvore.getMovimento().getMovCod()); //[2] retornou        
+		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+		int codDiscipulo = (Integer) objeto[0]; //transforma objeto[0] me Double
+		
+		discipuloArvoreSelecionada = discipuloDao.listarDiscipulador(codDiscipulo).get(0);
+		movimentoChequeNoPersistence = new MovimentoCheques();
+		movimentoChequeNoPersistence.setMovimento(repasseSelecionadoArvore.getMovimento());
+		movimentoChequeNoPersistence.setTotalRepasseCheques(0.00);
+		movimentoChequeNoPersistence.setTotalRepasseDinheiro(0.00);
+		
+		if(discipuloArvoreSelecionada.getDiscipulos().getDiscipulos() == null){
+			mostrarPnlGrdRepasseDiscipulador = false;
+			mostrarPnlGrdRepasseFinanceiro = true;
+		}
+		else{
+			mostrarPnlGrdRepasseDiscipulador = true;
+			mostrarPnlGrdRepasseFinanceiro = false;
+		}
+		
+		if(repasseSelecionadoArvore.getMovimento().getMovEspecie().equals("Dinheiro")){
+			mostrarGrdRepasseFinanceiroDinheiro = true;
+			mostrarGrdRepasseFinanceiroCheque = false;
+			mostrarGrdRepasseFinanceiroDinheiroCheque = false;
+			mostrarDtArvoreRepassesDetalhe = false;
+		}
+		
+		if(repasseSelecionadoArvore.getMovimento().getMovEspecie().equals("Cheque")){
+			mostrarGrdRepasseFinanceiroDinheiro = false;
+			mostrarGrdRepasseFinanceiroCheque = true;
+			mostrarGrdRepasseFinanceiroDinheiroCheque = false;
+			mostrarDtArvoreRepassesDetalhe = true;
+			
+			movimentoCheques = new ArrayList<Movimentocheque>();
+			movimentoCheques.addAll(repasseSelecionadoArvore.getMovimento().getMovimentocheques());
+			
+			movimentoChequeNoPersistence.setQtdCheques(movimentoCheques.size());
+		}
+		
+		if(repasseSelecionadoArvore.getMovimento().getMovEspecie().equals("Dinheiro e Cheque")){
+			mostrarGrdRepasseFinanceiroDinheiro = false;
+			mostrarGrdRepasseFinanceiroCheque = false;
+			mostrarGrdRepasseFinanceiroDinheiroCheque = true;
+			mostrarDtArvoreRepassesDetalhe = true;
+			
+			movimentoCheques = new ArrayList<Movimentocheque>();
+			movimentoCheques.addAll(repasseSelecionadoArvore.getMovimento().getMovimentocheques());
+			
+            movimentoChequeNoPersistence.setQtdCheques(movimentoCheques.size());
+			
+			totalRepasse = 0.00;
+			totalRepasseCheques = 0.00;
+			totalRepasseDinheiro = 0.00;
+			totalRepasse = movimentoChequeNoPersistence.getMovimento().getMovValor();
+			
+			//PEGA TODOS OS CHEQUES E SOMA OS VALORES DELES
+			for(Movimentocheque cheq : movimentoCheques){
+				totalRepasseCheques = totalRepasseCheques + cheq.getId().getValNum();
+			}
+			totalRepasseDinheiro = (totalRepasse - totalRepasseCheques);
+			
+			movimentoChequeNoPersistence.setTotalRepasseCheques(totalRepasseCheques);
+			movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalRepasseDinheiro);
+		}
 	}
 	
 	public void listarArvoreRepasses(AjaxBehaviorEvent event) throws Exception {	
@@ -153,7 +239,7 @@ public class RepasseBean {
     }
 	
 	public void calendarFimArvoreRepasses(DateSelectEvent event) {  
-		primeiroDiaCorrente = event.getDate();
+		ultimoDiaCorrente = event.getDate();
 		criarArvoreRepasseDiscipulo();
     }
 	
@@ -174,39 +260,105 @@ public class RepasseBean {
 			comboGeracao, movimento.getMovTipo(), movimento.getMovEspecie(), primeiroDiaCorrente, ultimoDiaCorrente));
 			
 			root = new DefaultTreeNode("root", null);
-			nodes = new ArrayList<TreeNode>();		
+			nodes = new ArrayList<TreeNode>();	
+			indexGeracoesNodos = new ArrayList<ArvoreGeracoesNodos>();
 			index = 0;
-
+			int indexGeracao = 0;
+			
+			if(listaMovimentos.size() <= 0){
+				//SETA A MENSAGEM DE NENHUM MOVIMENTO ENCONTRADO
+				mostrarMensagemArvorePasses = true;
+				mostrarDtArvoreRepasses = false;
+			}
+			else{
+				mostrarMensagemArvorePasses = false;
+				mostrarDtArvoreRepasses = true;
+			        	
+		        for(Movimento mov : listaMovimentos){
+		        	indexGeracao = montarArvoreGeracaoMovimentoPai(mov.getCelulas().getGeracoes());
+		        	
+		        	//SETA O MOVIMENTO PAI NO NODO
+		        	arvoreLista = new ArvoreListarGeracoes();
+		    		arvoreLista.setDiscipulo(mov.getCelulas().getDiscipulos());
+		    		arvoreLista.setGeracao(mov.getCelulas().getGeracoes());
+		    		arvoreLista.setMovimento(mov);
+		    		arvoreLista.setMostrarDetalhe(true);
+		    		arvoreLista.setMostrarFoto(true);
+		    		arvoreLista.setMostrarGeracao(false);
+		    		arvoreLista.setMostrarGeracao2(true);
+		    		
+		        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(indexGeracao));
+		        	nodes.add(treeNode);
+			    	index = nodes.indexOf(treeNode);
+			    	
+			    	carregarMovimentosFilhos(mov, nodes.get(index));
+				}
+			}
+		}
+	}
+	
+	public int montarArvoreGeracaoMovimentoPai(Geracoes geracao){
+		boolean existeGeracaoCriada = false;
+		//CRIA A PRIMEIRA GERAÇÃO
+		if(indexGeracoesNodos.size() <= 0){
 			//SETA A GERAÇÃO NO NODO
 			arvoreLista = new ArvoreListarGeracoes();
 			arvoreLista.setDiscipulo(null);
-			arvoreLista.setGeracao(arvoreSelecionada.getGeracao());
+			arvoreLista.setGeracao(geracao);
 			arvoreLista.setMovimento(null);
 			arvoreLista.setMostrarDetalhe(false);
 			arvoreLista.setMostrarFoto(false);
 			arvoreLista.setMostrarGeracao(true);
 			arvoreLista.setMostrarGeracao2(false);
+			
 	    	treeNode = new DefaultTreeNode(arvoreLista, root);
 	    	nodes.add(treeNode);
 	    	index = nodes.indexOf(treeNode);
-		        	
-	        for(Movimento mov : listaMovimentos){
-	        	//SETA O MOVIMENTO NO NODO
-	        	arvoreLista = new ArvoreListarGeracoes();
-	    		arvoreLista.setDiscipulo(arvoreSelecionada.getDiscipulo());
-	    		arvoreLista.setGeracao(arvoreSelecionada.getGeracao());
-	    		arvoreLista.setMovimento(mov);
-	    		arvoreLista.setMostrarDetalhe(true);
-	    		arvoreLista.setMostrarFoto(true);
-	    		arvoreLista.setMostrarGeracao(false);
-	    		arvoreLista.setMostrarGeracao2(true);
-	    		
-	        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(index));
-	        	nodes.add(treeNode);
+	    	
+	    	//CRIA O NODO NA ARVORE GERAÇÕES NODOS
+			arvoreGeracoesNodos = new ArvoreGeracoesNodos();
+			arvoreGeracoesNodos.setCodigoGeracao(geracao.getGerCod());
+			arvoreGeracoesNodos.setCodigoIndexNodo(index);
+			indexGeracoesNodos.add(arvoreGeracoesNodos);
+			
+			return index;
+		}
+		else{
+			for(ArvoreGeracoesNodos nodo: indexGeracoesNodos){
+				//SE EXISTIR ESSE NODO DESSA GERAÇÃO JÁ CRIADO
+				if(nodo.getCodigoGeracao() == geracao.getGerCod()){
+					existeGeracaoCriada = true;
+					return nodo.getCodigoIndexNodo();
+				}
+				else{
+					existeGeracaoCriada = false;
+				}
+			}
+			//VERIFICA SE FOI EXISTE GERAÇÃO NA ARVORE
+			if(existeGeracaoCriada == false){
+				//SETA A GERAÇÃO NO NODO
+				arvoreLista = new ArvoreListarGeracoes();
+				arvoreLista.setDiscipulo(null);
+				arvoreLista.setGeracao(geracao);
+				arvoreLista.setMovimento(null);
+				arvoreLista.setMostrarDetalhe(false);
+				arvoreLista.setMostrarFoto(false);
+				arvoreLista.setMostrarGeracao(true);
+				arvoreLista.setMostrarGeracao2(false);
+				
+		    	treeNode = new DefaultTreeNode(arvoreLista, root);
+		    	nodes.add(treeNode);
 		    	index = nodes.indexOf(treeNode);
 		    	
-		    	carregarMovimentosFilhos(mov, nodes.get(index));
+		    	//CRIA O NODO NA ARVORE GERAÇÕES NODOS
+				arvoreGeracoesNodos = new ArvoreGeracoesNodos();
+				arvoreGeracoesNodos.setCodigoGeracao(geracao.getGerCod());
+				arvoreGeracoesNodos.setCodigoIndexNodo(index);
+				indexGeracoesNodos.add(arvoreGeracoesNodos);
+				
+				return index;
 			}
+			return 0;
 		}
 	}
 	
@@ -218,8 +370,8 @@ public class RepasseBean {
     	for (Movimento mov : listaMovimentosFilhos) {
 			//SETA O MOVIMENTO NO NODO
         	arvoreLista = new ArvoreListarGeracoes();
-    		arvoreLista.setDiscipulo(arvoreSelecionada.getDiscipulo());
-    		arvoreLista.setGeracao(arvoreSelecionada.getGeracao());
+    		arvoreLista.setDiscipulo(mov.getCelulas().getDiscipulos());
+    		arvoreLista.setGeracao(mov.getCelulas().getGeracoes());
     		arvoreLista.setMovimento(mov);
     		arvoreLista.setMostrarDetalhe(true);
     		arvoreLista.setMostrarFoto(true);
@@ -1425,15 +1577,15 @@ public class RepasseBean {
 	public void setTreeNode(DefaultTreeNode treeNode) {
 		this.treeNode = treeNode;
 	}
-
-	public ArrayList<TreeNode> getNodes() {
+	
+	public List<TreeNode> getNodes() {
 		return nodes;
 	}
 
-	public void setNodes(ArrayList<TreeNode> nodes) {
+	public void setNodes(List<TreeNode> nodes) {
 		this.nodes = nodes;
 	}
-	
+
 	public int getIndex() {
 		return index;
 	}
@@ -1489,5 +1641,124 @@ public class RepasseBean {
 
 	public void setEnviarEmailRepasseRecebido(boolean enviarEmailRepasseRecebido) {
 		this.enviarEmailRepasseRecebido = enviarEmailRepasseRecebido;
+	}
+	
+	public boolean isMostrarMensagemArvorePasses() {
+		return mostrarMensagemArvorePasses;
+	}
+
+	public void setMostrarMensagemArvorePasses(boolean mostrarMensagemArvorePasses) {
+		this.mostrarMensagemArvorePasses = mostrarMensagemArvorePasses;
+	}
+	
+	public boolean isMostrarDtArvoreRepasses() {
+		return mostrarDtArvoreRepasses;
+	}
+
+	public void setMostrarDtArvoreRepasses(boolean mostrarDtArvoreRepasses) {
+		this.mostrarDtArvoreRepasses = mostrarDtArvoreRepasses;
+	}
+
+	public List<ArvoreGeracoesNodos> getIndexGeracoesNodos() {
+		return indexGeracoesNodos;
+	}
+
+	public void setIndexGeracoesNodos(List<ArvoreGeracoesNodos> indexGeracoesNodos) {
+		this.indexGeracoesNodos = indexGeracoesNodos;
+	}
+
+	public ArvoreGeracoesNodos getArvoreGeracoesNodos() {
+		return arvoreGeracoesNodos;
+	}
+
+	public void setArvoreGeracoesNodos(ArvoreGeracoesNodos arvoreGeracoesNodos) {
+		this.arvoreGeracoesNodos = arvoreGeracoesNodos;
+	}
+	
+	public ArvoreListarGeracoes getRepasseSelecionadoArvore() {
+		return repasseSelecionadoArvore;
+	}
+
+	public void setRepasseSelecionadoArvore(
+			ArvoreListarGeracoes repasseSelecionadoArvore) {
+		this.repasseSelecionadoArvore = repasseSelecionadoArvore;
+	}
+	
+	public Discipulos getDiscipuloArvoreSelecionada() {
+		return discipuloArvoreSelecionada;
+	}
+
+	public void setDiscipuloArvoreSelecionada(Discipulos discipuloArvoreSelecionada) {
+		this.discipuloArvoreSelecionada = discipuloArvoreSelecionada;
+	}
+
+	public Movimento getMovimentoArvoreSelecionada() {
+		return movimentoArvoreSelecionada;
+	}
+
+	public void setMovimentoArvoreSelecionada(Movimento movimentoArvoreSelecionada) {
+		this.movimentoArvoreSelecionada = movimentoArvoreSelecionada;
+	}
+
+	public Geracoes getGeracaoArvoreSelecionada() {
+		return geracaoArvoreSelecionada;
+	}
+
+	public void setGeracaoArvoreSelecionada(Geracoes geracaoArvoreSelecionada) {
+		this.geracaoArvoreSelecionada = geracaoArvoreSelecionada;
+	}
+	
+	public boolean isMostrarPnlGrdRepasseFinanceiro() {
+		return mostrarPnlGrdRepasseFinanceiro;
+	}
+
+	public void setMostrarPnlGrdRepasseFinanceiro(
+			boolean mostrarPnlGrdRepasseFinanceiro) {
+		this.mostrarPnlGrdRepasseFinanceiro = mostrarPnlGrdRepasseFinanceiro;
+	}
+
+	public boolean isMostrarPnlGrdRepasseDiscipulador() {
+		return mostrarPnlGrdRepasseDiscipulador;
+	}
+
+	public void setMostrarPnlGrdRepasseDiscipulador(
+			boolean mostrarPnlGrdRepasseDiscipulador) {
+		this.mostrarPnlGrdRepasseDiscipulador = mostrarPnlGrdRepasseDiscipulador;
+	}
+	
+	public boolean isMostrarGrdRepasseFinanceiroDinheiro() {
+		return mostrarGrdRepasseFinanceiroDinheiro;
+	}
+
+	public void setMostrarGrdRepasseFinanceiroDinheiro(
+			boolean mostrarGrdRepasseFinanceiroDinheiro) {
+		this.mostrarGrdRepasseFinanceiroDinheiro = mostrarGrdRepasseFinanceiroDinheiro;
+	}
+
+	public boolean isMostrarGrdRepasseFinanceiroCheque() {
+		return mostrarGrdRepasseFinanceiroCheque;
+	}
+
+	public void setMostrarGrdRepasseFinanceiroCheque(
+			boolean mostrarGrdRepasseFinanceiroCheque) {
+		this.mostrarGrdRepasseFinanceiroCheque = mostrarGrdRepasseFinanceiroCheque;
+	}
+
+	public boolean isMostrarGrdRepasseFinanceiroDinheiroCheque() {
+		return mostrarGrdRepasseFinanceiroDinheiroCheque;
+	}
+
+	public void setMostrarGrdRepasseFinanceiroDinheiroCheque(
+			boolean mostrarGrdRepasseFinanceiroDinheiroCheque) {
+		this.mostrarGrdRepasseFinanceiroDinheiroCheque = mostrarGrdRepasseFinanceiroDinheiroCheque;
+	}
+
+	public boolean isMostrarDtArvoreRepassesDetalhe() {
+		return mostrarDtArvoreRepassesDetalhe;
+	}
+
+	public void setMostrarDtArvoreRepassesDetalhe(
+			boolean mostrarDtArvoreRepassesDetalhe) {
+		this.mostrarDtArvoreRepassesDetalhe = mostrarDtArvoreRepassesDetalhe;
 	}
 }
