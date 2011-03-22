@@ -229,4 +229,19 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 			getEntityManager().close();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> trasCodigoDiscipuloRepasse(int movimento){
+		try {
+			Query query = getEntityManager().createQuery(
+			"select m.celulas.discipulos.disCod from Movimento m where m.movCod = "+ movimento +"");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
 }
