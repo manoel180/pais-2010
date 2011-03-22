@@ -22,6 +22,7 @@ import br.com.pais.exception.GenericException;
 import br.com.pais.exception.ValidarCPFException;
 import br.com.pais.mensagens.MessageManagerImpl;
 import br.com.pais.util.ApplicationSecurityManager;
+import br.com.pais.util.Criptografia;
 import br.com.pais.util.SendEMail;
 import br.com.pais.util.ValidarCPF;
 
@@ -62,7 +63,7 @@ public class LoginBean {
 			if (ValidarCPF.validarCPF(cpf) == true) {
 				discipulos = discipuloDao.encontrarPorCPF(cpf);
 				
-				if (discipulos != null  && discipulos.getDisSenha().equals(senha)) {
+				if (discipulos != null  && discipulos.getDisSenha().equals(new Criptografia().criptografar(senha))) {
 					discipuloSessao.setDiscipulos(discipulos);
 					cadCelulas = discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()).size()>=3;
 				    

@@ -11,11 +11,13 @@ import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.html.HtmlGraphicImage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import org.primefaces.component.fileupload.FileUpload;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -62,6 +64,7 @@ public class DiscipuloBean {
 	private Discipulos conjugePesq;
 	private boolean conjugeCadEdit = false;
 	private boolean fotoEdit = false;
+	private String senha;
 
 	private Discipulos discipulos = new Discipulos();
 	private Encontros encontros = new Encontros();
@@ -76,6 +79,7 @@ public class DiscipuloBean {
 	private FuncaoeclesiasticasDao funcaoeclesiasticasDao = new FuncaoeclesiasticasDaoImp();
 	byte[] conteudo;
 	String path;
+	
 
 	private List<Formacaoeclesiasticas> ListaFormacoesEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
 	private List<Funcaoeclesiasticas> listaFuncaoEclesiasticas = new ArrayList<Funcaoeclesiasticas>();
@@ -109,6 +113,8 @@ public class DiscipuloBean {
 
 	private boolean editarM12 = false;
 	private List<Discipulos> listaDiscipulos = new ArrayList<Discipulos>();
+	
+
 	
 	
 	// Buscar pelo cep
@@ -256,7 +262,7 @@ public class DiscipuloBean {
 	
 	public String prepararDiscipulo() {
 		estadocivil = new Estadocivil();
-		
+		estadocivil.setEstCod(2);
 		
 		conjugePesq = new Discipulos();
 		isConjugeCad = false;
@@ -511,6 +517,7 @@ public class DiscipuloBean {
 	
 	
 	public void salvar(ActionEvent event) {
+		
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (conteudo == null) {
 			discipulos.setDisfoto("/img/sem_foto.jpg"); 
@@ -541,6 +548,7 @@ public class DiscipuloBean {
 			discipulos.setDiscipulosByDisConjugecad(conjugePesq);
 		}
 		if(discipulos.getDisSenha()!= null) {
+			senha = discipulos.getDisSenha();
 			discipulos.setDisSenha(new Criptografia().criptografar(discipulos.getDisSenha()));
 		}
 		discipulos.setFormacaoacademica(formacaoacademica);
@@ -571,7 +579,7 @@ public class DiscipuloBean {
 				new SendEMail().sendSimpleMailEnviarSenha(
 						funcaoeclesiasticas.getFunDescricao(),
 						discipulos.getDisnome(), discipulos.getDisemail(),
-						discipulos.getDisSenha(), discipulos.getDisCpf());
+						discipulos.getDisSenha(), senha);
 			}
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO, "SUCESSO!!!",
@@ -1031,5 +1039,6 @@ public class DiscipuloBean {
 
 	public void setFotoEdit(boolean fotoEdit) {
 		this.fotoEdit = fotoEdit;
-	}	
+	}
+
 }
