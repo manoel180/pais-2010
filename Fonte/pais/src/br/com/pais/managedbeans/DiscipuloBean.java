@@ -21,9 +21,13 @@ import org.primefaces.component.fileupload.FileUpload;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 
+import br.com.pais.classe.nopersistence.ArvoreDiscipulos;
+import br.com.pais.classe.nopersistence.ArvoreGeracoesNodos;
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.FormacaoeclesiasticasDao;
 import br.com.pais.dao.FuncaoeclesiasticasDao;
@@ -114,8 +118,16 @@ public class DiscipuloBean {
 	private boolean editarM12 = false;
 	private List<Discipulos> listaDiscipulos = new ArrayList<Discipulos>();
 	
-
-	
+	//ÁRVORE GERAÇÕES
+	private int index;
+	private TreeNode root;
+	private DefaultTreeNode treeNode;
+	private List<TreeNode> nodes = new ArrayList<TreeNode>();
+	private ArvoreDiscipulos arvoreLista = new ArvoreDiscipulos();
+	private List<Geracoes> listaGeracoes = new ArrayList<Geracoes>();
+	private List<Discipulos> listaDiscipulosGeracoes = new ArrayList<Discipulos>();
+	private ArvoreGeracoesNodos arvoreGeracoesNodos = new ArvoreGeracoesNodos();
+	private List<ArvoreGeracoesNodos> indexGeracoesNodos = new ArrayList<ArvoreGeracoesNodos>();
 	
 	// Buscar pelo cep
 	public void buscarCEP(AjaxBehaviorEvent event) {
@@ -252,11 +264,158 @@ public class DiscipuloBean {
 	}
 
 	public String prepararListarDiscipulos() {
+	
+		//listaDiscipulos  = new ArrayList<Discipulos>();
+		//listaDiscipulos.addAll(discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
 		
-		/*discipulos = new Discipulos();*/
-		listaDiscipulos  = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(discipuloDao.listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
+		criarArvoreDiscipulosGeracoes();
+		
 		return "/list/discipulos.mir";
+	}
+	
+	public void criarArvoreDiscipulosGeracoes(){
+		index = 0;
+		int indexGeracao = 0;
+		indexGeracoesNodos = new ArrayList<ArvoreGeracoesNodos>();
+		
+		//SETA O LOGADO NO 1ºNODO
+		arvoreLista = new ArvoreDiscipulos();
+		arvoreLista.setDiscipulo(discipuloSessao.getDiscipulos());
+		arvoreLista.setMostrarDiscipulo(true);
+		arvoreLista.setGeracao(null);
+		arvoreLista.setMostrarGeracao(false);
+		arvoreLista.setMostrarGeracao2(false);
+		arvoreLista.setMostrarBotoes(false);
+		
+		root = new DefaultTreeNode("root", null);
+		nodes = new ArrayList<TreeNode>();
+		nodes.add(new DefaultTreeNode(arvoreLista, root));
+		
+		listaDiscipulosGeracoes = new ArrayList<Discipulos>();
+		listaDiscipulosGeracoes = discipuloSessao.getDiscipulos().getDiscipuloses();
+		
+		for (Discipulos dis : listaDiscipulosGeracoes) {
+        	
+        	indexGeracao = montarArvoreGeracaoMovimentoPai(dis, dis.getGeracoes());
+        	
+        	//SETA O DISCIPULO NO NODO
+        	arvoreLista = new ArvoreDiscipulos();
+        	arvoreLista.setDiscipulo(dis);
+			arvoreLista.setGeracao(dis.getGeracoes());
+			arvoreLista.setMostrarDiscipulo(true);
+			arvoreLista.setMostrarGeracao(false);
+			arvoreLista.setMostrarGeracao2(true);
+			arvoreLista.setMostrarBotoes(true);
+        	
+        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(indexGeracao));
+        	nodes.add(treeNode);
+	    	index = nodes.indexOf(treeNode);
+	    	
+	    	carregarDiscipulosFilhos(dis, nodes.get(index));
+		}	
+	}
+	
+	public void carregarDiscipulosFilhos(Discipulos discipulo, TreeNode pai) {
+		listaDiscipulosGeracoes = new ArrayList<Discipulos>();
+		listaDiscipulosGeracoes = discipulo.getDiscipuloses();
+		
+		for (Discipulos dis : listaDiscipulosGeracoes) {
+        	
+        	//SETA O DISCIPULO NO NODO
+        	arvoreLista = new ArvoreDiscipulos();
+        	arvoreLista.setDiscipulo(dis);
+			arvoreLista.setGeracao(dis.getGeracoes());
+			arvoreLista.setMostrarDiscipulo(true);
+			arvoreLista.setMostrarGeracao(false);
+			arvoreLista.setMostrarGeracao2(true);
+			arvoreLista.setMostrarBotoes(true);
+        	
+        	treeNode = new DefaultTreeNode(arvoreLista, pai);
+        	nodes.add(treeNode);
+	    	index = nodes.indexOf(treeNode);
+	    	
+	    	if(! dis.getDiscipuloses().isEmpty()) {
+	    		carregarDiscipulosFilhos(dis, (nodes.get(index)));
+			}
+		}
+	}
+	
+	public int montarArvoreGeracaoMovimentoPai(Discipulos discipulo, Geracoes geracao){
+		boolean existeGeracaoCriada = false;
+		//CRIA A PRIMEIRA GERAÇÃO
+		if(indexGeracoesNodos.size() <= 0){
+			//SETA A GERAÇÃO NO NODO
+			arvoreLista = new ArvoreDiscipulos();
+			arvoreLista.setDiscipulo(null);
+			arvoreLista.setGeracao(geracao);
+			arvoreLista.setMostrarDiscipulo(false);
+			arvoreLista.setMostrarGeracao(true);
+			arvoreLista.setMostrarGeracao2(false);
+			arvoreLista.setMostrarBotoes(false);
+			
+	    	treeNode = new DefaultTreeNode(arvoreLista, root);
+	    	nodes.add(treeNode);
+	    	index = nodes.indexOf(treeNode);
+	    	
+	    	//CRIA O NODO NA ARVORE GERAÇÕES NODOS
+			arvoreGeracoesNodos = new ArvoreGeracoesNodos();
+			arvoreGeracoesNodos.setCodigoGeracao(geracao.getGerCod());
+			arvoreGeracoesNodos.setCodigoIndexNodo(index);
+			arvoreGeracoesNodos.setCodigoDiscipulador(discipulo.getDisCod());
+			indexGeracoesNodos.add(arvoreGeracoesNodos);
+			
+			return index;
+		}
+		else{
+			for(ArvoreGeracoesNodos nodo: indexGeracoesNodos){
+				//SE EXISTIR ESSE NODO DESSA GERAÇÃO JÁ CRIADO
+				if(nodo.getCodigoGeracao() == geracao.getGerCod()){
+					existeGeracaoCriada = true;
+					return nodo.getCodigoIndexNodo();
+				}
+				else{
+					existeGeracaoCriada = false;
+				}
+			}
+			//VERIFICA SE FOI EXISTE GERAÇÃO NA ARVORE
+			if(existeGeracaoCriada == false){
+				//SETA A GERAÇÃO NO NODO
+				arvoreLista = new ArvoreDiscipulos();
+				arvoreLista.setDiscipulo(null);
+				arvoreLista.setGeracao(geracao);
+				arvoreLista.setMostrarDiscipulo(false);
+				arvoreLista.setMostrarGeracao(true);
+				arvoreLista.setMostrarGeracao2(false);
+				arvoreLista.setMostrarBotoes(false);
+				
+		    	treeNode = new DefaultTreeNode(arvoreLista, root);
+		    	nodes.add(treeNode);
+		    	index = nodes.indexOf(treeNode);
+		    	
+		    	//CRIA O NODO NA ARVORE GERAÇÕES NODOS
+				arvoreGeracoesNodos = new ArvoreGeracoesNodos();
+				arvoreGeracoesNodos.setCodigoGeracao(geracao.getGerCod());
+				arvoreGeracoesNodos.setCodigoIndexNodo(index);
+				indexGeracoesNodos.add(arvoreGeracoesNodos);
+				
+				return index;
+			}
+			return 0;
+		}
+	}
+	
+	public void carregarLideres(Discipulos discipulos, TreeNode pai) {
+		treeNode = new DefaultTreeNode();
+		listaDiscipulos =  discipulos.getDiscipuloses();
+		
+		for(Discipulos d : listaDiscipulos){
+            treeNode = new DefaultTreeNode(d,pai);
+			nodes.add(treeNode);
+			index = nodes.indexOf(treeNode);
+			if(!discipulos.getDiscipuloses().isEmpty()){
+				carregarLideres(d, (nodes.get(index)));
+			}
+		}
 	}
 	
 	
@@ -1040,5 +1199,79 @@ public class DiscipuloBean {
 	public void setFotoEdit(boolean fotoEdit) {
 		this.fotoEdit = fotoEdit;
 	}
+	
+	/**
+	 * GET SET ARVORE GERAÇÕES
+	 */
+	public int getIndex() {
+		return index;
+	}
 
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public TreeNode getRoot() {
+		return root;
+	}
+
+	public void setRoot(TreeNode root) {
+		this.root = root;
+	}
+
+	public DefaultTreeNode getTreeNode() {
+		return treeNode;
+	}
+
+	public void setTreeNode(DefaultTreeNode treeNode) {
+		this.treeNode = treeNode;
+	}
+
+	public List<TreeNode> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(List<TreeNode> nodes) {
+		this.nodes = nodes;
+	}
+
+	public ArvoreDiscipulos getArvoreLista() {
+		return arvoreLista;
+	}
+
+	public void setArvoreLista(ArvoreDiscipulos arvoreLista) {
+		this.arvoreLista = arvoreLista;
+	}
+
+	public List<Geracoes> getListaGeracoes() {
+		return listaGeracoes;
+	}
+
+	public void setListaGeracoes(List<Geracoes> listaGeracoes) {
+		this.listaGeracoes = listaGeracoes;
+	}
+	
+	public List<Discipulos> getListaDiscipulosGeracoes() {
+		return listaDiscipulosGeracoes;
+	}
+
+	public void setListaDiscipulosGeracoes(List<Discipulos> listaDiscipulosGeracoes) {
+		this.listaDiscipulosGeracoes = listaDiscipulosGeracoes;
+	}
+	
+	public ArvoreGeracoesNodos getArvoreGeracoesNodos() {
+		return arvoreGeracoesNodos;
+	}
+
+	public void setArvoreGeracoesNodos(ArvoreGeracoesNodos arvoreGeracoesNodos) {
+		this.arvoreGeracoesNodos = arvoreGeracoesNodos;
+	}
+
+	public List<ArvoreGeracoesNodos> getIndexGeracoesNodos() {
+		return indexGeracoesNodos;
+	}
+
+	public void setIndexGeracoesNodos(List<ArvoreGeracoesNodos> indexGeracoesNodos) {
+		this.indexGeracoesNodos = indexGeracoesNodos;
+	}
 }
