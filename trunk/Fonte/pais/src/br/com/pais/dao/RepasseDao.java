@@ -22,4 +22,6 @@ public interface RepasseDao extends DaoGenerico<Repasse,Integer> {
 	
 	List<Movimento> listarMovimentoRelatorio(int movimento);
 	List<Movimento> listarMovimentosLembrarPrincipal(int discipulo);
+	
+	List<Object> trasCodigoDiscipuloRepasse(int movimento);
 }
