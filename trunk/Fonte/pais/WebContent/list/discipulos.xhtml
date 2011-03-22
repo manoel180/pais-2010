@@ -7,23 +7,22 @@
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
 	template="/index.xhtml">
-
+	
 	<ui:define name="menu-vc-esta">
-
-		<table width="620" border="0" align="left" cellpadding="0"
-			background="/pais/img/barra_linha.png" cellspacing="0">
-			<tr>
-				<td align="left" scope="col"><span class="Fonte_12_Logado"></span>
-				<h:outputLabel value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11" /></td>
-				<td><p:breadCrumb
-					style="width: 520px; height: 19px; background: transparent; border: hidden">
-					<p:menuitem value="home" url="/index.mir" />
-					<p:menuitem value="CADASTRO" />
-					<p:menuitem value="LISTAR DISCÍPULOS"
-						action="#{discipuloBean.prepararListarDiscipulos}" ajax="false" />
-				</p:breadCrumb></td>
-			</tr>
-		</table>
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="CADASTRO"/>  
+         <p:menuitem value="LISTAR DISCÍPULOS" action="#{discipuloBean.prepararListarDiscipulos}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
 	</ui:define>
 
 	<ui:define name="conteudo">
@@ -33,7 +32,74 @@
 
 			<p:tabView orientation="top">
 				<p:tab id="tabListarDiscipulos" title="Discípulos Cadastradas">
-
+				
+				<p:treeTable value="#{discipuloBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column>
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+			        <p:column>  
+			            <f:facet name="header">  
+			            <center>EDITAR</center>  
+			            </f:facet>  
+			            <center>
+			            <h:commandButton image="/img/editar.png"  action="#{discipuloBean.prepararEdicao}"
+			            rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{discipuloBean.discipulos}" />
+						</h:commandButton> 
+			            </center> 
+			        </p:column>
+			        <p:column>  
+			            <f:facet name="header">  
+			            <center>EXCLUIR</center>  
+			            </f:facet>  
+			            <center>
+			            <p:commandLink title="Excluir Discípulo" disabled="true" update="pnldiscipuloExcluir" process="@this"
+						oncomplete="discipuloExcluir.show()" rendered="#{node.mostrarBotoes}">
+							  <p:graphicImage value="/img/deletar.png" />
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{discipuloBean.discipulos}" />
+						</p:commandLink>
+			            </center> 
+			        </p:column>
+			        <p:column>  
+			            <f:facet name="header">  
+			            <center>DETALHES</center>  
+			            </f:facet>  
+			            <center>
+			            <p:commandLink title="Detalhe Discípulo" update="pnlDiscipuloDetalhe" process="@this" 
+			            oncomplete="discipuloDetalhe.show()" rendered="#{node.mostrarBotoes}">
+						  <p:graphicImage value="/img/detalhe.png" />
+						  <f:setPropertyActionListener value="#{node.discipulo}" target="#{discipuloBean.discipulos}" />
+						</p:commandLink>
+			            </center> 
+			        </p:column>
+                </p:treeTable>
+                <br />
+                
 					<p:dataTable id="dtDiscipulos" var="discipulo"
 						selection="#{discipuloBean.discipulos}"
 						value="#{discipuloBean.listaDiscipulos}" paginator="true"
@@ -41,10 +107,10 @@
 						lastPageLinkLabel="Ultimo &gt;&gt;"
 						previousPageLinkLabel="&lt; Voltar"
 						nextPageLinkLabel="Avançar &gt;" width="100%"
-						dynamic="true"
 						sortAscMessage="Ordena em ordem crescente"
 						sortDescMessage="Ordena em ordem descrecente" rows="12"
 						emptyMessage="Nenhum discípulo encontrado"
+						rendered="false"
 						paginatorPosition="bottom">
 
 						<p:column style="width:50px" filterStyleClass="formularios"
@@ -122,8 +188,7 @@
 					</p:dataTable>
 
 					<p:dialog header="EXCLUIR DISCÍPULO" widgetVar="discipuloExcluir"
-						resizable="false" modal="true" width="400" showEffect="explode"
-						hideEffect="explode">
+						resizable="false" modal="true" width="400">
 						<p:outputPanel id="pnldiscipuloExcluir">
 							<h:panelGrid columns="3"
 								columnClasses="coluna1, coluna2, coluna1">
@@ -141,7 +206,7 @@
 					</p:dialog>
 					
 <p:dialog header="DETALHES DO DISCÍPULO" widgetVar="discipuloDetalhe" resizable="true"  width="900"
-                          modal="true" showEffect="explode" hideEffect="explode" > 
+                          modal="true"> 
                 <p:outputPanel id="pnlDiscipuloDetalhe"> 
                     
                     <p:tabView orientation="top">
