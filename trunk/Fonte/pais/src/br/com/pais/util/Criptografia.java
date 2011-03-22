@@ -34,6 +34,6 @@ public class Criptografia {
 		return null;
 	}
 	public static void main(String[] args) {
-		//System.out.println(criptografar("admin"));
+		System.out.println(new Criptografia().criptografar("terranova"));
 	}
 }
