@@ -317,8 +317,8 @@
 				tabindex="25" actionListener="#{basesBean.salvar}"></h:commandButton>
 
 			<p:dialog id="dlg" header="Selecionar Líder da Base" modal="true"
-				widgetVar="dlg" resizable="false" width="600">
-				<p:treeTable value="#{basesBean.root}" var="lider">
+				widgetVar="dlg" resizable="false" width="600" height="400">
+				<p:treeTable value="#{basesBean.root}" var="lider" style="overflow:auto; ">
 					<p:column>
 						<f:facet name="header"> Nome </f:facet>
 						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
@@ -348,9 +348,9 @@
 			</p:dialog>
 
 			<p:dialog id="dlgGJ" header="Selecionar Líder Governo do Justo" modal="true"
-				widgetVar="dlgGJ" resizable="false" width="600">
+				widgetVar="dlgGJ" resizable="false" width="600" height="400">
 
-				<p:treeTable value="#{basesBean.root}" var="lider">
+				<p:treeTable value="#{basesBean.root}" var="lider" style="overflow:auto; ">
 					<p:column>
 						<f:facet name="header"> Nome </f:facet>
 						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
@@ -380,8 +380,10 @@
 			</p:dialog>
 			
 			<p:dialog id="dlgAS" header="Selecione Líder Ação Social" modal="true"
-				widgetVar="dlgAS" resizable="false" width="600">
-				<p:treeTable value="#{basesBean.root}" var="lider">
+				widgetVar="dlgAS" resizable="false" width="600" height="400">
+				
+				
+				<p:treeTable value="#{basesBean.root}" var="lider" style="overflow:auto;">
 					<p:column>
 						<f:facet name="header"> Nome </f:facet>
 						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
