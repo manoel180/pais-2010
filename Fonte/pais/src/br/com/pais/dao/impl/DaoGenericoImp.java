@@ -2,8 +2,6 @@ package br.com.pais.dao.impl;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +13,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-
-import org.hibernate.HibernateException;
-import org.hibernate.PersistentObjectException;
-import org.hibernate.exception.SQLExceptionConverterFactory;
 
 import br.com.pais.dao.DaoGenerico;
 import br.com.pais.mensagens.MessageManagerImpl;
@@ -34,7 +28,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	private final Class<T> oClass;// object class
 
 	// fica
-	protected EntityManager getEntityManager() {
+	public EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}
 

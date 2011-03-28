@@ -362,7 +362,7 @@
 								styleClass="formulariosObrigatorio" for="discipulador" />
 							<h:inputText id="discipulador" size="30"
 								styleClass="formularios2" required="true"
-								value="#{loginBean.discipuloSessao.discipulos.disnome}"
+								value="#{discipuloBean.discipulos.discipulos.disnome}"
 								readonly="true" requiredMessage="Discipulador é obrigatório" />
 
 							<h:outputLabel value="M12?:" styleClass="formulariosObrigatorio"
@@ -438,7 +438,7 @@
 
 			<br />
 
-			<h:commandButton value="Editar..." styleClass="formularios"
+			<h:commandButton value="Salvar..." styleClass="formularios"
 				tabindex="25" actionListener="#{discipuloBean.editar}"></h:commandButton>
 
 			<p:dialog closeOnEscape="true" position="center" resizable="false"

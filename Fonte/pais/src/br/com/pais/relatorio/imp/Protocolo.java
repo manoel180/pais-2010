@@ -1,4 +1,4 @@
-package br.com.pais.relatorio;
+package br.com.pais.relatorio.imp;
 
 import java.util.Date;
 import java.util.List;

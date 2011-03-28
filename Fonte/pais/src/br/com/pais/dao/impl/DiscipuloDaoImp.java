@@ -112,6 +112,20 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 			getEntityManager().close();
 		}
 	}
+	
+	@Override
+	public double listarTotalGeracoes(int lider) {
+		try {
+			Query query = getEntityManager().createQuery(
+					"select count(distinct o.geracoes.gerCod) from Discipulos o where o.discipulos.disCod = " + lider);
+			return (Long) query.getSingleResult();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return 0.0;
+		} finally {
+			getEntityManager().close();
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

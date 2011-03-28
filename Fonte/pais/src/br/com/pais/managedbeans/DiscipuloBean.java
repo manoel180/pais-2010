@@ -533,6 +533,7 @@ public class DiscipuloBean {
 	public String prepararEdicaoMeusDados() {
 		nomeArquivoSelecionado = "";
 		fotoEdit = false;
+		senha = "";
 		source = new ArrayList<Encontros>();
 		target = new ArrayList<Encontros>();
 		sourceFormacaoEclesiasticas = new ArrayList<Formacaoeclesiasticas>();
@@ -600,6 +601,83 @@ public class DiscipuloBean {
 		 		
 		return "/editar/editarmeusdados.mir";
 	}
+	
+	public void editarMeusDados(ActionEvent event) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (fotoEdit == true) {
+			//discipulos.setDisfoto("/img/sem_foto.jpg"); // Falta Verificar
+			discipulos.setDisfoto("/fotos/" + salvarFoto());
+		} /*else {
+			discipulos.setDisfoto("/fotos/" + salvarFoto());
+		}*/
+		
+		
+
+		if (logradouro == null) {
+			logradouro.setCep(null);
+			context.addMessage(null, new FacesMessage("ERRO", " CEP inválido"));
+		} else {
+			discipulos.setLogradouro(logradouro);
+		}
+
+		validarcpf(null);
+		if (discipulos.getDisTitEleitor() != null) {
+			validartituloeleitor(null);
+		}
+		
+		if(!senha.equals("") || senha.equals(null)){
+			discipulos.setDisSenha(new Criptografia().criptografar(senha));
+		}
+
+		//discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
+		//discipulos.setEncontroses(ListaEncontros.getTarget());
+		//discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
+		//discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
+
+		
+		discipulos.setEstadocivil(estadocivil);
+		if(estadocivil.getEstCod()==2 && isConjugeCad==true){
+			discipulos.setDiscipulosByDisConjugecad(conjugePesq);
+		}
+		
+		
+		discipulos.setFormacaoacademica(formacaoacademica);
+		//discipulos.setFuncaoeclesiasticas(funcaoeclesiasticas);
+		//discipulos.setGeracoes(geracoes);
+
+		if (discipuloDao.atualizar(discipulos) == (true)) {
+			if(estadocivil.getEstCod()==2 && isConjugeCad==true){
+				conjugePesq.setDiscipulosByDisConjugecad(discipulos);
+				conjugePesq.setEstadocivil(estadocivil);
+				discipuloDao.atualizar(conjugePesq);
+			}
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, "SUCESSO!!!",
+					"Dados atualizados com sucesso!"));
+			
+			/*if (discipulos.getDisemail() != null
+					|| discipulos.getDisemail() != ""
+					&& (funcaoeclesiasticas.getFunCod() != 1 || funcaoeclesiasticas
+							.getFunCod() != 2)) {
+
+				for (Funcaoeclesiasticas fe : listaFuncaoEclesiasticas) {
+					if (fe.getFunCod() == funcaoeclesiasticas.getFunCod()) {
+
+						funcaoeclesiasticas = fe;
+					}
+				}// for end
+
+				new SendEMail().sendSimpleMailEnviarSenha(
+						funcaoeclesiasticas.getFunDescricao(),
+						discipulos.getDisnome(), discipulos.getDisemail(),
+						discipulos.getDisSenha(), discipulos.getDisCpf());
+			}*/ 
+		} else {
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "ERRO!!!",
+					"Erro ao cadastrar!"));
+		}
+	}
 
 	public void editar(ActionEvent event) {
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -628,7 +706,7 @@ public class DiscipuloBean {
 		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
 		discipulos.setEncontroses(ListaEncontros.getTarget());
 		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
-		discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
+		//discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
 
 		
 		discipulos.setEstadocivil(estadocivil);
@@ -1273,5 +1351,19 @@ public class DiscipuloBean {
 
 	public void setIndexGeracoesNodos(List<ArvoreGeracoesNodos> indexGeracoesNodos) {
 		this.indexGeracoesNodos = indexGeracoesNodos;
+	}
+
+	/**
+	 * @return the senha
+	 */
+	public String getSenha() {
+		return senha;
+	}
+
+	/**
+	 * @param senha the senha to set
+	 */
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 }
