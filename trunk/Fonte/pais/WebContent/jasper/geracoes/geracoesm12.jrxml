@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="discipulador" class="java.lang.Integer"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     Líder.`disnome` AS lider_disnome,
+     fe.fundescricao as Funcao,
+     Discipulos.`disnome` AS d_disnome,
+     Discipulos.`disTelFixo` AS d_disTelFixo,
+     Discipulos.`disTelCelular` AS d_disTelCelular,
+     Discipulos.`disemail` AS d_disEmail,
+     fa.`foracdescricao` AS d_disFormacao,
+     (select count(distinct d.disgeracao) from discipulos d where d.disdiscipulador = Discipulos.discod) as QTD_Geracoes,
+     count( c.celdiscod)	 as QTD_Celulas,
+(select count(*) from discipulos d where d.disdiscipulador = Discipulos.discod) as QTD_Discipulos
+FROM
+     `discipulos` Discipulos
+INNER JOIN `discipulos` Líder ON Discipulos.`disdiscipulador` = Líder.`disCod`
+left join celulas c on Discipulos.discod = c.celdiscod
+
+inner join funcaoeclesiasticas fe  on Discipulos.disFunCod = fe.funcod
+inner join formacaoacademica fa on Discipulos.forCod = fa.foraccod
+where
+     Discipulos.disdiscipulador = $P{discipulador}
+group by Discipulos.disnome
+order by Discipulos.disnome]]>
+	</queryString>
+	<field name="lider_disnome" class="java.lang.String"/>
+	<field name="Funcao" class="java.lang.String"/>
+	<field name="d_disnome" class="java.lang.String"/>
+	<field name="d_disTelFixo" class="java.lang.String"/>
+	<field name="d_disTelCelular" class="java.lang.String"/>
+	<field name="d_disEmail" class="java.lang.String"/>
+	<field name="d_disFormacao" class="java.lang.String"/>
+	<field name="QTD_Geracoes" class="java.lang.Long"/>
+	<field name="QTD_Celulas" class="java.lang.Long"/>
+	<field name="QTD_Discipulos" class="java.lang.Long"/>
+	<title>
+		<band height="60">
+			<staticText>
+				<reportElement x="258" y="2" width="287" height="57" forecolor="#006699"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gerações Cadastradas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="36" width="112" height="20" forecolor="#000000"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Discipulador]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="59" width="802" height="1"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="37" width="193" height="19"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{lider_disnome}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" hAlign="Center">
+				<reportElement x="571" y="0" width="231" height="55"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31">
+			<staticText>
+				<reportElement x="227" y="0" width="77" height="31"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Função
+Eclesiástica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="481" y="0" width="100" height="30"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Telefone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="352" y="0" width="100" height="31"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Formação
+Acadêmica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="616" y="0" width="58" height="31"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[QTD
+Geracoes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="674" y="0" width="54" height="31"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[QTD
+Celulas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="728" y="0" width="61" height="31"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[QTD
+Discipulos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="0" width="117" height="31"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="30" width="802" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="48">
+			<textField>
+				<reportElement x="227" y="6" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Funcao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="481" y="6" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disTelFixo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="481" y="26" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disTelCelular}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="6" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disFormacao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="616" y="6" width="58" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{QTD_Geracoes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="674" y="6" width="54" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{QTD_Celulas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="728" y="6" width="61" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{QTD_Discipulos}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="18" y="6" width="182" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disnome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="23">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="23" forecolor="#DFDFDF" backcolor="#DBDBDB"/>
+			</rectangle>
+			<textField>
+				<reportElement mode="Opaque" x="671" y="6" width="76" height="13" backcolor="#DBDBDB"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="746" y="6" width="40" height="13" backcolor="#DBDBDB"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="114" y="6" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="14" y="6" width="100" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/index.xhtml">
+	
+	<ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="RELATÓRIOS"/>  
+         <p:menuitem value="GERAÇÕES CADASTRADAS" action="#{relatoriosBean.prepararRelatorioGeracoesCadastradas}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<h:form prependId="false">
+			<p:dialog id="dlgDiscipulador" header="Selecione Discipulador" modal="true"
+				widgetVar="dlgDiscipulador" resizable="false" width="600" height="400">
+				
+				
+				<p:treeTable value="#{relatoriosBean.root}" var="lider" style="overflow:auto;">
+					<p:column>
+						<f:facet name="header"> Nome </f:facet>
+						<p:graphicImage value="#{lider.disfoto}" width="40" height="40" />
+						<h:outputText value=" #{lider.disnome}" />
+					</p:column>
+
+					<p:column >
+						<f:facet name="header"> Gerações </f:facet>
+						<center>
+							<h:outputText value="#{lider.geracoes.gerDescricao}" />
+						</center>
+					</p:column>
+					
+					<p:column  >
+						<f:facet name="header"> Selecionar </f:facet>
+						<center>
+							<p:commandButton update="discipulador dtDiscipulos" type="image"
+								image="/img/ver.png" process="@this" action="#{relatoriosBean.listarGeracoesCadastradas}" oncomplete="dlgDiscipulador.hide()">
+								<f:setPropertyActionListener value="#{lider}"
+									target="#{relatoriosBean.selectedLider}" />
+									
+							</p:commandButton>
+						</center>
+					</p:column>
+				</p:treeTable>
+			</p:dialog>
+			
+			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		  <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
+				    <h:outputText id="discipulador" value="Discipulador: #{relatoriosBean.selectedLider.disnome}" styleClass="formulariosObrigatorio"/>
+					<p:commandButton value="Selecionar Discípulo" onclick="dlgDiscipulador.show();"></p:commandButton>
+					
+			</h:panelGrid>			
+			<h:commandLink  value="Imprimir" onclick="window.print();"/>&nbsp;
+			<h:commandLink action="#{relatoriosBean.gerarRelatorioGeracoesCadastradas}" value="Gerar PDF" target="_blank"/>
+			<h:outputFormat />
+			<p:dataTable id="dtDiscipulos" var="discipulos"
+						selection="#{relatoriosBean.selectedDiscipulos}" value="#{relatoriosBean.listaDiscipulos}"
+						paginator="true" firstPageLinkLabel="&lt;&lt; Primeiro"
+						lastPageLinkLabel="Ultimo &gt;&gt;"
+						previousPageLinkLabel="&lt; Voltar"
+						nextPageLinkLabel="Avançar &gt;" width="100%"
+						sortAscMessage="Ordena em ordem crescente"
+						sortDescMessage="Ordena em ordem descrecente" rows="10"
+						dynamic="true" emptyMessage="Nenhum discipulo(a) encontrado(a)"
+						paginatorPosition="bottom">
+			
+			<p:column headerText="NOME" style="width:100px 0px">
+				<h:outputText value="#{discipulos.disnome}" />
+			</p:column>
+			<p:column headerText="FUNÇÃO ECLESIÁSTICA" style="width:60px 0px">
+				<h:outputText value="#{discipulos.funcaoeclesiasticas.funDescricao}" />
+			</p:column>
+			<p:column headerText="TELEFONES" style="width:60px 0px">
+				<h:outputText value="#{discipulos.disTelFixo}" /><br/>
+				<h:outputText value="#{discipulos.disTelCelular}" /><br/>
+				<h:outputText value="#{discipulos.disTelComercial}" />
+			</p:column>
+			<p:column headerText="FORMAÇÃO ACADÊMICA" style="width:60px 0px">
+				<h:outputText value="#{discipulos.formacaoacademica.forAcDescricao}" />
+			</p:column>
+			<p:column style="width:10px">
+				<f:facet name="header">
+					<h:outputText value="TOTAL&lt;br/> GERAÇÕES" styleClass="Fonte_12" escape="false"/>
+				</f:facet><center>
+				<h:outputText value="#{discipulos.totalGeracoes}" />
+				</center>
+			</p:column>
+			<p:column style="width:10px 0px">
+			<f:facet name="header">
+					<h:outputText value="TOTAL&lt;br/> CÉLULAS" styleClass="Fonte_12" escape="false"/>
+				</f:facet><center>
+				<h:outputText value="#{discipulos.totalCelulas}" />
+				</center>
+			</p:column>
+			<p:column style="width:10px 0px">
+				<f:facet name="header">
+					<h:outputText value="TOTAL&lt;br/> DISCÍPULOS" styleClass="Fonte_12" escape="false"/>
+				</f:facet><center>
+				<h:outputText value="#{discipulos.totalDiscipulos}" />
+				</center>
+			</p:column>
+			</p:dataTable>	
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

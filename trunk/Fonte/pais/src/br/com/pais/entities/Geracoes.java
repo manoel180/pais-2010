@@ -2,13 +2,15 @@ package br.com.pais.entities;
 
 // Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,10 +23,15 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "geracoes", uniqueConstraints = @UniqueConstraint(columnNames = "gerDescricao"))
 public class Geracoes implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	
 	private Integer gerCod;
 	private String gerDescricao;
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
+
 
 	public Geracoes() {
 	}

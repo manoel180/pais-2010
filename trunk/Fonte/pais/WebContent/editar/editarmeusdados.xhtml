@@ -353,22 +353,15 @@
 							<h:outputLabel value="Nova Senha de Acesso:"
 								styleClass="formulariosObrigatorio" for="senha" />
 							<h:inputSecret id="senha" size="10" styleClass="formularios2"
-								required="true" redisplay="true"
-								value="#{discipuloBean.discipulos.disSenha}"
-								readonly="#{discipuloBean.editarSenha}"
+								redisplay="true"
+								value="#{discipuloBean.senha}"
 								requiredMessage="Senha é obrigatória" />
-							<h:outputLabel value="Repita Nova Senha de Acesso:"
-								styleClass="formulariosObrigatorio" for="senha" />
-							<h:inputSecret  size="10" styleClass="formularios2"
-								required="true"  redisplay="true"
-								value="#{discipuloBean.discipulos.disSenha}"
-								readonly="#{discipuloBean.editarSenha}"
-								requiredMessage="Senha é obrigatória" />	
+								
 							<h:outputLabel value="Discipulador:"
 								styleClass="formulariosObrigatorio" for="discipulador" />
 							<h:inputText id="discipulador" size="30"
 								styleClass="formularios2" required="true"
-								value="#{loginBean.discipuloSessao.discipulos.disnome}"
+								value="#{loginBean.discipuloSessao.discipulos.discipulos.disnome}"
 								readonly="true" requiredMessage="Discipulador é obrigatório" />
 
 							<h:outputLabel value="M12?:" styleClass="formulariosObrigatorio"
@@ -444,8 +437,8 @@
 
 			<br />
 
-			<h:commandButton value="Editar..." styleClass="formularios"
-				tabindex="25" actionListener="#{discipuloBean.editar}"></h:commandButton>
+			<h:commandButton value="Salvar..." styleClass="formularios"
+				tabindex="25" actionListener="#{discipuloBean.editarMeusDados}"></h:commandButton>
 
 			<p:dialog closeOnEscape="true" position="center" resizable="false"
 				widgetVar="dlg1" header="Dados do discípulo">
