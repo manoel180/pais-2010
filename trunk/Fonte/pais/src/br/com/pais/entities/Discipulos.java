@@ -449,6 +449,7 @@ public class Discipulos implements java.io.Serializable {
 	public int getTotalDiscipulos(){
 		return this.discipuloses.size(); 
 	}
+	
 	@Transient
 	public int getTotalGeracoes(){
 		return (int) new DiscipuloDaoImp().listarTotalGeracoes(this.disCod);
