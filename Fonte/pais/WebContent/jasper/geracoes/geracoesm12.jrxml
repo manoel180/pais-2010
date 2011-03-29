@@ -1,21 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
-	<parameter name="discipulador" class="java.lang.Integer"/>
-	<parameter name="logo" class="java.lang.String"/>
-	<queryString>
-		<![CDATA[SELECT
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="report1"
+
+		 language="groovy"		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Landscape"
+		 pageWidth="842"
+		 pageHeight="595"
+		 columnWidth="802"
+		 columnSpacing="0"
+		 leftMargin="20"
+		 rightMargin="20"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.zoom" value="1.0" />
+	<property name="ireport.x" value="0" />
+	<property name="ireport.y" value="0" />
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="discipulador" isForPrompting="true" class="java.lang.Integer"/>
+	<parameter name="logo" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT
      Líder.`disnome` AS lider_disnome,
      fe.fundescricao as Funcao,
      Discipulos.`disnome` AS d_disnome,
      Discipulos.`disTelFixo` AS d_disTelFixo,
      Discipulos.`disTelCelular` AS d_disTelCelular,
      Discipulos.`disemail` AS d_disEmail,
-     fa.`foracdescricao` AS d_disFormacao,
      (select count(distinct d.disgeracao) from discipulos d where d.disdiscipulador = Discipulos.discod) as QTD_Geracoes,
      count( c.celdiscod)	 as QTD_Celulas,
+(select count(*) from bases b where b.basdiscod = Discipulos.discod) as QTD_Bases,
 (select count(*) from discipulos d where d.disdiscipulador = Discipulos.discod) as QTD_Discipulos
 FROM
      `discipulos` Discipulos
@@ -23,185 +46,442 @@ INNER JOIN `discipulos` Líder ON Discipulos.`disdiscipulador` = Líder.`disCod`
 left join celulas c on Discipulos.discod = c.celdiscod
 
 inner join funcaoeclesiasticas fe  on Discipulos.disFunCod = fe.funcod
-inner join formacaoacademica fa on Discipulos.forCod = fa.foraccod
 where
      Discipulos.disdiscipulador = $P{discipulador}
 group by Discipulos.disnome
-order by Discipulos.disnome]]>
-	</queryString>
+order by Discipulos.disnome]]></queryString>
+
 	<field name="lider_disnome" class="java.lang.String"/>
 	<field name="Funcao" class="java.lang.String"/>
 	<field name="d_disnome" class="java.lang.String"/>
 	<field name="d_disTelFixo" class="java.lang.String"/>
 	<field name="d_disTelCelular" class="java.lang.String"/>
 	<field name="d_disEmail" class="java.lang.String"/>
-	<field name="d_disFormacao" class="java.lang.String"/>
 	<field name="QTD_Geracoes" class="java.lang.Long"/>
 	<field name="QTD_Celulas" class="java.lang.Long"/>
+	<field name="QTD_Bases" class="java.lang.Long"/>
 	<field name="QTD_Discipulos" class="java.lang.Long"/>
-	<title>
-		<band height="60">
-			<staticText>
-				<reportElement x="258" y="2" width="287" height="57" forecolor="#006699"/>
-				<textElement textAlignment="Center">
-					<font size="20" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Gerações Cadastradas]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="19" y="36" width="112" height="20" forecolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Discipulador]]></text>
-			</staticText>
-			<line>
-				<reportElement x="0" y="59" width="802" height="1"/>
-			</line>
-			<textField isBlankWhenNull="true">
-				<reportElement x="115" y="37" width="193" height="19"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{lider_disnome}.toUpperCase()]]></textFieldExpression>
-			</textField>
-			<image scaleImage="FillFrame" hAlign="Center">
-				<reportElement x="571" y="0" width="231" height="55"/>
-				<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
-			</image>
-		</band>
-	</title>
-	<columnHeader>
-		<band height="31">
-			<staticText>
-				<reportElement x="227" y="0" width="77" height="31"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Função
-Eclesiástica]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="481" y="0" width="100" height="30"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Telefone]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="352" y="0" width="100" height="31"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Formação
-Acadêmica]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="616" y="0" width="58" height="31"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
+
+	<variable name="total_Discipulos" class="java.lang.Integer" resetType="Report" incrementType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{QTD_Discipulos}]]></variableExpression>
+	</variable>
+	<variable name="SUM_QTD_Discipulos_1" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{QTD_Discipulos}]]></variableExpression>
+	</variable>
+	<variable name="SUM_QTD_Geracoes_1" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{QTD_Geracoes}]]></variableExpression>
+	</variable>
+	<variable name="SUM_QTD_Celulas_1" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{QTD_Celulas}]]></variableExpression>
+	</variable>
+	<variable name="SUM_QTD_Bases_1" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{QTD_Bases}]]></variableExpression>
+	</variable>
+		<background>
+			<band height="100"  isSplitAllowed="true" >
+				<image  scaleImage="FillFrame" hAlign="Center" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="286"
+						y="23"
+						width="231"
+						height="55"
+						key="image"/>
+					<box></box>
+					<graphicElement stretchType="NoStretch"/>
+					<imageExpression class="java.lang.String"><![CDATA[$P{logo}]]></imageExpression>
+				</image>
+			</band>
+		</background>
+		<title>
+			<band height="60"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="0"
+						y="0"
+						width="802"
+						height="60"
+						forecolor="#006699"
+						key="staticText"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font pdfFontName="Helvetica-Bold" size="20" isBold="true"/>
+					</textElement>
+				<text><![CDATA[RELATÓRIO PARCIAL - ESTRUTURADO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="19"
+						y="36"
+						width="112"
+						height="20"
+						forecolor="#000000"
+						key="staticText"/>
+					<box></box>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+				<text><![CDATA[DISCIPULADOR:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="115"
+						y="37"
+						width="193"
+						height="19"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{lider_disnome}.toUpperCase()]]></textFieldExpression>
+				</textField>
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="31"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="-1"
+						width="802"
+						height="1"
+						key="line"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="357"
+						y="0"
+						width="122"
+						height="31"
+						key="staticText"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Courier-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
+				<text><![CDATA[FUNÇÃO ECLESIÁSTICA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="516"
+						y="0"
+						width="58"
+						height="31"
+						key="staticText"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Courier-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
 				<text><![CDATA[QTD
-Geracoes]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="674" y="0" width="54" height="31"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
+GERAÇÕES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="659"
+						y="-1"
+						width="54"
+						height="31"
+						key="staticText"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Courier-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
 				<text><![CDATA[QTD
-Celulas]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="728" y="0" width="61" height="31"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
+CÉLULAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="723"
+						y="0"
+						width="66"
+						height="31"
+						key="staticText"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Courier-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
 				<text><![CDATA[QTD
-Discipulos]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="19" y="0" width="117" height="31"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Courier" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Nome]]></text>
-			</staticText>
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="30" width="802" height="1"/>
-			</line>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="48">
-			<textField>
-				<reportElement x="227" y="6" width="100" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Funcao}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="481" y="6" width="100" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disTelFixo}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="481" y="26" width="100" height="20" isRemoveLineWhenBlank="true"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disTelCelular}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="352" y="6" width="100" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disFormacao}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="616" y="6" width="58" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{QTD_Geracoes}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="674" y="6" width="54" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{QTD_Celulas}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="728" y="6" width="61" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{QTD_Discipulos}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="18" y="6" width="182" height="20"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{d_disnome}]]></textFieldExpression>
-			</textField>
-		</band>
-	</detail>
-	<pageFooter>
-		<band height="23">
-			<rectangle>
-				<reportElement x="0" y="0" width="802" height="23" forecolor="#DFDFDF" backcolor="#DBDBDB"/>
-			</rectangle>
-			<textField>
-				<reportElement mode="Opaque" x="671" y="6" width="76" height="13" backcolor="#DBDBDB"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement mode="Opaque" x="746" y="6" width="40" height="13" backcolor="#DBDBDB"/>
-				<textElement/>
-				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="114" y="6" width="100" height="13"/>
-				<textElement/>
-				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<textField pattern="HH:mm:ss">
-				<reportElement x="14" y="6" width="100" height="13"/>
-				<textElement/>
-				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
-	<summary>
-		<band/>
-	</summary>
+DISCÍPULOS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="19"
+						y="0"
+						width="117"
+						height="31"
+						key="staticText"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Courier-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
+				<text><![CDATA[NOME COMPLETO]]></text>
+				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="30"
+						width="802"
+						height="1"
+						key="line"
+						positionType="FixRelativeToBottom"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="596"
+						y="-1"
+						width="58"
+						height="31"
+						key="staticText-2"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Courier-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
+				<text><![CDATA[QTD
+BASES]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="27"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="357"
+						y="6"
+						width="100"
+						height="20"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{Funcao}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="516"
+						y="6"
+						width="58"
+						height="20"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{QTD_Geracoes}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="659"
+						y="6"
+						width="54"
+						height="20"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{QTD_Celulas}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="723"
+						y="6"
+						width="61"
+						height="20"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{QTD_Discipulos}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="18"
+						y="6"
+						width="313"
+						height="20"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{d_disnome}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="597"
+						y="6"
+						width="58"
+						height="20"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{QTD_Bases}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="23"  isSplitAllowed="true" >
+				<rectangle>
+					<reportElement
+						x="0"
+						y="0"
+						width="802"
+						height="23"
+						forecolor="#DFDFDF"
+						backcolor="#DBDBDB"
+						key="rectangle"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="671"
+						y="6"
+						width="76"
+						height="13"
+						backcolor="#DBDBDB"
+						key="textField"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="746"
+						y="6"
+						width="40"
+						height="13"
+						backcolor="#DBDBDB"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="114"
+						y="6"
+						width="100"
+						height="13"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="HH:mm:ss" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="14"
+						y="6"
+						width="100"
+						height="13"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="27"  isSplitAllowed="false" >
+				<rectangle>
+					<reportElement
+						x="0"
+						y="0"
+						width="802"
+						height="27"
+						backcolor="#F5F6F5"
+						key="rectangle-1"/>
+					<graphicElement stretchType="NoStretch">
+					<pen lineWidth="0.0" lineStyle="Solid"/>
+</graphicElement>
+				</rectangle>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="723"
+						y="0"
+						width="61"
+						height="23"
+						key="textField"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{SUM_QTD_Discipulos_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="364"
+						y="0"
+						width="91"
+						height="23"
+						key="staticText-1"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true" isPdfEmbedded ="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="516"
+						y="0"
+						width="58"
+						height="23"
+						key="textField"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{SUM_QTD_Geracoes_1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="659"
+						y="0"
+						width="51"
+						height="23"
+						key="textField"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{SUM_QTD_Celulas_1}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="597"
+						y="0"
+						width="58"
+						height="23"
+						key="textField"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{SUM_QTD_Bases_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</summary>
 </jasperReport>
