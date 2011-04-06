@@ -39,6 +39,7 @@ public class Movimento implements java.io.Serializable {
 	private String movEspecie;
 	private Double movValor;
 	private String movRecebido;
+	private String movVisualizado;
 	private String movProtocolo;
 	private String movProtocoloPai;
 	private List<Repasse> repasses = new ArrayList<Repasse>();
@@ -51,7 +52,7 @@ public class Movimento implements java.io.Serializable {
 			Date movDataCadastro, Date movHoraCadastro,
 			Date movDataBaixa, Date movHoraBaixa,
 			String movTipo, String movEspecie, Double movValor,
-			String movRecebido, String movProtocolo, String movProtocoloPai,
+			String movRecebido, String movVisualizado, String movProtocolo, String movProtocoloPai,
 			List<Repasse> repasses, List<Movimentocheque> movimentocheques) {
 		this.celulas = celulas;
 		this.bases = bases;
@@ -64,6 +65,7 @@ public class Movimento implements java.io.Serializable {
 		this.movEspecie = movEspecie;
 		this.movValor = movValor;
 		this.movRecebido = movRecebido;
+		this.movVisualizado = movVisualizado;
 		this.movProtocolo = movProtocolo;
 		this.movProtocoloPai = movProtocoloPai;
 		this.repasses = repasses;
@@ -185,6 +187,15 @@ public class Movimento implements java.io.Serializable {
 
 	public void setMovRecebido(String movRecebido) {
 		this.movRecebido = movRecebido;
+	}
+	
+	@Column(name = "movVisualizado", length = 1)
+	public String getMovVisualizado() {
+		return this.movVisualizado;
+	}
+
+	public void setMovVisualizado(String movVisualizado) {
+		this.movVisualizado = movVisualizado;
 	}
 
 	@Column(name = "movProtocolo")
