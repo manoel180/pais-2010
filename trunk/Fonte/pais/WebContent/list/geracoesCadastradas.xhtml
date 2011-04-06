@@ -64,10 +64,10 @@
 		  <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
 				    <h:outputText id="discipulador" value="Discipulador: #{relatoriosBean.selectedLider.disnome}" styleClass="formulariosObrigatorio"/>
 					<p:commandButton value="Selecionar Discípulo" onclick="dlgDiscipulador.show();"></p:commandButton>
-					
-			</h:panelGrid>			
 			<h:commandLink  value="Imprimir" onclick="window.print();"/>&nbsp;
-			<h:commandLink action="#{relatoriosBean.gerarRelatorioGeracoesCadastradas}" value="Gerar PDF" target="_blank"/>
+			<h:commandLink action="#{relatoriosBean.gerarRelatorioGeracoesCadastradas}" value="Gerar PDF" target="_blank"/>		
+			</h:panelGrid>			
+			
 			<h:outputFormat />
 			<p:dataTable id="dtDiscipulos" var="discipulos"
 						selection="#{relatoriosBean.selectedDiscipulos}" value="#{relatoriosBean.listaDiscipulos}"
@@ -76,7 +76,7 @@
 						previousPageLinkLabel="&lt; Voltar"
 						nextPageLinkLabel="Avançar &gt;" width="100%"
 						sortAscMessage="Ordena em ordem crescente"
-						sortDescMessage="Ordena em ordem descrecente" rows="10"
+						sortDescMessage="Ordena em ordem descrecente" rows="12"
 						dynamic="true" emptyMessage="Nenhum discipulo(a) encontrado(a)"
 						paginatorPosition="bottom">
 			
@@ -86,15 +86,16 @@
 			<p:column headerText="FUNÇÃO ECLESIÁSTICA" style="width:60px 0px">
 				<h:outputText value="#{discipulos.funcaoeclesiasticas.funDescricao}" />
 			</p:column>
-			<p:column headerText="TELEFONES" style="width:60px 0px">
-				<h:outputText value="#{discipulos.disTelFixo}" /><br/>
-				<h:outputText value="#{discipulos.disTelCelular}" /><br/>
-				<h:outputText value="#{discipulos.disTelComercial}" />
+			
+			<p:column style="width:15px 0px">
+				<f:facet name="header">
+					<h:outputText value="TOTAL&lt;br/> BASES" styleClass="Fonte_12" escape="false"/>
+				</f:facet><center>
+				<h:outputText value="#{discipulos.totalBases}" />
+				</center>
 			</p:column>
-			<p:column headerText="FORMAÇÃO ACADÊMICA" style="width:60px 0px">
-				<h:outputText value="#{discipulos.formacaoacademica.forAcDescricao}" />
-			</p:column>
-			<p:column style="width:10px">
+			
+			<p:column style="width:10px 0px">
 				<f:facet name="header">
 					<h:outputText value="TOTAL&lt;br/> GERAÇÕES" styleClass="Fonte_12" escape="false"/>
 				</f:facet><center>
@@ -115,6 +116,18 @@
 				<h:outputText value="#{discipulos.totalDiscipulos}" />
 				</center>
 			</p:column>
+	
+		 <p:columnGroup type="footer">  
+            <p:row>  
+                <p:column colspan="2" footerText="Totais:"  
+                                style="text-align:right"  />  
+				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
+				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
+				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
+  				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
+          
+            </p:row>  
+        </p:columnGroup>
 			</p:dataTable>	
 		</h:form>
 		

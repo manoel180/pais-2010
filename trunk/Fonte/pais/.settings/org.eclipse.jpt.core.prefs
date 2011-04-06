@@ -1,4 +1,4 @@
-#Fri May 14 14:35:02 AMT 2010
+#Tue Mar 29 13:45:42 BOT 2011
 eclipse.preferences.version=1
 org.eclipse.jpt.core.discoverAnnotatedClasses=true
-org.eclipse.jpt.core.platform=hibernate
+org.eclipse.jpt.core.platform=hibernate2_0

@@ -76,6 +76,10 @@ public class Discipulos implements java.io.Serializable {
 	private Set<Mensagem> mensagemsForMensDisCodRecebe = new HashSet<Mensagem>(
 			0);
 	private Set<Mensagem> mensagemsForMensDisCod = new HashSet<Mensagem>(0);
+	private int totalBases = 0;
+	private int totalCelulas = 0;
+	private int totalGeracoes = 0;
+	private int totalDiscipulos = 0;
 
 	public Discipulos() {
 	}
@@ -441,19 +445,7 @@ public class Discipulos implements java.io.Serializable {
 		return this.celulases_1;
 	}
 	
-	@Transient
-	public int getTotalCelulas(){
-		return this.celulases_1.size(); 
-	}
-	@Transient
-	public int getTotalDiscipulos(){
-		return this.discipuloses.size(); 
-	}
 	
-	@Transient
-	public int getTotalGeracoes(){
-		return (int) new DiscipuloDaoImp().listarTotalGeracoes(this.disCod);
-	}
 	public void setCelulases_1(Set<Celulas> celulases_1) {
 		this.celulases_1 = celulases_1;
 	}
@@ -510,6 +502,7 @@ public class Discipulos implements java.io.Serializable {
 	public void setEncontroses(List<Encontros> encontroses) {
 		this.encontroses = encontroses;
 	}
+	
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "discipulos")
 	@OrderBy("disnome")
@@ -548,6 +541,66 @@ public class Discipulos implements java.io.Serializable {
 
 	public void setMensagemsForMensDisCod(Set<Mensagem> mensagemsForMensDisCod) {
 		this.mensagemsForMensDisCod = mensagemsForMensDisCod;
+	}
+
+	/**
+	 * @return the totalBases
+	 */
+	@Transient
+	public int getTotalBases() {
+		return totalBases;
+	}
+
+	/**
+	 * @return the totalCelulas
+	 */
+	@Transient
+	public int getTotalCelulas() {
+		return totalCelulas;
+	}
+
+	/**
+	 * @return the totalGeracoes
+	 */
+	@Transient
+	public int getTotalGeracoes() {
+		return totalGeracoes;
+	}
+
+	/**
+	 * @return the totalDiscipulos
+	 */
+	@Transient
+	public int getTotalDiscipulos() {
+		return totalDiscipulos;
+	}
+
+	/**
+	 * @param totalBases the totalBases to set
+	 */
+	public void setTotalBases(int totalBases) {
+		this.totalBases = totalBases;
+	}
+
+	/**
+	 * @param totalCelulas the totalCelulas to set
+	 */
+	public void setTotalCelulas(int totalCelulas) {
+		this.totalCelulas = totalCelulas;
+	}
+
+	/**
+	 * @param totalGeracoes the totalGeracoes to set
+	 */
+	public void setTotalGeracoes(int totalGeracoes) {
+		this.totalGeracoes = totalGeracoes;
+	}
+
+	/**
+	 * @param totalDiscipulos the totalDiscipulos to set
+	 */
+	public void setTotalDiscipulos(int totalDiscipulos) {
+		this.totalDiscipulos = totalDiscipulos;
 	}
 
 	
