@@ -97,14 +97,13 @@ public class RepasseDaoImp extends DaoGenericoImp<Repasse, Integer> implements R
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Object> totalMovimentosEnviados(int celula, String tipo, String especie, String recebido, String DataInicio, String DataFim) {
+	public List<Object> totalMovimentosEnviados(int celula, String tipo, String especie, String DataInicio, String DataFim) {
 		try {
 			Query query = getEntityManager().createQuery(
 			"select sum(m.movValor) from Movimento m where " +
 			" m.celulas.celCod = "+ celula +"" +
 			" and m.movTipo = '"+ tipo +"'" +
 			" and m.movEspecie = '"+ especie +"'" +
-			" and m.movRecebido = '"+ recebido +"'" +
 			" and m.movData BETWEEN '"+ DataInicio +"' and '"+ DataFim +"'");
 			return query.getResultList();
 		} catch (NoResultException nre) {
