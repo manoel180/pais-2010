@@ -13,7 +13,7 @@ public interface RepasseDao extends DaoGenerico<Repasse,Integer> {
 	List<Movimento> listarMovimentosTodosReceber(int celula, String tipo, String especie, String recebido, String DataInicio, String DataFim);
 	//Enviados
 	List<Movimento> listarMovimentosEnviados(int lider, int geracao, String tipo, String especie, String DataInicio, String DataFim);
-	List<Object> totalMovimentosEnviados(int celula, String tipo, String especie, String recebido, String DataInicio, String DataFim);
+	List<Object> totalMovimentosEnviados(int celula, String tipo, String especie, String DataInicio, String DataFim);
 	List<Movimento> listarMovimentosTodosEnviados(int celula, String tipo, String especie, String DataInicio, String DataFim);
 	//Recebidos
 	List<Movimento> listarMovimentosRecebdidos(int lider, int geracao, String recebido, String tipo, String especie, String DataInicio, String DataFim);
