@@ -46,11 +46,4 @@
     <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
     <param-value>server</param-value>
   </context-param>
-  <session-config>
-    <session-timeout>20</session-timeout>
-  </session-config>
-  <error-page>
-    <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-    <location>/login.mir</location>
-  </error-page>
 </web-app>

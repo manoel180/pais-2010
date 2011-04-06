@@ -197,7 +197,7 @@ public class BasesBean {
 				//nodes.add(new DefaultTreeNode(d, pai));
 				nodes.add(treeNode);
 				index = nodes.indexOf(treeNode);
-				System.out.println(d.getDisnome());
+			
 				if (!discipulos.getDiscipuloses().isEmpty()) {
 					carregarLideres(d, (nodes.get(index)));
 				}
