@@ -20,6 +20,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
+import br.com.pais.entities.Discipulos;
 import br.com.pais.relatorio.RelatorioDao;
 
 import com.mysql.jdbc.Connection;
@@ -152,18 +153,22 @@ public class RelatorioDaoImp implements RelatorioDao {
 		return session.getServletContext().getRealPath(diretorio);
 	}
 
+	
 	@Override
-	public void gerarRelatorioGeracoes(int Discipulador) {
+	public void gerarRelatorioGeracoes(List<Discipulos> discipulos) {
 		String jasper = "";
 		String pathSubRelatorio = "";
 		jasper = getDiretorioReal("/jasper/geracoes/geracoesm12.jasper");
 		
+		// Preenche a Lista
+		JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(discipulos);
+		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("logo", getDiretorioReal("/img/logoRelatorio.png"));
-		params.put("discipulador", Discipulador);
-
+		params.put("logo", getDiretorioReal("/img/logoRelatorio_transparente.png"));
+		/*params.put("discipulador", Discipulador);*/
+		
 		try {
-			gerarRelatorioPDF(jasper, params);
+			gerarRelatorioPDF(jasper, params,ds);
 		} catch (Exception e) {
 
 			System.err.println(e.getMessage());
@@ -181,14 +186,14 @@ public class RelatorioDaoImp implements RelatorioDao {
         return con;  
     }
 	
-	private void gerarRelatorioPDF(String nome, Map params) {
+	private void gerarRelatorioPDF(String nome, Map params,JRBeanCollectionDataSource ds) {
 
 		
 		try {
 
 			 
 			byte[] pdf = JasperRunManager.runReportToPdf(nome,
-					params,getConnection());
+					params,ds);
 
 			//Captura uma instancia da página
 			FacesContext faces = FacesContext.getCurrentInstance();
