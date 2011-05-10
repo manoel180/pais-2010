@@ -52,7 +52,9 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 	public List<Discipulos> listarDiscipulos(int discipulador) {
 		try {
 			Query query = getEntityManager().createQuery(
-					"From Discipulos d " + "where d.discipulos.disCod ="+ discipulador );
+					"From Discipulos d " + "where d.discipulos.disCod ="+ discipulador +
+					" order by d.disnome"
+					);
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
