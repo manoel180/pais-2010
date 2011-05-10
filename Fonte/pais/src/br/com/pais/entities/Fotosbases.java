@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/05/2011 15:49:37 by Hibernate Tools 3.4.0.CR1
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -79,7 +79,6 @@ public class Fotosbases implements java.io.Serializable {
 	public void setLegenda(String legenda) {
 		this.legenda = legenda;
 	}
-
 	/**
 	 * @return the imagem
 	 */

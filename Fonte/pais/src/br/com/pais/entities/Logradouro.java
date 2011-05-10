@@ -1,10 +1,9 @@
 package br.com.pais.entities;
 
-// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/05/2011 15:49:37 by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +29,7 @@ public class Logradouro implements java.io.Serializable {
 	private String logComplemento;
 	private String logTipoLogradouro;
 	private String cep;
+	private Set<Escolalideres> escolalidereses = new HashSet<Escolalideres>(0);
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Bases> baseses = new HashSet<Bases>(0);
 	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
@@ -53,8 +53,8 @@ public class Logradouro implements java.io.Serializable {
 	public Logradouro(int logNumSequencial, Bairro bairro, String ufeSg,
 			int locNuSequencial, String logNo, String logNome,
 			String logComplemento, String logTipoLogradouro, String cep,
-			Set<Celulas> celulases, Set<Bases> baseses,
-			Set<Discipulos> discipuloses) {
+			Set<Escolalideres> escolalidereses, Set<Celulas> celulases,
+			Set<Bases> baseses, Set<Discipulos> discipuloses) {
 		this.logNumSequencial = logNumSequencial;
 		this.bairro = bairro;
 		this.ufeSg = ufeSg;
@@ -64,6 +64,7 @@ public class Logradouro implements java.io.Serializable {
 		this.logComplemento = logComplemento;
 		this.logTipoLogradouro = logTipoLogradouro;
 		this.cep = cep;
+		this.escolalidereses = escolalidereses;
 		this.celulases = celulases;
 		this.baseses = baseses;
 		this.discipuloses = discipuloses;
@@ -150,6 +151,15 @@ public class Logradouro implements java.io.Serializable {
 
 	public void setCep(String cep) {
 		this.cep = cep;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "logradouro")
+	public Set<Escolalideres> getEscolalidereses() {
+		return this.escolalidereses;
+	}
+
+	public void setEscolalidereses(Set<Escolalideres> escolalidereses) {
+		this.escolalidereses = escolalidereses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "logradouro")
