@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/05/2011 15:49:37 by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -22,7 +22,7 @@ public class Encontros implements java.io.Serializable {
 
 	private Integer encCod;
 	private String encDescricao;
-	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private Set<Palestras> palestrases = new HashSet<Palestras>(0);
 
 	public Encontros() {
 	}
@@ -31,9 +31,9 @@ public class Encontros implements java.io.Serializable {
 		this.encDescricao = encDescricao;
 	}
 
-	public Encontros(String encDescricao, Set<Discipulos> discipuloses) {
+	public Encontros(String encDescricao, Set<Palestras> palestrases) {
 		this.encDescricao = encDescricao;
-		this.discipuloses = discipuloses;
+		this.palestrases = palestrases;
 	}
 
 	@Id
@@ -56,13 +56,13 @@ public class Encontros implements java.io.Serializable {
 		this.encDescricao = encDescricao;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "encontroses")
-	public Set<Discipulos> getDiscipuloses() {
-		return this.discipuloses;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "encontros")
+	public Set<Palestras> getPalestrases() {
+		return this.palestrases;
 	}
 
-	public void setDiscipuloses(Set<Discipulos> discipuloses) {
-		this.discipuloses = discipuloses;
+	public void setPalestrases(Set<Palestras> palestrases) {
+		this.palestrases = palestrases;
 	}
 
 }

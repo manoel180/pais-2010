@@ -1,12 +1,14 @@
 package br.com.pais.entities;
 
-// Generated 25/01/2011 16:14:58 by Hibernate Tools 3.4.0.Beta1
+// Generated 06/05/2011 15:49:37 by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,7 +20,7 @@ import javax.persistence.Table;
 @Table(name = "zona")
 public class Zona implements java.io.Serializable {
 
-	private int idzona;
+	private Integer idzona;
 	private String descricao;
 	private Set<Celulas> celulases = new HashSet<Celulas>(0);
 	private Set<Bases> baseses = new HashSet<Bases>(0);
@@ -26,25 +28,20 @@ public class Zona implements java.io.Serializable {
 	public Zona() {
 	}
 
-	public Zona(int idzona) {
-		this.idzona = idzona;
-	}
-
-	public Zona(int idzona, String descricao, Set<Celulas> celulases,
-			Set<Bases> baseses) {
-		this.idzona = idzona;
+	public Zona(String descricao, Set<Celulas> celulases, Set<Bases> baseses) {
 		this.descricao = descricao;
 		this.celulases = celulases;
 		this.baseses = baseses;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idzona", unique = true, nullable = false)
-	public int getIdzona() {
+	public Integer getIdzona() {
 		return this.idzona;
 	}
 
-	public void setIdzona(int idzona) {
+	public void setIdzona(Integer idzona) {
 		this.idzona = idzona;
 	}
 

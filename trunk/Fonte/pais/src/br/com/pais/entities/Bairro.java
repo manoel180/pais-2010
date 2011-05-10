@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 01/02/2011 10:30:59 by Hibernate Tools 3.4.0.CR1
+// Generated 06/05/2011 15:49:37 by Hibernate Tools 3.4.0.CR1
 
 import java.util.HashSet;
 import java.util.Set;
