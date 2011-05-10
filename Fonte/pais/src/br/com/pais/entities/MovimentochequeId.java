@@ -3,6 +3,7 @@ package br.com.pais.entities;
 // Generated 14/02/2011 15:49:33 by Hibernate Tools 3.4.0.Beta1
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
