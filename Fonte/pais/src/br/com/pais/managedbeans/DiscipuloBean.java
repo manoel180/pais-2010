@@ -475,7 +475,7 @@ public class DiscipuloBean {
 		editarM12 = discipulos.getDism12() == 's';
 		
 		source.addAll(new EncontrosDaoImp().todos());
-		target = discipulos.getEncontroses();
+		//target = discipulos.getEncontroses();
 		
 		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp().todos());
 		targetFormacaoEclesiasticas = discipulos.getFormacaoeclesiasticases();
@@ -547,7 +547,7 @@ public class DiscipuloBean {
 		editarM12 = discipulos.getDism12() == 's';
 		
 		source.addAll(new EncontrosDaoImp().todos());
-		target = discipulos.getEncontroses();
+		//target = discipulos.getEncontroses();
 		
 		sourceFormacaoEclesiasticas.addAll(new FormacaoeclesiasticasDaoImp().todos());
 		targetFormacaoEclesiasticas = discipulos.getFormacaoeclesiasticases();
@@ -628,9 +628,9 @@ public class DiscipuloBean {
 		
 		discipulos.setDisSenha(new Criptografia().criptografar(discipulos.getDisSenha()));
 		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
-		discipulos.setEncontroses(ListaEncontros.getTarget());
+		//discipulos.setEncontroses(ListaEncontros.getTarget());
 		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
-		discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
+		//discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
 
 		
 		discipulos.setEstadocivil(estadocivil);
@@ -699,7 +699,7 @@ public class DiscipuloBean {
 		}
 		
 		discipulos.setDisSexo(discipuloSessao.getDiscipulos().getDisSexo());
-		discipulos.setEncontroses(ListaEncontros.getTarget());
+		//discipulos.setEncontroses(ListaEncontros.getTarget());
 		discipulos.setFormacaoeclesiasticases(ListaFormacaoEclesiasticas.getTarget());
 		discipulos.setDiscipulos(discipuloSessao.getDiscipulos());
 

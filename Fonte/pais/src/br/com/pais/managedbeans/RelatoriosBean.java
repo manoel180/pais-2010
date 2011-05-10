@@ -31,78 +31,93 @@ public class RelatoriosBean {
 	private TreeNode root;
 	private ArrayList<TreeNode> nodes = new ArrayList<TreeNode>();
 	private int totalDiscipulos = 0;
+	private int totalCelulas = 0;
+	private int totalBases = 0;
+	private int totalGeracoes = 0;
 	private int geracoes = 0;
-	
 
 	public void carregarLideres(Discipulos discipulos, TreeNode pai) {
 		treeNode = new DefaultTreeNode();
-		listDiscipulos =  discipulos.getDiscipuloses();
-			for (Discipulos d : listDiscipulos) {
-				treeNode = new DefaultTreeNode(d,pai);
-				
-				//nodes.add(new DefaultTreeNode(d, pai));
-				nodes.add(treeNode);
-				index = nodes.indexOf(treeNode);
+		listDiscipulos = discipulos.getDiscipuloses();
+		for (Discipulos d : listDiscipulos) {
+			treeNode = new DefaultTreeNode(d, pai);
 
-				if (!discipulos.getDiscipuloses().isEmpty()) {
-					carregarLideres(d, (nodes.get(index)));
-				}
+			// nodes.add(new DefaultTreeNode(d, pai));
+			nodes.add(treeNode);
+			index = nodes.indexOf(treeNode);
+
+			if (!discipulos.getDiscipuloses().isEmpty()) {
+				carregarLideres(d, (nodes.get(index)));
 			}
+		}
 	}
 
-	/*
-	 * public SelectItem[] getGeracaoCombo() { listaGeracoes = new
-	 * ArrayList<Geracoes>(); listaGeracoes.addAll(new
-	 * GeracaoDaoImp().listarGeracoes()); List<SelectItem> itens = new
-	 * ArrayList<SelectItem>(listaGeracoes.size());
-	 * 
-	 * for(Geracoes g : listaGeracoes) { itens.add(new SelectItem(g.getGerCod(),
-	 * g.getGerDescricao())); } return itens.toArray(new
-	 * SelectItem[itens.size()]); }
-	 */
 	public Discipulos montarRelatorioGeracoes(Discipulos discipulos) {
-		// listaDiscipulos = new ArrayList<Discipulos>();
-		/* listaDiscipulos = discipulos.getDiscipuloses(); */
+
+		discipulos.setTotalBases(discipulos.getBasesesForBasDisCod().size());
+		discipulos.setTotalCelulas(discipulos.getCelulases_1().size());
+		discipulos.setTotalGeracoes(0);
+		int geracoes = 0;
+		
+		if(!discipulos.getDiscipuloses().isEmpty()){
+			
+			discipulos.setTotalGeracoes(+1);
 		for (Discipulos d : discipulos.getDiscipuloses()) {
-			
-			
-			if (!d.getDiscipuloses().isEmpty()) {
-				montarRelatorioGeracoes(d);
-				discipulos.setTotalDiscipulos(discipulos.getTotalDiscipulos()+ d.getTotalDiscipulos() + 1);
-				/*if (!d.getBasesesForBasDisCod().isEmpty()) {
-					discipulos.setTotalBases(d.getTotalBases() + 1);
-				}*/
-
-			} else {
-				/*if (!d.getBasesesForBasDisCod().isEmpty()) {
-					discipulos.setTotalBases(d.getBasesesForBasDisCod().size() + 1);
-				}*/
-
-				discipulos.setTotalDiscipulos(discipulos.getTotalDiscipulos() + 1);
+			// Verifica se possui bases
+			if (!d.getBasesesForBasDisCod().isEmpty()) {
+				discipulos.setTotalBases(discipulos.getTotalBases()
+						+ d.getBasesesForBasDisCod().size());
+			}
+			// Verifica se possui celulas
+			if (!d.getCelulases_1().isEmpty()) {
+				discipulos.setTotalCelulas(discipulos.getTotalCelulas()
+						+ d.getCelulases_1().size());
 			}
 
-			System.out.println(discipulos.getDisnome() + " "
-					+ discipulos.getTotalDiscipulos() + " "
-					+ discipulos.getTotalBases());
-			// listaDiscipulos.add(d);
+			// Conta quantidade de discipulos
+			if (!d.getDiscipuloses().isEmpty()) {
 
+				d = montarRelatorioGeracoes(d);
+				discipulos.setTotalGeracoes(d.getTotalGeracoes()+1);
+				discipulos.setTotalDiscipulos(discipulos.getTotalDiscipulos()
+						+ d.getTotalDiscipulos() + 1);
+
+			} else {
+
+				discipulos
+						.setTotalDiscipulos(discipulos.getTotalDiscipulos() + 1);
+			}
+			
+			}
 		}
+		
+		/*if (geracoes >= discipulos.getTotalGeracoes()) {
+			discipulos.setTotalGeracoes(geracoes);*/
+		//}
+		
 		return discipulos;
 
 	}
 
 	public void gerarRelatorioGeracoesCadastradas() {
-		discipulador = 1;
-		new RelatorioDaoImp().gerarRelatorioGeracoes(selectedLider.getDisCod());
+		new RelatorioDaoImp().gerarRelatorioGeracoes(listaDiscipulos);
 	}
 
 	public void listarGeracoesCadastradas() {
 		totalDiscipulos = 0;
+		totalBases= 0 ;
+		totalCelulas = 0;
+		totalGeracoes = 0;
 		listaDiscipulos = new ArrayList<Discipulos>();
-		listaDiscipulos.addAll(selectedLider.getDiscipuloses());
+		listaDiscipulos = (new DiscipuloDaoImp().listarDiscipulos(selectedLider
+				.getDisCod()));
 		for (Discipulos d : listaDiscipulos) {
-			listaDiscipulos.set(listaDiscipulos.indexOf(d),(montarRelatorioGeracoes(d)));
+			listaDiscipulos.set(listaDiscipulos.indexOf(d),
+					(montarRelatorioGeracoes(d)));
 			totalDiscipulos = totalDiscipulos + d.getTotalDiscipulos();
+			totalCelulas = totalCelulas + d.getTotalCelulas();
+			totalBases = totalBases + d.getTotalBases();
+			totalGeracoes = totalGeracoes + d.getTotalGeracoes();
 		}
 	}
 
@@ -112,19 +127,26 @@ public class RelatoriosBean {
 
 		index = 0;
 		totalDiscipulos = 0;
+		totalBases = 0;
+		totalCelulas = 0;
+		totalGeracoes = 0;
 		selectedLider = new Discipulos();
 		listaDiscipulos = new ArrayList<Discipulos>();
-		listDiscipulos = new ArrayList<Discipulos>();
 		root = new DefaultTreeNode("root", null);
 		nodes.add(new DefaultTreeNode(discipuloSessao.getDiscipulos(), root));
 		carregarLideres(discipuloSessao.getDiscipulos(), nodes.get(0));
-		// listaDiscipulos.addAll(new
-		// DiscipuloDaoImp().listarDiscipulos(discipuloSessao.getDiscipulos().getDisCod()));
+
 		selectedLider = discipuloSessao.getDiscipulos();
-		listaDiscipulos.addAll(selectedLider.getDiscipuloses());
+
+		listaDiscipulos = (new DiscipuloDaoImp().listarDiscipulos(selectedLider
+				.getDisCod()));
 		for (Discipulos d : listaDiscipulos) {
-			listaDiscipulos.set(listaDiscipulos.indexOf(d),(montarRelatorioGeracoes(d)));
+			listaDiscipulos.set(listaDiscipulos.indexOf(d),
+					(montarRelatorioGeracoes(d)));
 			totalDiscipulos = totalDiscipulos + d.getTotalDiscipulos();
+			totalCelulas = totalCelulas + d.getTotalCelulas();
+			totalBases = totalBases + d.getTotalBases();
+			totalGeracoes = totalGeracoes + d.getTotalGeracoes();
 		}
 
 		return "/list/geracoesCadastradas.mir";
@@ -258,9 +280,55 @@ public class RelatoriosBean {
 	}
 
 	/**
-	 * @param totalDiscipulos the totalDiscipulos to set
+	 * @param totalDiscipulos
+	 *            the totalDiscipulos to set
 	 */
 	public void setTotalDiscipulos(int totalDiscipulos) {
 		this.totalDiscipulos = totalDiscipulos;
+	}
+
+	/**
+	 * @return the totalCelulas
+	 */
+	public int getTotalCelulas() {
+		return totalCelulas;
+	}
+
+	/**
+	 * @param totalCelulas
+	 *            the totalCelulas to set
+	 */
+	public void setTotalCelulas(int totalCelulas) {
+		this.totalCelulas = totalCelulas;
+	}
+
+	/**
+	 * @return the totalBases
+	 */
+	public int getTotalBases() {
+		return totalBases;
+	}
+
+	/**
+	 * @param totalBases
+	 *            the totalBases to set
+	 */
+	public void setTotalBases(int totalBases) {
+		this.totalBases = totalBases;
+	}
+
+	/**
+	 * @return the totalGeracoes
+	 */
+	public int getTotalGeracoes() {
+		return totalGeracoes;
+	}
+
+	/**
+	 * @param totalGeracoes
+	 *            the totalGeracoes to set
+	 */
+	public void setTotalGeracoes(int totalGeracoes) {
+		this.totalGeracoes = totalGeracoes;
 	}
 }
