@@ -13,7 +13,6 @@ public class FrequenciaId implements java.io.Serializable {
 
 	private int discipulosDisCod;
 	private int palestrasHasEncontrosPalestrasPalCod;
-	private int palestrasHasEncontrosEncontrosEncCod;
 
 	public FrequenciaId() {
 	}
@@ -23,7 +22,6 @@ public class FrequenciaId implements java.io.Serializable {
 			int palestrasHasEncontrosEncontrosEncCod) {
 		this.discipulosDisCod = discipulosDisCod;
 		this.palestrasHasEncontrosPalestrasPalCod = palestrasHasEncontrosPalestrasPalCod;
-		this.palestrasHasEncontrosEncontrosEncCod = palestrasHasEncontrosEncontrosEncCod;
 	}
 
 	@Column(name = "discipulos_disCod", nullable = false)
@@ -45,16 +43,6 @@ public class FrequenciaId implements java.io.Serializable {
 		this.palestrasHasEncontrosPalestrasPalCod = palestrasHasEncontrosPalestrasPalCod;
 	}
 
-	@Column(name = "Palestras_has_encontros_encontros_EncCod", nullable = false)
-	public int getPalestrasHasEncontrosEncontrosEncCod() {
-		return this.palestrasHasEncontrosEncontrosEncCod;
-	}
-
-	public void setPalestrasHasEncontrosEncontrosEncCod(
-			int palestrasHasEncontrosEncontrosEncCod) {
-		this.palestrasHasEncontrosEncontrosEncCod = palestrasHasEncontrosEncontrosEncCod;
-	}
-
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -66,9 +54,7 @@ public class FrequenciaId implements java.io.Serializable {
 
 		return (this.getDiscipulosDisCod() == castOther.getDiscipulosDisCod())
 				&& (this.getPalestrasHasEncontrosPalestrasPalCod() == castOther
-						.getPalestrasHasEncontrosPalestrasPalCod())
-				&& (this.getPalestrasHasEncontrosEncontrosEncCod() == castOther
-						.getPalestrasHasEncontrosEncontrosEncCod());
+						.getPalestrasHasEncontrosPalestrasPalCod());
 	}
 
 	public int hashCode() {
@@ -76,7 +62,6 @@ public class FrequenciaId implements java.io.Serializable {
 
 		result = 37 * result + this.getDiscipulosDisCod();
 		result = 37 * result + this.getPalestrasHasEncontrosPalestrasPalCod();
-		result = 37 * result + this.getPalestrasHasEncontrosEncontrosEncCod();
 		return result;
 	}
 

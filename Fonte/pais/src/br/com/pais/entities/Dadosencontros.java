@@ -32,6 +32,7 @@ public class Dadosencontros implements java.io.Serializable {
 	private Encontros encontros;
 	private String dadenclocal;
 	private char dadencstatus;
+	private Discipulos discipulos;//responsavel
 	private Date dadenchorario;
 	private Date dadencdatainicio;
 	private Date dadencdatafim;
@@ -40,8 +41,7 @@ public class Dadosencontros implements java.io.Serializable {
 	private Set<Lideres> lidereses = new HashSet<Lideres>(0);
 	private Set<Discipulos> discipuloses_1 = new HashSet<Discipulos>(0);
 	private Set<Discipulos> discipuloses_2 = new HashSet<Discipulos>(0);
-	private Set<Encontrospalestras> encontrospalestrases = new HashSet<Encontrospalestras>(
-			0);
+	private Set<Encontrospalestras> encontrospalestrases = new HashSet<Encontrospalestras>(0);
 
 	public Dadosencontros() {
 	}
@@ -57,7 +57,7 @@ public class Dadosencontros implements java.io.Serializable {
 
 	public Dadosencontros(Encontros encontros, String dadenclocal,
 			char dadencstatus, Date dadenchorario, Date dadencdatainicio,
-			Date dadencdatafim, BigDecimal dadencvalor,
+			Date dadencdatafim, BigDecimal dadencvalor,Discipulos discipulos,
 			Set<Discipulos> discipuloses, Set<Lideres> lidereses,
 			Set<Discipulos> discipuloses_1, Set<Discipulos> discipuloses_2,
 			Set<Encontrospalestras> encontrospalestrases) {
@@ -69,6 +69,7 @@ public class Dadosencontros implements java.io.Serializable {
 		this.dadencdatafim = dadencdatafim;
 		this.dadencvalor = dadencvalor;
 		this.discipuloses = discipuloses;
+		this.discipulos = discipulos;
 		this.lidereses = lidereses;
 		this.discipuloses_1 = discipuloses_1;
 		this.discipuloses_2 = discipuloses_2;
@@ -96,6 +97,16 @@ public class Dadosencontros implements java.io.Serializable {
 		this.encontros = encontros;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dadencresponsavel")
+	public Discipulos getDiscipulos() {
+		return this.discipulos;
+	}
+
+	public void setDiscipulos(Discipulos discipulos) {
+		this.discipulos = discipulos;
+	}
+	
 	@Column(name = "dadenclocal", nullable = false, length = 100)
 	public String getDadenclocal() {
 		return this.dadenclocal;
