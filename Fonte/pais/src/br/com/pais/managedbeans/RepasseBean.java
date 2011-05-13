@@ -16,6 +16,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 
+import org.primefaces.event.CloseEvent;
 import org.primefaces.event.DateSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -28,15 +29,14 @@ import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.GeracaoDao;
 import br.com.pais.dao.MovimentoChequeDao;
 import br.com.pais.dao.MovimentoDao;
-import br.com.pais.dao.RelatorioDao;
 import br.com.pais.dao.RepasseDao;
 import br.com.pais.dao.impl.CelulaDaoImp;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
 import br.com.pais.dao.impl.GeracaoDaoImp;
 import br.com.pais.dao.impl.MovimentoChequeDaoImp;
 import br.com.pais.dao.impl.MovimentoDaoImp;
-import br.com.pais.dao.impl.RelatorioDaoImp;
 import br.com.pais.dao.impl.RepasseDaoImp;
+import br.com.pais.entities.Bases;
 import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Geracoes;
@@ -45,8 +45,10 @@ import br.com.pais.entities.Movimentocheque;
 import br.com.pais.entities.MovimentochequeId;
 import br.com.pais.entities.Repasse;
 import br.com.pais.entities.RepasseId;
-import br.com.pais.relatorio.Protocolo;
-import br.com.pais.relatorio.ProtocoloCheques;
+import br.com.pais.relatorio.RelatorioDao;
+import br.com.pais.relatorio.imp.Protocolo;
+import br.com.pais.relatorio.imp.ProtocoloCheques;
+import br.com.pais.relatorio.imp.RelatorioDaoImp;
 import br.com.pais.util.ApplicationSecurityManager;
 import br.com.pais.util.SendEMail;
 
@@ -90,7 +92,8 @@ public class RepasseBean {
 	private MovimentoChequeDao movimentoChequeDao = new MovimentoChequeDaoImp();
 	private RelatorioDao relatorioDao = new RelatorioDaoImp();
 	
-	private boolean dtM12 = false;
+	private boolean dtM12Celulas = false;
+	private boolean dtM12Bases = false;
 	private int comboGeracao = 0;
 	private Double totalNaoRecebido = 0.00;
 	private String totalStringNaoRecebido = "";
@@ -148,6 +151,10 @@ public class RepasseBean {
 	private boolean mostrarGrdRepasseFinanceiroCheque = false;
 	private boolean mostrarGrdRepasseFinanceiroDinheiroCheque = false;
 	private boolean mostrarDtArvoreRepassesDetalhe = false;
+	
+	private boolean mostrarComboGeracaoEnviados = false;
+	private boolean mostrarComboGeracaoNaoRecebidos = false;
+	private boolean movimentoCelula = false;
 
 	public String prepararArvoreDiscipulo() throws Exception{
 		root = new DefaultTreeNode("root", null);
@@ -162,11 +169,28 @@ public class RepasseBean {
 		return "/cad/repasseArvoresRepasses.mir";
 	}
 	
-	public void detalheArvoreSelecionada(){
+	public void detalheArvoreSelecionada(){	
+		List<Object> obj;
+		Object[] objeto;
+		int codDiscipulo = 0;
 		
-		List<Object> obj = repasseDao.trasCodigoDiscipuloRepasse(repasseSelecionadoArvore.getMovimento().getMovCod()); //[2] retornou        
-		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
-		int codDiscipulo = (Integer) objeto[0]; //transforma objeto[0] me Double
+		if(repasseSelecionadoArvore.getMovimento().getMovVisualizado().equals("N")){
+			movimento = new Movimento();
+			movimento = repasseSelecionadoArvore.getMovimento();
+			movimento.setMovVisualizado("S");
+			movimentoDao.atualizar(movimento);
+		}
+		
+		if(repasseSelecionadoArvore.getMovimento().getCelulas() == null){
+			obj = repasseDao.trasCodigoDiscipuloRepassePorBase(repasseSelecionadoArvore.getMovimento().getMovCod()); //[2] retornou 
+			objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			codDiscipulo = (Integer) objeto[0]; //transforma objeto[0] me Double
+		}
+		else{
+			obj = repasseDao.trasCodigoDiscipuloRepassePorCelula(repasseSelecionadoArvore.getMovimento().getMovCod()); //[2] retornou 
+			objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			codDiscipulo = (Integer) objeto[0]; //transforma objeto[0] me Double
+		}
 		
 		discipuloArvoreSelecionada = discipuloDao.listarDiscipulador(codDiscipulo).get(0);
 		movimentoChequeNoPersistence = new MovimentoCheques();
@@ -242,6 +266,10 @@ public class RepasseBean {
 		ultimoDiaCorrente = event.getDate();
 		criarArvoreRepasseDiscipulo();
     }
+	
+	 public void handleCloseDialogDetalheRepasse(CloseEvent event) {
+		 criarArvoreRepasseDiscipulo();
+	 }
 	
 	public void criarArvoreRepasseDiscipulo(){
 		
@@ -370,13 +398,29 @@ public class RepasseBean {
     	for (Movimento mov : listaMovimentosFilhos) {
 			//SETA O MOVIMENTO NO NODO
         	arvoreLista = new ArvoreListarGeracoes();
-    		arvoreLista.setDiscipulo(mov.getCelulas().getDiscipulos());
-    		arvoreLista.setGeracao(mov.getCelulas().getGeracoes());
-    		arvoreLista.setMovimento(mov);
-    		arvoreLista.setMostrarDetalhe(true);
-    		arvoreLista.setMostrarFoto(true);
-    		arvoreLista.setMostrarGeracao(false);
-    		arvoreLista.setMostrarGeracao2(true);
+        	
+        	//Pesquisa Movimento Detalhados Celulas
+    		if(mov.getMovTipo().equals("Oferta de Célula")
+    		|| mov.getMovTipo().equals("Oferta de Macro-Célula")){
+    			arvoreLista.setDiscipulo(mov.getCelulas().getDiscipulos());
+        		arvoreLista.setGeracao(mov.getCelulas().getGeracoes());
+        		arvoreLista.setMovimento(mov);
+        		arvoreLista.setMostrarDetalhe(true);
+        		arvoreLista.setMostrarFoto(true);
+        		arvoreLista.setMostrarFoto2(false);
+        		arvoreLista.setMostrarGeracao(false);
+        		arvoreLista.setMostrarGeracao2(true);
+    		}
+    		else{
+    			arvoreLista.setDiscipulo(mov.getBases().getLiderBase());
+        		arvoreLista.setGeracao(mov.getBases().getLiderBase().getGeracoes());
+        		arvoreLista.setMovimento(mov);
+        		arvoreLista.setMostrarDetalhe(true);
+        		arvoreLista.setMostrarFoto(false);
+        		arvoreLista.setMostrarFoto2(true);
+        		arvoreLista.setMostrarGeracao(false);
+        		arvoreLista.setMostrarGeracao2(true);
+    		}
     		
 			treeNode = new DefaultTreeNode(arvoreLista,pai);
 			nodes.add(treeNode);
@@ -497,9 +541,24 @@ public class RepasseBean {
 		movimentoSelecionado = new Movimento();
 		movimentoSelecionado = movimento;
 		
-		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosTodosRecebidos(movimentoSelecionado.getCelulas().getCelCod(),
-		movimentoSelecionado.getMovTipo(), movimentoSelecionado.getMovEspecie(), "N", inicio, fim));
+		//Pesquisa Movimento Detalhados Celulas
+		if(movimentoSelecionado.getMovTipo().equals("Oferta de Célula")
+		|| movimentoSelecionado.getMovTipo().equals("Oferta de Macro-Célula")){
+			
+			listaMovimentos = new ArrayList<Movimento>();
+			listaMovimentos.addAll(repasseDao.listarMovimentosTodosReceberCelulas(movimentoSelecionado.getCelulas().getCelCod(),
+			movimentoSelecionado.getMovTipo(), movimentoSelecionado.getMovEspecie(), "N", inicio, fim));
+			
+			movimentoCelula = true;
+		}
+		//Pesquisa Movimento Detalhados Bases
+		else{
+			listaMovimentos = new ArrayList<Movimento>();
+			listaMovimentos.addAll(repasseDao.listarMovimentosTodosReceberBases(movimentoSelecionado.getBases().getBasCod(),
+			movimentoSelecionado.getMovTipo(), movimentoSelecionado.getMovEspecie(), "N", inicio, fim));
+			
+			movimentoCelula = false;
+		}
 		
 		totalNaoRecebido = 0.00;
 		for(Movimento mov : listaMovimentos){
@@ -584,9 +643,24 @@ public class RepasseBean {
 		movimentoSelecionado = new Movimento();
 		movimentoSelecionado = movimento;
 		
-		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosTodosRecebidos(movimento.getCelulas().getCelCod(),
-		movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim));
+		//Pesquisa Movimento Detalhados Celulas
+		if(movimentoSelecionado.getMovTipo().equals("Oferta de Célula")
+		|| movimentoSelecionado.getMovTipo().equals("Oferta de Macro-Célula")){
+			
+			listaMovimentos = new ArrayList<Movimento>();
+			listaMovimentos.addAll(repasseDao.listarMovimentosTodosRecebidosCelulas(movimento.getCelulas().getCelCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim));
+			
+			movimentoCelula = true;
+		}
+		//Pesquisa Movimento Detalhados Bases
+		else{
+			listaMovimentos = new ArrayList<Movimento>();
+			listaMovimentos.addAll(repasseDao.listarMovimentosTodosRecebidosBases(movimento.getBases().getBasCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim));
+			
+			movimentoCelula = false;
+		}
 		
 		totalNaoRecebido = 0.00;
 		for(Movimento mov : listaMovimentos){
@@ -652,13 +726,43 @@ public class RepasseBean {
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
+		//PEGO O DISCIPULADOR DO LOGADO
+		discipuladorLogado = new Discipulos();
+	    discipuladorLogado = discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()).get(0);
+	    	
 		//Seta o Movimento Selecionado No Filtro
 		movimentoSelecionado = new Movimento();
 		movimentoSelecionado = movimento;
 		
-		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosTodosEnviados(movimento.getCelulas().getCelCod(),
-		movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+		//M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	listaMovimentos = new ArrayList<Movimento>();
+			listaMovimentos.addAll(repasseDao.listarMovimentosTodosEnviadosCelulas(movimento.getCelulas().getCelCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+			
+			movimentoCelula = true;
+	    }
+	    //DISCIPILOS DO M12 DO RENNER
+	    else{
+	    	//Pesquisa Movimento Detalhados Celulas
+			if(movimentoSelecionado.getMovTipo().equals("Oferta de Célula")
+			|| movimentoSelecionado.getMovTipo().equals("Oferta de Macro-Célula")){
+				
+				listaMovimentos = new ArrayList<Movimento>();
+				listaMovimentos.addAll(repasseDao.listarMovimentosTodosEnviadosCelulas(movimento.getCelulas().getCelCod(),
+				movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+				
+				movimentoCelula = true;
+			}
+			//Pesquisa Movimento Detalhados Bases
+			else{
+				listaMovimentos = new ArrayList<Movimento>();
+				listaMovimentos.addAll(repasseDao.listarMovimentosTodosEnviadosBases(movimento.getBases().getBasCod(),
+				movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+				
+				movimentoCelula = false;
+			}
+	    }
 		
 		totalNaoRecebido = 0.00;
 		for(Movimento mov : listaMovimentos){
@@ -753,7 +857,12 @@ public class RepasseBean {
 			movimento.setMovHoraBaixa(null);
 			movimento.setMovProtocolo(gerarProtocolo());
 			movimento.setMovProtocoloPai(null);
+			
+			if(enviarFinanceiro == true)movimento.setMovOfertaM12("S");
+			else movimento.setMovOfertaM12("N");
+			
 			movimento.setMovRecebido("N");
+			movimento.setMovVisualizado("N");
 			movimento.setMovTipo(movimentoSelecionado.getMovTipo());
 			movimento.setMovEspecie(movimentoSelecionado.getMovEspecie());
 			movimento.setMovValor(totalNaoRecebido);
@@ -806,6 +915,7 @@ public class RepasseBean {
 					prencheChequeDialogRepasseGerado(movimentoChequeId);
 				}
 			}
+			
 			preencheProtocoloGerado();
 			
 			enviarEmailMensagemRepasseRecebido(diretorioImg, discipuloSessao.getDiscipulos().getDisnome(), 
@@ -953,7 +1063,8 @@ public class RepasseBean {
 		repasse = new Repasse();
 		
 		comboGeracao = 0;
-		dtM12 = false;
+		dtM12Celulas = false;
+		dtM12Bases = false;
 		
 		return "/cad/repasseListarRecebidos.mir";
 	}
@@ -965,8 +1076,13 @@ public class RepasseBean {
 		repasse = new Repasse();
 		
 		comboGeracao = 0;
-		dtM12 = false;
+		dtM12Celulas = false;
+		dtM12Bases = false;
 		
+		//PEGO O DISCIPULADOR DO LOGADO
+		discipuladorLogado = new Discipulos();
+	    discipuladorLogado = discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()).get(0);
+	    
 		return "/cad/repasseListarEnviados.mir";
 	}
 	
@@ -1001,30 +1117,89 @@ public class RepasseBean {
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
-		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosReceber(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao, "N", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
-		
-		totalNaoRecebido = 0.00;
-		countLista = 0;
-		
-		if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovEspecie() == "")dtM12  = false;
-		else dtM12 = true;
+		//Pesquisa Movimento Por Celulas
+		if(movimento.getMovTipo().equals("Oferta de Célula")
+		   || movimento.getMovTipo().equals("Oferta de Macro-Célula")){
+		   
+		   if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		   }
+		   else{
+				dtM12Celulas = true;
+				dtM12Bases  = false;
+		   }
+		   
+		   if(dtM12Celulas == true){
+			   listaMovimentos = new ArrayList<Movimento>();
+			   listaMovimentos.addAll(repasseDao.listarMovimentosReceberCelulas(discipuloSessao.getDiscipulos().getDisCod(), 
+			   comboGeracao, "N", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+			   
+			   listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			   for(Movimento mov: listaMovimentos){
+				   calcularValorTotalMovimentoNaoRecebidos(true, mov.getCelulas(), null);
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalNaoRecebido);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+		   }
+		}
+		//Pesquisa Movimento Por Bases
+		else{
+			if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		    }
+		    else{
+				dtM12Celulas = false;
+				dtM12Bases  = true;
+		    }
+			
+			if(dtM12Bases == true){
+				listaMovimentos = new ArrayList<Movimento>();
+				listaMovimentos.addAll(repasseDao.listarMovimentosReceberBases(discipuloSessao.getDiscipulos().getDisCod(), 
+				comboGeracao, "N", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+				
+				listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			    for(Movimento mov: listaMovimentos){
+				   calcularValorTotalMovimentoNaoRecebidos(false, null, mov.getBases());
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalNaoRecebido);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+			}
+		}
 	}
 	
 	
-	public Double calcularValorTotalMovimentoNaoRecebidos(){
+	public void calcularValorTotalMovimentoNaoRecebidos(boolean celula, Celulas cel, Bases bas){
 		SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		totalNaoRecebido = 0.00;
 		
-		List<Object> obj = repasseDao.totalMovimentosReceber(listaMovimentos.get(countLista).getCelulas().getCelCod(),
-		movimento.getMovTipo(), movimento.getMovEspecie(), "N", inicio, fim); //[1, 2] retornou        
-		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
-		totalNaoRecebido = (Double) objeto[0]; //transforma objeto[0] me Double
-	
-        return totalNaoRecebido;
+		if(celula == true){
+			List<Object> obj = repasseDao.totalMovimentosReceberCelulas(cel.getCelCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), "N", inicio, fim); //[1500.00] retornou        
+			Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			totalNaoRecebido = (Double) objeto[0]; //transforma objeto[0] em Double
+		}
+		else{
+			List<Object> obj = repasseDao.totalMovimentosReceberBases(bas.getBasCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), "N", inicio, fim); //[1500.00] retornou        
+			Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			totalNaoRecebido = (Double) objeto[0]; //transforma objeto[0] em Double
+		}
 	}          
 	
 	public void listarM12PorGeracaoRecebidos(AjaxBehaviorEvent event) throws Exception {	
@@ -1046,29 +1221,88 @@ public class RepasseBean {
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
-		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosRecebdidos(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao, "S", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
-		
-		totalRecebido = 0.00;
-		countLista = 0;
-		
-		if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovEspecie() == "")dtM12  = false;
-		else dtM12 = true;
+		//Pesquisa Movimento Por Celulas
+		if(movimento.getMovTipo().equals("Oferta de Célula")
+		   || movimento.getMovTipo().equals("Oferta de Macro-Célula")){
+		   
+		   if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		   }
+		   else{
+				dtM12Celulas = true;
+				dtM12Bases  = false;
+		   }
+		   
+		   if(dtM12Celulas == true){
+			   listaMovimentos = new ArrayList<Movimento>();
+			   listaMovimentos.addAll(repasseDao.listarMovimentosRecebidosCelulas(discipuloSessao.getDiscipulos().getDisCod(), 
+			   comboGeracao, "S", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+			   
+			   listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			   for(Movimento mov: listaMovimentos){
+				   calcularValorTotalMovimentoRecebidos(true, mov.getCelulas(), null);
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalRecebido);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+		   }
+		}
+		//Pesquisa Movimento Por Bases
+		else{
+			if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		    }
+		    else{
+				dtM12Celulas = false;
+				dtM12Bases  = true;
+		    }
+			
+			if(dtM12Bases == true){
+				listaMovimentos = new ArrayList<Movimento>();
+				listaMovimentos.addAll(repasseDao.listarMovimentosRecebidosBases(discipuloSessao.getDiscipulos().getDisCod(), 
+				comboGeracao, "S", movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+				
+				listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			    for(Movimento mov: listaMovimentos){
+				   calcularValorTotalMovimentoRecebidos(false, null, mov.getBases());
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalRecebido);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+			}
+		}
 	}
 	
-	public Double calcularValorTotalMovimentoRecebidos() {
+	public void calcularValorTotalMovimentoRecebidos(boolean celula, Celulas cel, Bases bas) {
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		totalRecebido = 0.00; 
 		
-		List<Object> obj = repasseDao.totalMovimentosRecebidos(listaMovimentos.get(countLista).getCelulas().getCelCod(),
-		movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim); //[1, 2] retornou        
-		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
-		totalRecebido = (Double) objeto[0]; //transforma objeto[0] me Double
-	
-        return totalRecebido;
+		if(celula == true){
+			List<Object> obj = repasseDao.totalMovimentosRecebidosCelulas(cel.getCelCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim); //[1500.00] retornou        
+			Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			totalRecebido = (Double) objeto[0]; //transforma objeto[0] em Double
+		}
+		else{
+			List<Object> obj = repasseDao.totalMovimentosRecebidosBases(bas.getBasCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), "S", inicio, fim); //[1500.00] retornou        
+			Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			totalRecebido = (Double) objeto[0]; //transforma objeto[0] em Double
+		}
 	}
 	
 	public void listarM12PorGeracaoEnviados(AjaxBehaviorEvent event) throws Exception {	
@@ -1090,29 +1324,151 @@ public class RepasseBean {
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		
-		listaMovimentos = new ArrayList<Movimento>();
-		listaMovimentos.addAll(repasseDao.listarMovimentosEnviados(discipuloSessao.getDiscipulos().getDisCod(), 
-		comboGeracao, movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
-		
-		totalRecebido = 0.00;
-		countLista = 0;
-		
-		if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovEspecie() == "")dtM12  = false;
-		else dtM12 = true;
+		//M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	mostrarComboGeracaoEnviados = true;
+	    	
+    	    if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		   }
+		   else{
+				dtM12Celulas = true;
+				dtM12Bases  = false;
+		   }
+    			   
+		   if(dtM12Celulas == true){
+			   listaMovimentos = new ArrayList<Movimento>();
+			   listaMovimentos.addAll(repasseDao.listarMovimentosEnviadosCelulas(discipuloSessao.getDiscipulos().getDisCod(), 
+			   comboGeracao, movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+			   
+			   listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			   for(Movimento mov: listaMovimentos){
+				   calcularValorTotalMovimentoEnviados(true, mov.getCelulas(), null);
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalEnviado);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+		   }
+	    }
+	    //DISCIPULOS DOS M12 DO RENNER
+	    else{
+		//Pesquisa Movimento Por Celulas
+		if(movimento.getMovTipo().equals("Oferta de Célula")
+		   || movimento.getMovTipo().equals("Oferta de Macro-Célula")){
+			mostrarComboGeracaoEnviados = true;
+			
+		   if(comboGeracao == 0 || movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		   }
+		   else{
+				dtM12Celulas = true;
+				dtM12Bases  = false;
+		   }
+		   
+		   if(dtM12Celulas == true){
+			   listaMovimentos = new ArrayList<Movimento>();
+			   listaMovimentos.addAll(repasseDao.listarMovimentosEnviadosCelulas(discipuloSessao.getDiscipulos().getDisCod(), 
+			   comboGeracao, movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+			   
+			   listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			   for(Movimento mov: listaMovimentos){
+				   calcularValorTotalMovimentoEnviados(true, mov.getCelulas(), null);
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalEnviado);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+		   }
+		}
+		//Pesquisa Movimento Por Bases
+		else{
+			mostrarComboGeracaoEnviados = false;
+			
+			if(movimento.getMovTipo() == "" || movimento.getMovTipo() == null  
+			|| movimento.getMovEspecie() == "" || movimento.getMovEspecie() == null){
+			   dtM12Celulas  = false;
+			   dtM12Bases  = false;
+		    }
+		    else{
+				dtM12Celulas = false;
+				dtM12Bases  = true;
+		    }
+			
+			if(dtM12Bases == true){
+				listaMovimentos = new ArrayList<Movimento>();
+				listaMovimentos.addAll(repasseDao.listarMovimentosEnviadosBases(discipuloSessao.getDiscipulos().getDisCod(), 
+				movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim));
+				
+				listaMovimentoCheque = new ArrayList<MovimentoCheques>();
+			    for(Movimento mov: listaMovimentos){
+			       calcularValorTotalMovimentoEnviados(false, null, mov.getBases());
+				   
+				   movimentoChequeNoPersistence = new MovimentoCheques();
+				   movimentoChequeNoPersistence.setMovimento(mov);
+				   movimentoChequeNoPersistence.setTotalRepasseDinheiro(totalEnviado);
+				   movimentoChequeNoPersistence.setQtdCheques(0);
+				   movimentoChequeNoPersistence.setTotalRepasseCheques(null);
+				   listaMovimentoCheque.add(movimentoChequeNoPersistence);
+			   }
+			}
+		  }
+	    }
 	}
 	
-	public Double calcularValorTotalMovimentoEnviados() {
+	public void calcularValorTotalMovimentoEnviados(boolean celula, Celulas cel, Bases bas) {
         SimpleDateFormat formatarDate = new SimpleDateFormat("yyyy-MM-dd");
 		String inicio = formatarDate.format(primeiroDiaCorrente);
 		String fim = formatarDate.format(ultimoDiaCorrente);
 		totalEnviado = 0.00; 
 		
-		List<Object> obj = repasseDao.totalMovimentosEnviados(listaMovimentos.get(countLista).getCelulas().getCelCod(),
-		movimento.getMovTipo(), movimento.getMovEspecie(), "N", inicio, fim); //[1, 2] retornou        
-		Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
-		totalEnviado = (Double) objeto[0]; //transforma objeto[0] me Double
+		if(celula == true){
+			List<Object> obj = repasseDao.totalMovimentosEnviadosCelulas(cel.getCelCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim); //[1500.00] retornou        
+			Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			totalEnviado = (Double) objeto[0]; //transforma objeto[0] em Double
+		}
+		else{
+			List<Object> obj = repasseDao.totalMovimentosEnviadosBases(bas.getBasCod(),
+			movimento.getMovTipo(), movimento.getMovEspecie(), inicio, fim); //[1500.00] retornou        
+			Object[] objeto = obj.toArray(); //transformar sua List num array de Objeto  
+			totalEnviado = (Double) objeto[0]; //transforma objeto[0] em Double
+		}
+	}
 	
-        return totalEnviado;
+	public SelectItem[] getTipoRepasseCombo() {
+		List<SelectItem> itens = new ArrayList<SelectItem>();
+	    
+	    //VERIFICO SE ESSE MEU DISCIPULADOR NÃO TEM DISCIPULADOR, ENTAUM EU SOU M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	//So Pode Mandar Mensagem Para Geração
+			itens.add(new SelectItem("Oferta de M12", "Oferta de M12"));
+			itens.add(new SelectItem("Oferta de Célula", "Oferta de Célula"));
+			itens.add(new SelectItem("Oferta de Macro-Célula", "Oferta de Macro-Célula"));
+			itens.add(new SelectItem("Oferta de Base Célular", "Oferta de Base Célular"));
+			itens.add(new SelectItem("Oferta de Base Setorial", "Oferta de Base Setorial"));
+			itens.add(new SelectItem("Oferta de Base Regional", "Oferta de Base Regional"));
+			itens.add(new SelectItem("Oferta de Base Sede", "Oferta de Base Sede"));
+	    }
+	    else{
+	    	itens.add(new SelectItem("Oferta de Célula", "Oferta de Célula"));
+			itens.add(new SelectItem("Oferta de Macro-Célula", "Oferta de Macro-Célula"));
+			itens.add(new SelectItem("Oferta de Base Célular", "Oferta de Base Célular"));
+			itens.add(new SelectItem("Oferta de Base Setorial", "Oferta de Base Setorial"));
+			itens.add(new SelectItem("Oferta de Base Regional", "Oferta de Base Regional"));
+			itens.add(new SelectItem("Oferta de Base Sede", "Oferta de Base Sede"));
+	    }
+		return itens.toArray(new SelectItem[itens.size()]);
 	}
 	
 	public String prepararRepasse() throws Exception{ 
@@ -1122,7 +1478,9 @@ public class RepasseBean {
 		repasse = new Repasse();
 		
 		comboGeracao = 0;
-		dtM12 = false;
+		dtM12Celulas = false;
+		dtM12Bases = false;
+		mostrarComboGeracaoNaoRecebidos = false;
 		
 		return "/cad/repasseCadastro.mir";
 	}
@@ -1195,12 +1553,6 @@ public class RepasseBean {
 	public void setListaDiscipulos(List<Discipulos> listaDiscipulos) {
 		this.listaDiscipulos = listaDiscipulos;
 	}
-	public boolean isDtM12() {
-		return dtM12;
-	}
-	public void setDtM12(boolean dtM12) {
-		this.dtM12 = dtM12;
-	}
 	public int getComboGeracao() {
 		return comboGeracao;
 	}
@@ -1256,7 +1608,7 @@ public class RepasseBean {
 		this.repasseId = repasseId;
 	}
 	public Double getTotalNaoRecebido() {
-		return totalNaoRecebido = calcularValorTotalMovimentoNaoRecebidos();
+		return totalNaoRecebido;
 	}
 	public void setTotalNaoRecebido(Double totalNaoRecebido) {
 		this.totalNaoRecebido = totalNaoRecebido;
@@ -1268,12 +1620,11 @@ public class RepasseBean {
 		this.totalStringNaoRecebido = totalStringNaoRecebido;
 	}
 	public Double getTotalRecebido() {
-		return totalRecebido = calcularValorTotalMovimentoRecebidos();
+		return totalRecebido;
 	}
 	public void setTotalRecebido(Double totalRecebido) {
 		this.totalRecebido = totalRecebido;
 	}
-
 	public String getTotalStringRecebido() {
 		return totalStringRecebido;
 	}
@@ -1281,7 +1632,7 @@ public class RepasseBean {
 		this.totalStringRecebido = totalStringRecebido;
 	}
 	public Double getTotalEnviado() {
-		return totalEnviado = calcularValorTotalMovimentoEnviados();
+		return totalEnviado;
 	}
 	public void setTotalEnviado(Double totalEnviado) {
 		this.totalEnviado = totalEnviado;
@@ -1627,7 +1978,9 @@ public class RepasseBean {
 	}
 	
 	public int getQtdRepassesRecebidos() {
-		qtdRepassesRecebidos = repasseDao.listarMovimentosLembrarPrincipal(discipuloSessao.getDiscipulos().getDisCod()).size();
+		int repassesCelulas = repasseDao.listarMovimentosLembrarCelulas(discipuloSessao.getDiscipulos().getDisCod()).size();
+		int repassesBases = repasseDao.listarMovimentosLembrarBases(discipuloSessao.getDiscipulos().getDisCod()).size();
+		qtdRepassesRecebidos = (repassesCelulas + repassesBases);
 		return qtdRepassesRecebidos;
 	}
 
@@ -1760,5 +2113,46 @@ public class RepasseBean {
 	public void setMostrarDtArvoreRepassesDetalhe(
 			boolean mostrarDtArvoreRepassesDetalhe) {
 		this.mostrarDtArvoreRepassesDetalhe = mostrarDtArvoreRepassesDetalhe;
+	}
+	
+	public boolean isMostrarComboGeracaoEnviados() {
+		return mostrarComboGeracaoEnviados;
+	}
+
+	public void setMostrarComboGeracaoEnviados(boolean mostrarComboGeracaoEnviados) {
+		this.mostrarComboGeracaoEnviados = mostrarComboGeracaoEnviados;
+	}
+
+	public boolean isDtM12Celulas() {
+		return dtM12Celulas;
+	}
+
+	public void setDtM12Celulas(boolean dtM12Celulas) {
+		this.dtM12Celulas = dtM12Celulas;
+	}
+
+	public boolean isDtM12Bases() {
+		return dtM12Bases;
+	}
+
+	public void setDtM12Bases(boolean dtM12Bases) {
+		this.dtM12Bases = dtM12Bases;
+	}
+	
+	public boolean isMostrarComboGeracaoNaoRecebidos() {
+		return mostrarComboGeracaoNaoRecebidos;
+	}
+
+	public void setMostrarComboGeracaoNaoRecebidos(
+			boolean mostrarComboGeracaoNaoRecebidos) {
+		this.mostrarComboGeracaoNaoRecebidos = mostrarComboGeracaoNaoRecebidos;
+	}
+	
+	public boolean isMovimentoCelula() {
+		return movimentoCelula;
+	}
+
+	public void setMovimentoCelula(boolean movimentoCelula) {
+		this.movimentoCelula = movimentoCelula;
 	}
 }

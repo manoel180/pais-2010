@@ -197,7 +197,7 @@ public class BasesBean {
 				//nodes.add(new DefaultTreeNode(d, pai));
 				nodes.add(treeNode);
 				index = nodes.indexOf(treeNode);
-			
+				System.out.println(d.getDisnome());
 				if (!discipulos.getDiscipuloses().isEmpty()) {
 					carregarLideres(d, (nodes.get(index)));
 				}
@@ -257,8 +257,7 @@ public class BasesBean {
 
 	public String prepararListarBases() {
 		listaBases = new ArrayList<Bases>();
-		listaBases.addAll(basesDao.listarBases(discipuloSessao.getDiscipulos()
-				.getDisCod()));
+		listaBases.addAll(basesDao.listarBases(discipuloSessao.getDiscipulos().getDisCod()));
 		return "/list/bases.mir";
 	}
 
