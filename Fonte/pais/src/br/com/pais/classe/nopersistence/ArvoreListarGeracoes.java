@@ -10,6 +10,7 @@ public class ArvoreListarGeracoes {
 	private Movimento movimento;
 	
 	private boolean mostrarFoto;
+	private boolean mostrarFoto2;
 	private boolean mostrarGeracao;
 	private boolean mostrarGeracao2;
 	private boolean mostrarDetalhe;
@@ -19,13 +20,14 @@ public class ArvoreListarGeracoes {
 	}
 
 	public ArvoreListarGeracoes(Discipulos discipulo, Geracoes geracao,
-			Movimento movimento, boolean mostrarFoto, boolean mostrarGeracao,
+			Movimento movimento, boolean mostrarFoto, boolean mostrarFoto2, boolean mostrarGeracao,
 			boolean mostrarGeracao2, boolean mostrarDetalhe) {
 		super();
 		this.discipulo = discipulo;
 		this.geracao = geracao;
 		this.movimento = movimento;
 		this.mostrarFoto = mostrarFoto;
+		this.mostrarFoto2 = mostrarFoto2;
 		this.mostrarGeracao = mostrarGeracao;
 		this.mostrarGeracao2 = mostrarGeracao2;
 		this.mostrarDetalhe = mostrarDetalhe;
@@ -61,6 +63,14 @@ public class ArvoreListarGeracoes {
 
 	public void setMostrarFoto(boolean mostrarFoto) {
 		this.mostrarFoto = mostrarFoto;
+	}
+	
+	public boolean isMostrarFoto2() {
+		return mostrarFoto2;
+	}
+
+	public void setMostrarFoto2(boolean mostrarFoto2) {
+		this.mostrarFoto2 = mostrarFoto2;
 	}
 
 	public boolean isMostrarGeracao() {
