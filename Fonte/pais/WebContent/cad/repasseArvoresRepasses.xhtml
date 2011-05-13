@@ -35,7 +35,7 @@
 				   <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
 				      <p:graphicImage value="#{repasseBean.arvoreSelecionada.discipulo.disfoto}" width="41" height="40"/>
 				      <h:outputText value="#{repasseBean.arvoreSelecionada.discipulo.disnome}" styleClass="formulariosObrigatorio"/>
-				      <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/>
+				      <h:outputText value="Equipe:" styleClass="formulariosObrigatorio"/>
 				      <h:outputText value="#{repasseBean.arvoreSelecionada.geracao.gerDescricao}" styleClass="formulariosFonteNormal"/>
 				   </h:panelGrid>
 				</p:tab>
@@ -59,6 +59,7 @@
 						styleClass="formularios">
 						<f:selectItem itemValue="" itemLabel="Selecione..."/>
 						<f:selectItem itemValue="Todos" itemLabel="Todos Tipos"/>
+						<f:selectItem itemValue="Oferta de M12" itemLabel="Oferta de M12"/>
 						<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
 						<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
 						<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
@@ -114,9 +115,10 @@
 						<f:facet name="header">
 						<center>Nome</center>  
 						</f:facet>
-						<p:graphicImage value="#{node.movimento.celulas.discipulos.disfoto}" width="40" height="40" 
-						rendered="#{node.mostrarFoto}"/>
+						<p:graphicImage value="#{node.movimento.celulas.discipulos.disfoto}" width="40" height="40" rendered="#{node.mostrarFoto}"/>
 						<h:outputText value="#{node.movimento.celulas.discipulos.disnome}" rendered="#{node.mostrarFoto}"/>
+						<p:graphicImage value="#{node.movimento.bases.liderBase.disfoto}" width="40" height="40" rendered="#{node.mostrarFoto2}"/>
+						<h:outputText value="#{node.movimento.bases.liderBase.disnome}" rendered="#{node.mostrarFoto2}"/>
 						<h:outputText value="#{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
 					</p:column> 
 					<p:column>
@@ -163,6 +165,24 @@
 						</h:outputText>
 						</center>
 					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>Recebido</center> 
+						</f:facet>
+						<center>
+						<p:graphicImage rendered="#{node.movimento.movRecebido == 'S'}" value="/img/ok.png"/> 
+						<p:graphicImage rendered="#{node.movimento.movRecebido == 'N'}" value="/img/cancel.png"/> 
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>Visualizado</center> 
+						</f:facet>
+						<center>
+						<p:graphicImage rendered="#{node.movimento.movVisualizado== 'S'}" value="/img/ok.png"/> 
+						<p:graphicImage rendered="#{node.movimento.movVisualizado == 'N'}" value="/img/cancel.png"/> 
+						</center>
+					</p:column>
 					<p:column>  
 			            <f:facet name="header">  
 			            <center>Ver Repasses</center>  
@@ -180,7 +200,8 @@
                 </p:treeTable>
               </p:outputPanel>
               
-            <p:dialog header="DETALHE REPASSE" widgetVar="detalheRepasseDialog" resizable="false" modal="true" width="800">
+            <p:dialog header="DETALHE REPASSE" widgetVar="detalheRepasseDialog" resizable="false" modal="true" width="800"
+            closeListener="#{repasseBean.handleCloseDialogDetalheRepasse}" onCloseUpdate="outPnlDtRepasses">
 		    <p:outputPanel id="outPnlDetalheRepasse">
 		    
 		    <p:panel>

@@ -73,32 +73,24 @@
 				        </p:panel>
 			            <p:panel header="Dados Movimento"> 
 				        <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
-				            <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/> 
-				            <h:outputText value="#{movimentacaoBean.celulaSelecionada.geracoes.gerDescricao}" styleClass="Texto_cpf_login"/>
+				            <h:outputText value="Geração:" styleClass="formulariosObrigatorio" 
+				            rendered="#{movimentacaoBean.mostraDtCelulas == true}"/> 
+				            <h:outputText value="#{movimentacaoBean.celulaSelecionada.geracoes.gerDescricao}" 
+				            rendered="#{movimentacaoBean.mostraDtCelulas == true}" styleClass="Texto_cpf_login"/>
 							<h:outputText value="Data:" styleClass="formulariosObrigatorio"/>
 							<p:calendar id="movData" value="#{movimentacaoBean.movimento.movData}"
 				                    inputStyleClass="formularios" navigator="true" showOn="button" 
 				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
 								    maxlength="10" pattern="dd/MM/yyyy"/>						
 						    <h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
-						    <h:selectOneMenu id="selTipoOferta" value="#{movimentacaoBean.movimento.movTipo}" styleClass="formularios">
-								<f:selectItem itemValue="Selecione" itemLabel="Selecione..."/>
-								<f:selectItem itemValue="Oferta de Célula" itemLabel="Oferta de Célula"/>
-								<f:selectItem itemValue="Oferta de Macro-Célula" itemLabel="Oferta de Macro-Célula"/>
-								<f:selectItem itemValue="Oferta de Base Célular" itemLabel="Oferta de Base Célular"/>
-								<f:selectItem itemValue="Oferta de Base Setorial" itemLabel="Oferta de Base Setorial"/>
-								<f:selectItem itemValue="Oferta de Base Regional" itemLabel="Oferta de Base Regional"/>
-								<f:selectItem itemValue="Oferta de Base Sede" itemLabel="Oferta de Base Sede"/>
-							<f:ajax event="change" listener="#{movimentacaoBean.comboTipoOferta}" execute="selTipoOferta selTipoEspecie"  
-							render="outPnlMovValor outPnldtCheques outBtnCadastrar"/>
-							</h:selectOneMenu>
+						    <h:outputText value="#{movimentacaoBean.movimento.movTipo}" styleClass="Texto_cpf_login"/>
 							<h:outputText value="Espécie:" styleClass="formulariosObrigatorio"/>
 							<h:selectOneMenu id="selTipoEspecie" value="#{movimentacaoBean.movimento.movEspecie}" styleClass="formularios">
 								<f:selectItem itemValue="Selecione" itemLabel="Selecione..."/>
 								<f:selectItem itemValue="Dinheiro" itemLabel="Dinheiro"/>
 								<f:selectItem itemValue="Cheque" itemLabel="Cheque"/>
 								<f:selectItem itemValue="Dinheiro e Cheque" itemLabel="Dinheiro e Cheque"/>
-							<f:ajax event="change" listener="#{movimentacaoBean.comboTipoEspecie}" execute="selTipoOferta selTipoEspecie"  
+							<f:ajax event="change" listener="#{movimentacaoBean.comboTipoEspecie}" execute="selTipoEspecie"  
 							render="outPnlMovValor outPnldtCheques outBtnCadastrar"/>
 							</h:selectOneMenu>
 						</h:panelGrid>

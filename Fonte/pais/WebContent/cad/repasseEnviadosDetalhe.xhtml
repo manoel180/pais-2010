@@ -32,10 +32,17 @@
 			<p:tabView orientation="top" style="margin-top: 20px;">
 				<p:tab title="Dados do Movimento Enviado">
 				   <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
-				      <p:graphicImage value="#{repasseBean.movimento.celulas.discipulos.disfoto}" width="41" height="40"/>
-				      <h:outputText value="#{repasseBean.movimento.celulas.discipulos.disnome}" styleClass="formulariosObrigatorio"/>
-				      <h:outputText value="Geração:" styleClass="formulariosObrigatorio"/>
-				      <h:outputText value="#{repasseBean.movimento.celulas.geracoes.gerDescricao}" styleClass="formulariosFonteNormal"/>
+				      <p:graphicImage value="#{repasseBean.movimento.celulas.discipulos.disfoto}" width="41" height="40"
+				      rendered="#{repasseBean.movimentoCelula == true}"/>
+				      <h:outputText value="#{repasseBean.movimento.celulas.discipulos.disnome}" 
+				      rendered="#{repasseBean.movimentoCelula == true}" styleClass="formulariosObrigatorio"/>
+				      <p:graphicImage value="#{repasseBean.movimento.bases.liderBase.disfoto}" width="41" height="40"
+				      rendered="#{repasseBean.movimentoCelula == false}"/>
+				      <h:outputText value="#{repasseBean.movimento.bases.liderBase.disnome}" 
+				      rendered="#{repasseBean.movimentoCelula == false}" styleClass="formulariosObrigatorio"/>
+				      <h:outputText value="Geração:" styleClass="formulariosObrigatorio" rendered="#{repasseBean.movimentoCelula == true}"/>
+				      <h:outputText value="#{repasseBean.movimento.celulas.geracoes.gerDescricao}" 
+				      rendered="#{repasseBean.movimentoCelula == true}"  styleClass="formulariosFonteNormal"/>
 				      <h:outputText value="Tipo de Movimento:" styleClass="formulariosObrigatorio"/>
 				      <h:outputText value="#{repasseBean.movimento.movTipo}" styleClass="formulariosFonteNormal"/>
 				      <h:outputText value="Espécie do Movimento:" styleClass="formulariosObrigatorio"/>
