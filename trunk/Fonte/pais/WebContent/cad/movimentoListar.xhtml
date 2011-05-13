@@ -27,11 +27,28 @@
 
 	<ui:define name="conteudo">
 		<br/>
-    
 		<h:form prependId="false">
 		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-			<p:tabView orientation="top">
-				<p:tab id="tabListarCelula" title="Células Cadastradas">
+		
+		<p:tabView orientation="top">
+		   <p:tab id="tabFiltroRepasse" title="Filtro Repasse">
+		   <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+		        <h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
+			    <h:selectOneMenu id="selTipoOferta" value="#{movimentacaoBean.movimento.movTipo}" styleClass="formularios">
+					<f:selectItem itemValue="Selecione" itemLabel="Selecione..."/>
+					<f:selectItems value="#{movimentacaoBean.tipoRepasseCombo}"/>
+				<f:ajax event="change" listener="#{movimentacaoBean.comboTipoOferta}" execute="selTipoOferta"  
+				render="outPnlDtCelulasBases"/>
+				</h:selectOneMenu>
+		   </h:panelGrid>
+		   </p:tab>
+		</p:tabView>
+		<br/>
+		
+		<p:outputPanel id="outPnlDtCelulasBases">
+			<p:tabView orientation="top" rendered="#{movimentacaoBean.mostraTabViewCelulasBases}">
+				<p:tab id="tabListarCelula" title="Células Cadastradas"
+				rendered="#{movimentacaoBean.mostraDtCelulas}">
 					<p:dataTable
 					id="dtCelula" 
 					var="cel" 
@@ -52,9 +69,9 @@
 					    filterStyleClass="formularios" resizable="true"
 						sortBy="#{cel.celNome}">
 						<f:facet name="header">
-							<h:outputText value="&nbsp;CÓDIGO DA CÉLULA" styleClass="Fonte_12"/>
+							<h:outputText value="&nbsp;EQUIPE" styleClass="Fonte_12"/>
 						</f:facet>
-						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.celCod}"/>
+						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.geracoes.gerDescricao}"/>
 					</p:column>
 					<p:column id="dtDia"
 						filterStyleClass="formularios" resizable="true"
@@ -159,10 +176,245 @@
 						
 				</p:outputPanel>
 			    </p:dialog>
-			    
+				</p:tab>
+				
+				<p:tab id="tabListarBases" title="Bases Cadastradas"
+				rendered="#{movimentacaoBean.mostraDtBases}">
+				<p:dataTable id="dtBases" var="bases"
+						selection="#{movimentacaoBean.bases}" value="#{movimentacaoBean.listaBases}"
+						paginator="true" firstPageLinkLabel="&lt;&lt; Primeiro"
+						lastPageLinkLabel="Ultimo &gt;&gt;"
+						previousPageLinkLabel="&lt; Voltar"
+						nextPageLinkLabel="Avançar &gt;" width="100%"
+						sortAscMessage="Ordena em ordem crescente"
+						sortDescMessage="Ordena em ordem descrecente" rows="10"
+						dynamic="true" emptyMessage="Nenhuma base encontrada"
+						paginatorPosition="bottom">
+
+
+						<p:column id="dtDiaBase" filterStyleClass="formularios"
+							resizable="true" sortBy="#{bases.basDiaReuniao}">
+							<f:facet name="header">
+								<h:outputText value="&nbsp;DIA DA SEMANA" styleClass="Fonte_12" />
+							</f:facet>
+							<h:outputText value="#{bases.basDiaReuniao}"
+								styleClass="Fonte_13" />
+						</p:column>
+						<p:column id="dtHoraBase" filterStyleClass="formularios"
+							resizable="true" sortBy="#{bases.basHorReuniao}">
+							<f:facet name="header">
+								<h:outputText value="&nbsp;HORA" styleClass="Fonte_12" />
+							</f:facet>
+							<h:outputText value="#{bases.basHorReuniao}"
+								styleClass="Fonte_13" />
+						</p:column>
+						<p:column id="dtTipoBase" filterStyleClass="formularios"
+							resizable="true" sortBy="#{bases.tipobases.tpbDescricao}">
+							<f:facet name="header">
+								<h:outputText value="&nbsp;TIPO BASE" styleClass="Fonte_12" />
+							</f:facet>
+							<h:outputText value="#{bases.tipobases.tpbDescricao}"
+								styleClass="Fonte_13" />
+						</p:column>
+						<p:column id="dtLiderBase" filterStyleClass="formularios"
+							resizable="true" sortBy="#{bases.liderBase.disnome}">
+							<f:facet name="header">
+								<h:outputText value="&nbsp;LÍDER DE BASE" styleClass="Fonte_12" />
+							</f:facet>
+							<h:outputText value="#{bases.liderBase.disnome}"
+								styleClass="Fonte_13" />
+						</p:column>
+
+						<p:column id="dtHora" filterStyleClass="formularios"
+							resizable="true" sortBy="#{bases.zona.descricao}">
+							<f:facet name="header">
+								<h:outputText value="&nbsp;ZONA" styleClass="Fonte_12" />
+							</f:facet>
+							<h:outputText value="#{bases.zona.descricao}"
+								styleClass="Fonte_13" />
+						</p:column>
+						<p:column style="width:10px 0px">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="&nbsp;FAZER REPASSE" styleClass="Fonte_12" />
+					    </center>
+						</f:facet> 
+						<p:commandLink title="Fazer Repasse" action="#{movimentacaoBean.prepararCadastro}" ajax="false">  
+                        <center>
+                        <p:graphicImage value="/img/dinheiro.png"/>     
+                        </center>
+                        <f:setPropertyActionListener value="#{bases}" target="#{movimentacaoBean.bases}" />
+                        </p:commandLink>
+					    </p:column>
+						<p:column style="width:10px 0px">
+							<f:facet name="header">
+								<center><h:outputText value="&nbsp;DETALHES"
+									styleClass="Fonte_12" /></center>
+							</f:facet>
+							<p:commandLink title="Detalhe Base" update="pnlBaseDetalhe"
+								oncomplete="baseDetalhe.show()">
+								<center><p:graphicImage value="/img/detalhe.png" /></center>
+								<f:setPropertyActionListener value="#{bases}"
+									target="#{basesBean.bases}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+					
+					<p:dialog header="DETALHES DA BASE" widgetVar="baseDetalhe"
+						resizable="true" width="900" modal="true" showEffect="explode"
+						hideEffect="explode">
+						<p:outputPanel id="pnlBaseDetalhe">
+
+							<p:panel>
+								<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+									<p:graphicImage
+										value="#{loginBean.discipuloSessao.discipulos.disfoto}"
+										width="41" height="40" />
+									<h:outputText
+										value="#{loginBean.discipuloSessao.discipulos.funcaoeclesiasticas.funDescricao}:  #{loginBean.discipuloSessao.discipulos.disnome}"
+										styleClass="Texto_cpf_login" />
+								</h:panelGrid>
+							</p:panel>
+
+							<p:tabView >
+								<p:tab title="Dados da Base">
+									<h:panelGrid columns="3" columnClasses="coluna1, coluna2">
+										<h:outputText value="Líder da Base:"
+											styleClass="formulariosObrigatorio" />
+
+										<p:graphicImage value="#{basesBean.bases.liderBase.disfoto}"
+											width="41" height="40" />
+										<h:outputText value="#{basesBean.bases.liderBase.disnome}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Líder Governo do Justo:"
+											styleClass="formulariosObrigatorio" />
+
+										<p:graphicImage
+											value="#{basesBean.bases.discipulosByLiderGovJusto.disfoto}"
+											width="41" height="40" />
+										<h:outputText
+											value="#{basesBean.bases.discipulosByLiderGovJusto.disnome}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Líder Ação Social:"
+											styleClass="formulariosObrigatorio" />
+
+										<p:graphicImage
+											value="#{basesBean.bases.discipulosByLiderAcaoSocial.disfoto}"
+											width="41" height="40" />
+										<h:outputText
+											value="#{basesBean.bases.discipulosByLiderAcaoSocial.disnome}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Tipo da Base:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText
+											value="#{basesBean.bases.tipobases.tpbDescricao}"
+											styleClass="Texto_cpf_login" />
+										<br />
+
+										<h:outputText value="Dia da semana:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.basDiaReuniao}"
+											styleClass="Texto_cpf_login" />
+										<br />
+
+										<h:outputText value="Hora da Reunião:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.basHorReuniao}"
+											styleClass="Texto_cpf_login" />
+										<br />
+									</h:panelGrid>
+									<br />
+								</p:tab>
+								<p:tab title="ENDEREÇO">
+									<h:panelGrid columns="4"
+										columnClasses="coluna1, coluna2, coluna1, coluna2">
+										<h:outputText value="CEP:" styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.logradouro.cep}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Tipo:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText
+											value="#{basesBean.bases.logradouro.logTipoLogradouro}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Endereço:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.logradouro.logNo}"
+											styleClass="Texto_cpf_login" cellspacing="5px" />
+
+										<h:outputText value="Número:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.basNuEndereco}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Complemento:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.basEndComplemento}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Zona:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.zona.descricao}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Bairro:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText
+											value="#{basesBean.bases.logradouro.bairro.baiNo}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Cidade:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText
+											value="#{basesBean.bases.logradouro.bairro.localidade.locNo}"
+											styleClass="Texto_cpf_login" />
+
+										<h:outputText value="Estado:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText
+											value="#{basesBean.bases.logradouro.bairro.localidade.estado.ufeNo}"
+											styleClass="Texto_cpf_login" />
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="CONTATOS">
+									<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+										<h:outputText value="Tel. Fixo:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.basTelFixo}"
+											styleClass="Texto_cpf_login" />
+										<h:outputText value="Tel. Celular:"
+											styleClass="formulariosObrigatorio" />
+										<h:outputText value="#{basesBean.bases.basTelCelular}"
+											styleClass="Texto_cpf_login" />
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="FOTOS DA BASE">
+
+									<p:galleria id="galeria" effect="slide" widgetVar="gallery">
+
+										<ui:repeat value="#{basesBean.bases.fotosbaseses}" var="image">
+
+											<p:graphicImage value="#{image.foto}"
+												title="#{image.legenda}" id="img" />
+
+										</ui:repeat>
+
+									</p:galleria>
+
+								</p:tab>
+							</p:tabView>
+						</p:outputPanel>
+					</p:dialog>
 				</p:tab>
 			</p:tabView>
 			
+			</p:outputPanel>
 			</h:form>
 	</ui:define>
 </ui:composition>
