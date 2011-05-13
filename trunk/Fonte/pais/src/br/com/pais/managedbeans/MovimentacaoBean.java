@@ -18,20 +18,21 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.event.DateSelectEvent;
 
 import br.com.pais.dao.BancosDao;
+import br.com.pais.dao.BasesDao;
 import br.com.pais.dao.CelulaDao;
 import br.com.pais.dao.DiscipuloDao;
 import br.com.pais.dao.MovimentoChequeDao;
 import br.com.pais.dao.MovimentoDao;
-import br.com.pais.dao.RelatorioDao;
 import br.com.pais.dao.RepasseDao;
 import br.com.pais.dao.impl.BancosDaoImp;
+import br.com.pais.dao.impl.BasesDaoImp;
 import br.com.pais.dao.impl.CelulaDaoImp;
 import br.com.pais.dao.impl.DiscipuloDaoImp;
 import br.com.pais.dao.impl.MovimentoChequeDaoImp;
 import br.com.pais.dao.impl.MovimentoDaoImp;
-import br.com.pais.dao.impl.RelatorioDaoImp;
 import br.com.pais.dao.impl.RepasseDaoImp;
 import br.com.pais.entities.Bancos;
+import br.com.pais.entities.Bases;
 import br.com.pais.entities.Celulas;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Movimento;
@@ -39,8 +40,10 @@ import br.com.pais.entities.Movimentocheque;
 import br.com.pais.entities.MovimentochequeId;
 import br.com.pais.entities.Repasse;
 import br.com.pais.entities.RepasseId;
-import br.com.pais.relatorio.Protocolo;
-import br.com.pais.relatorio.ProtocoloCheques;
+import br.com.pais.relatorio.RelatorioDao;
+import br.com.pais.relatorio.imp.Protocolo;
+import br.com.pais.relatorio.imp.ProtocoloCheques;
+import br.com.pais.relatorio.imp.RelatorioDaoImp;
 import br.com.pais.util.ApplicationSecurityManager;
 import br.com.pais.util.SendEMail;
 
@@ -51,6 +54,7 @@ public class MovimentacaoBean {
 	private Repasse repasse = new Repasse();
 	private RepasseId repasseId = new RepasseId();
 	private Protocolo protocolo = new Protocolo();
+	private Bases bases = new Bases();
 	private ProtocoloCheques protocoloCheques = new ProtocoloCheques();
 	private Movimentocheque movimentoCheque = new Movimentocheque();
 	private MovimentochequeId movimentoChequeId = new MovimentochequeId();
@@ -66,6 +70,7 @@ public class MovimentacaoBean {
 	private List<Bancos> listaBancos = new ArrayList<Bancos>();
 	private List<Protocolo> listaProtocolo = new ArrayList<Protocolo>();
 	private List<ProtocoloCheques> listaProtocoloCheques = new ArrayList<ProtocoloCheques>();
+	private List<Bases> listaBases = new ArrayList<Bases>();
 
 	//Daos
 	private MovimentoDao movimentoDao = new MovimentoDaoImp();
@@ -75,6 +80,7 @@ public class MovimentacaoBean {
 	private RelatorioDao relatorioDao = new RelatorioDaoImp();
 	private BancosDao bancosDao = new BancosDaoImp();
 	private MovimentoChequeDao movimentoChequeDao = new MovimentoChequeDaoImp();
+	private BasesDao basesDao = new BasesDaoImp();
 	
 	private int comboBancos = 0;
 	private boolean mostraLogoBanco = false;
@@ -110,6 +116,10 @@ public class MovimentacaoBean {
 	private String valueButtonRepasse = "";
 	private String valueButtonAbrirDialogRepasse = "";
 	private boolean enviarEmailRepasseRecebido = false;
+	
+	private boolean mostraDtCelulas = false;
+	private boolean mostraDtBases = false;
+	private boolean mostraTabViewCelulasBases = false;
 
 	public SelectItem[] getBancosCombo() {
 		listaBancos = new ArrayList<Bancos>();
@@ -243,7 +253,36 @@ public class MovimentacaoBean {
 		}
 	}
 	
+	public SelectItem[] getTipoRepasseCombo() {
+		List<SelectItem> itens = new ArrayList<SelectItem>();
+		
+		//PEGO O DISCIPULADOR DO LOGADO
+		discipuladorLogado = new Discipulos();
+	    discipuladorLogado = discipuloDao.listarDiscipulador(discipuloSessao.getDiscipulos().getDiscipulos().getDisCod()).get(0);
+	    
+	    //VERIFICO SE ESSE MEU DISCIPULADOR NÃO TEM DISCIPULADOR, ENTAUM EU SOU M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	//So Pode Mandar Mensagem Para Geração
+			itens.add(new SelectItem("Oferta de M12", "Oferta de M12"));
+			itens.add(new SelectItem("Oferta de Macro-Célula", "Oferta de Macro-Célula"));
+			itens.add(new SelectItem("Oferta de Base Célular", "Oferta de Base Célular"));
+			itens.add(new SelectItem("Oferta de Base Setorial", "Oferta de Base Setorial"));
+			itens.add(new SelectItem("Oferta de Base Regional", "Oferta de Base Regional"));
+			itens.add(new SelectItem("Oferta de Base Sede", "Oferta de Base Sede"));
+	    }
+	    else{
+	    	itens.add(new SelectItem("Oferta de Célula", "Oferta de Célula"));
+			itens.add(new SelectItem("Oferta de Macro-Célula", "Oferta de Macro-Célula"));
+			itens.add(new SelectItem("Oferta de Base Célular", "Oferta de Base Célular"));
+			itens.add(new SelectItem("Oferta de Base Setorial", "Oferta de Base Setorial"));
+			itens.add(new SelectItem("Oferta de Base Regional", "Oferta de Base Regional"));
+			itens.add(new SelectItem("Oferta de Base Sede", "Oferta de Base Sede"));
+	    }
+		return itens.toArray(new SelectItem[itens.size()]);
+	}
+	
 	public void comboTipoOferta(AjaxBehaviorEvent event){
+		/*
 		if(movimento.getMovTipo().contains("Selecione")){
 			mostraCadastrar = false;
 			mostraCheque = false;
@@ -265,6 +304,41 @@ public class MovimentacaoBean {
 					mostraCheque = true;
 					mostraDinheiro = true;
 				}
+		}
+		*/
+		if(movimento.getMovTipo().contains("Selecione")){
+			mostraDtBases = false;
+			mostraDtCelulas = false;
+			mostraTabViewCelulasBases = false;
+		}
+		else{
+			//Pesquisa as células
+			if(movimento.getMovTipo().contains("Oferta de M12")
+			   ||movimento.getMovTipo().contains("Oferta de Célula") 
+			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+				listaCelulas = new ArrayList<Celulas>();
+		        listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+		        
+		        mostraDtBases = false;
+				mostraDtCelulas = true;
+				mostraTabViewCelulasBases = true;
+			}
+			//Pesquisa as Bases
+			else{
+				int tipo = 0;
+				if(movimento.getMovTipo().contains("Oferta de Base Célular"))tipo = 1;
+				if(movimento.getMovTipo().contains("Oferta de Base Setorial"))tipo = 2;
+				if(movimento.getMovTipo().contains("Oferta de Base Regional"))tipo = 3;
+				if(movimento.getMovTipo().contains("Oferta de Base Sede"))tipo = 4;
+				
+				listaBases = new ArrayList<Bases>();
+				listaBases.addAll(basesDao.listarBasesPorTipo(discipuloSessao.getDiscipulos().getDisCod(),
+				tipo));
+				
+				mostraDtBases = true;
+				mostraDtCelulas = false;
+				mostraTabViewCelulasBases = true;
+			}
 		}
 	}
 	
@@ -333,14 +407,17 @@ public class MovimentacaoBean {
 		if(mes.contains("12"))movimentoChequeId.setDataMes("Dezembro");
     }
 	
-	public String prepararMovimento(){		
-		listaCelulas = new ArrayList<Celulas>();
-        listaCelulas.addAll(celulaDao.listarCelulas(discipuloSessao.getDiscipulos().getDisCod()));
+	public String prepararMovimento(){	
+		movimento = new Movimento();
+		mostraDtBases = false;
+		mostraDtCelulas = false;
+		mostraTabViewCelulasBases = false;
+		
 		return "/cad/movimentoListar.mir";
 	}
 	
 	public String prepararCadastro(){
-		movimento = new Movimento();
+		//movimento = new Movimento();
 		repasse = new Repasse();
 		repasseId = new RepasseId();
 		protocolo = new Protocolo();
@@ -432,9 +509,38 @@ public class MovimentacaoBean {
 		Calendar data = Calendar.getInstance();
 		String diretorioImg = getDiretorioReal("/img/");
 		
-		movimento.setCelulas(celulaSelecionada);
+		//M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	if(movimento.getMovTipo().contains("Oferta de M12") 
+			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+				movimento.setCelulas(celulaSelecionada);
+				movimento.setBases(null);
+				movimento.setMovOfertaM12("S");
+			}
+			//Repasse por Bases
+			else{
+				movimento.setCelulas(null);
+				movimento.setBases(bases);
+				movimento.setMovOfertaM12("S");
+			}
+	    }
+	    //DISCIPULOS DOS M12 DO RENNER
+	    else{
+	    	if(movimento.getMovTipo().contains("Oferta de Célula") 
+ 			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+ 				movimento.setCelulas(celulaSelecionada);
+ 				movimento.setBases(null);
+ 				movimento.setMovOfertaM12("N");
+ 			}
+ 			//Repasse por Bases
+ 			else{
+ 				movimento.setCelulas(null);
+ 				movimento.setBases(bases);
+ 				movimento.setMovOfertaM12("N");
+ 			}
+	    }
 		movimento.setMovRecebido("N");
-		movimento.setBases(null);
+		movimento.setMovVisualizado("N");
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
 		movimento.setMovDataCadastro(dataAtual);
@@ -465,9 +571,38 @@ public class MovimentacaoBean {
 			valorMovimento = valorMovimento + mov.getId().getValNum();
 		}
 		
-		movimento.setCelulas(celulaSelecionada);
+		//M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	if(movimento.getMovTipo().contains("Oferta de M12") 
+			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+				movimento.setCelulas(celulaSelecionada);
+				movimento.setBases(null);
+				movimento.setMovOfertaM12("S");
+			}
+			//Repasse por Bases
+			else{
+				movimento.setCelulas(null);
+				movimento.setBases(bases);
+				movimento.setMovOfertaM12("S");
+			}
+	    }
+	    //DISCIPULOS DOS M12 DO RENNER
+	    else{
+	    	if(movimento.getMovTipo().contains("Oferta de Célula") 
+ 			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+ 				movimento.setCelulas(celulaSelecionada);
+ 				movimento.setBases(null);
+ 				movimento.setMovOfertaM12("N");
+ 			}
+ 			//Repasse por Bases
+ 			else{
+ 				movimento.setCelulas(null);
+ 				movimento.setBases(bases);
+ 				movimento.setMovOfertaM12("N");
+ 			}
+	    }
 		movimento.setMovRecebido("N");
-		movimento.setBases(null);
+		movimento.setMovVisualizado("N");
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
 		movimento.setMovDataCadastro(dataAtual);
@@ -514,9 +649,38 @@ public class MovimentacaoBean {
 			valorMovimento = valorMovimento + mov.getId().getValNum();
 		}
 		
-		movimento.setCelulas(celulaSelecionada);
+		//M12 DO RENNER
+	    if(discipuladorLogado.getDiscipulos() == null){
+	    	if(movimento.getMovTipo().contains("Oferta de M12") 
+			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+				movimento.setCelulas(celulaSelecionada);
+				movimento.setBases(null);
+				movimento.setMovOfertaM12("S");
+			}
+			//Repasse por Bases
+			else{
+				movimento.setCelulas(null);
+				movimento.setBases(bases);
+				movimento.setMovOfertaM12("S");
+			}
+	    }
+	    //DISCIPULOS DOS M12 DO RENNER
+	    else{
+	    	if(movimento.getMovTipo().contains("Oferta de Célula") 
+ 			   || movimento.getMovTipo().contains("Oferta de Macro-Célula")){
+ 				movimento.setCelulas(celulaSelecionada);
+ 				movimento.setBases(null);
+ 				movimento.setMovOfertaM12("N");
+ 			}
+ 			//Repasse por Bases
+ 			else{
+ 				movimento.setCelulas(null);
+ 				movimento.setBases(bases);
+ 				movimento.setMovOfertaM12("N");
+ 			}
+	    }
 		movimento.setMovRecebido("N");
-		movimento.setBases(null);
+		movimento.setMovVisualizado("N");
 		movimento.setMovProtocolo(gerarProtocolo());
 		movimento.setMovProtocoloPai(null);
 		movimento.setMovDataCadastro(dataAtual);
@@ -1191,4 +1355,45 @@ public class MovimentacaoBean {
 	public void setEnviarEmailRepasseRecebido(boolean enviarEmailRepasseRecebido) {
 		this.enviarEmailRepasseRecebido = enviarEmailRepasseRecebido;
 	}
+	
+	public boolean isMostraDtCelulas() {
+		return mostraDtCelulas;
+	}
+
+	public void setMostraDtCelulas(boolean mostraDtCelulas) {
+		this.mostraDtCelulas = mostraDtCelulas;
+	}
+
+	public boolean isMostraDtBases() {
+		return mostraDtBases;
+	}
+
+	public void setMostraDtBases(boolean mostraDtBases) {
+		this.mostraDtBases = mostraDtBases;
+	}
+
+	public boolean isMostraTabViewCelulasBases() {
+		return mostraTabViewCelulasBases;
+	}
+
+	public void setMostraTabViewCelulasBases(boolean mostraTabViewCelulasBases) {
+		this.mostraTabViewCelulasBases = mostraTabViewCelulasBases;
+	}
+	
+	public List<Bases> getListaBases() {
+		return listaBases;
+	}
+
+	public void setListaBases(List<Bases> listaBases) {
+		this.listaBases = listaBases;
+	}
+	
+	public Bases getBases() {
+		return bases;
+	}
+
+	public void setBases(Bases bases) {
+		this.bases = bases;
+	}
+	
 }
