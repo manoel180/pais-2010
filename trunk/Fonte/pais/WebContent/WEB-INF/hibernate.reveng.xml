@@ -3,24 +3,72 @@
 
 <hibernate-reverse-engineering>
 	<table-filter match-name="bairro" match-catalog="wwwpais_sistema"></table-filter>
+	<table-filter match-name="bancos" match-catalog="wwwpais_sistema"></table-filter>
 	<table-filter match-name="bases" match-catalog="wwwpais_sistema"></table-filter>
-	<table-filter match-name="celulas"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="celulas" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="condicaobase"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="condicaobase" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="discipulos"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="dadosencontros" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="discipulos" match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="discipuloscelulas"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="encontros"
+	<table-filter match-name="encontros" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="encontrospalestras"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideres" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolaliderescronograma"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolaliderescronogramaaulas"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresdiscipulos"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresfechamentomodulo"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresfinanceiro"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresfinanceiroalunos"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresfrequencia"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresindicador"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalidereslivro"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresmaterias"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresmodulo"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolalideresnotas"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolaliderestiposmovimento"
+		match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="escolarequerimentos"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="estado" match-catalog="wwwpais_sistema"></table-filter>
-	<table-filter match-name="estadocivil"
+	<table-filter match-name="estadocivil" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="financeiroigrejas"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="foreclesiasticasdiscipulos"
@@ -32,41 +80,47 @@
 	<table-filter match-name="formacaoeclesiasticas"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="fotosbases"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="fotosbases" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="frequencia" match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="funcaoeclesiasticas"
 		match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="geracoes"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="geracoes" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="localidade"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="igrejas" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="logradouro"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="inscritos" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="mensagem"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="lideres" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="mensagemanexos"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="localidade" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="movimento"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="logradouro" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="participa"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="mensagem" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="repasse"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="mensagemanexos" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="statusbase"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="ministra" match-catalog="wwwpais_sistema">
 	</table-filter>
-	<table-filter match-name="tipobases"
-		match-catalog="wwwpais_sistema">
+	<table-filter match-name="movimento" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="movimentocheque" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="pacotes" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="paises" match-catalog="wwwpais_sistema"></table-filter>
+	<table-filter match-name="palestras" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="participa" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="repasse" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="statusbase" match-catalog="wwwpais_sistema">
+	</table-filter>
+	<table-filter match-name="tipobases" match-catalog="wwwpais_sistema">
 	</table-filter>
 	<table-filter match-name="zona" match-catalog="wwwpais_sistema"></table-filter>
 </hibernate-reverse-engineering>
