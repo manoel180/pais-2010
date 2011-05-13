@@ -26,4 +26,21 @@ public class BasesDaoImp extends DaoGenericoImp<Bases, Integer> implements
 			getEntityManager().close();
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Bases> listarBasesPorTipo(int discipulador, int tipo) {
+		try {
+
+			Query query = getEntityManager().createQuery(
+					"From Bases b " + "where b.discipulosByBasDisCod.disCod ="+ discipulador +""+
+					" and b.tipobases ="+ tipo +"");
+			return query.getResultList();
+		} catch (NoResultException nre) {
+			// TODO: handle exception
+			return null;
+		} finally {
+			getEntityManager().close();
+		}
+	}
 }
