@@ -29,6 +29,8 @@ public class Igrejas implements java.io.Serializable {
 	private String igrlogo;
 	private String igrcidade;
 	private String igrestado;
+	private int igrnum;
+	private String igrcomplemento;
 	private String igrtelfixo;
 	private String igrtelcelular;
 	private String igremail;
@@ -228,6 +230,36 @@ public class Igrejas implements java.io.Serializable {
 
 	public void setDiscipuloses(Set<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
+	}
+
+	/**
+	 * @return the igrnum
+	 */
+	@Column(name = "igrnum")
+	public int getIgrnum() {
+		return igrnum;
+	}
+
+	/**
+	 * @param igrnum the igrnum to set
+	 */
+	public void setIgrnum(int igrnum) {
+		this.igrnum = igrnum;
+	}
+
+	/**
+	 * @return the igrcomplemento
+	 */
+	@Column(name = "igrnum", length = 80 )
+	public String getIgrcomplemento() {
+		return igrcomplemento;
+	}
+
+	/**
+	 * @param igrcomplemento the igrcomplemento to set
+	 */
+	public void setIgrcomplemento(String igrcomplemento) {
+		this.igrcomplemento = igrcomplemento;
 	}
 
 }
