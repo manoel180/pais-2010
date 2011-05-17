@@ -250,7 +250,7 @@ public class Igrejas implements java.io.Serializable {
 	/**
 	 * @return the igrcomplemento
 	 */
-	@Column(name = "igrnum", length = 80 )
+	@Column(name = "igrcomplemento", length = 80 )
 	public String getIgrcomplemento() {
 		return igrcomplemento;
 	}
