@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
@@ -14,6 +15,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import br.com.pais.dao.DaoGenerico;
+import br.com.pais.mensagens.MessageManagerImpl;
 
 // Default is read only
 
@@ -51,14 +53,11 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	@Override
 	public boolean atualizar(T object) {
 		EntityManager em = getEntityManager();
-		
 		try {
 			em.getTransaction().begin();
 			em.merge(object);
 			em.getTransaction().commit();
-			
 		}
-
 		catch (PersistenceException e) {
 			// TODO: handle exception
 			e.getCause();
@@ -76,9 +75,7 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	@Override
 	public void excluir(T object, ID id ) {
 		EntityManager em = getEntityManager();
-		
 		try {
-			
 			em.getTransaction().begin();
 			em.remove(em.getReference(object.getClass(),id));
 			em.flush();
@@ -87,7 +84,6 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 		}
 		catch (PersistenceException ex) {
 			ex.printStackTrace();
-			
 			//MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro.exclusao_datail", "erro.exclusao_datail");
 			em.getTransaction().rollback();
 			
@@ -95,7 +91,6 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 			ex.printStackTrace();
 			//MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro.exclusao_datail", "erro.exclusao_datail");
 			em.getTransaction().rollback();
-			
 		}finally {
 			em.close();
 		}
@@ -108,34 +103,19 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 	}
 
 	@Override
-	
 	public boolean salvar(T object)  {
 		EntityManager em = getEntityManager();
-		
 		try {
 			em.getTransaction().begin();
 			em.persist(object);
 			em.getTransaction().commit();
 		}
-		
 		catch (PersistenceException e) {
 			// TODO: handle exception
-			
 			e.getCause();
-			
 			em.getTransaction().rollback();
 			return false;
 		}
-		/*catch (SQLException e) {
-			// TODO: handle exception
-			e.getErrorCode();
-		}
-		*/
-		/*catch (Exception ex) {
-			ex.printStackTrace();
-			em.getTransaction().rollback();
-			return false;
-		}*/
 		finally {
 			em.close();
 		}
@@ -201,5 +181,4 @@ public class DaoGenericoImp<T, ID extends Serializable> implements DaoGenerico<T
 			return null;
 		}
 	}
-
 }
