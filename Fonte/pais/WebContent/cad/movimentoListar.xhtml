@@ -6,19 +6,19 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
-
-    <ui:define name="menu-vc-esta">
-	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	template="/layout/template.xhtml">
+	
+	<ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
 	 <tr>
-	   <td align="right" scope="col" width="65">  
+	   <td align="right" scope="col" width="85">  
 		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
 	   </td>
        <td>
-	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	    <p:breadCrumb>    
 	     <p:menuitem value="home" url="/principal.mir" />
-	     <p:menuitem value="FINANCEIRO"/>  
-         <p:menuitem value="FAZER REPASSE" action="#{movimentacaoBean.prepararMovimento}" ajax="false" />   
+		 <p:menuitem value="FINANCEIRO"/>  
+         <p:menuitem value="FAZER REPASSE" action="#{movimentacaoBean.prepararMovimento}" ajax="false" /> 
 	    </p:breadCrumb> 
 	   </td>
 	 </tr>
@@ -26,10 +26,9 @@
 	</ui:define>
 
 	<ui:define name="conteudo">
-		<br/>
 		<h:form prependId="false">
 		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-		
+		<br/>
 		<p:tabView orientation="top">
 		   <p:tab id="tabFiltroRepasse" title="Filtro Repasse">
 		   <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
@@ -65,31 +64,25 @@
 					dynamic="true" emptyMessage="Nenhuma célula encontrada"
 					paginatorPosition="bottom">
 
-					<p:column id="dtNome" 
-					    filterStyleClass="formularios" resizable="true"
-						sortBy="#{cel.celNome}">
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{cel.celNome}">
 						<f:facet name="header">
 							<h:outputText value="&nbsp;EQUIPE" styleClass="Fonte_12"/>
 						</f:facet>
 						<h:outputText id="nome" styleClass="Fonte_13" value="#{cel.geracoes.gerDescricao}"/>
 					</p:column>
-					<p:column id="dtDia"
-						filterStyleClass="formularios" resizable="true"
-						sortBy="#{cel.celDiaReuniao}">
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{cel.celDiaReuniao}">
 						<f:facet name="header">
 							<h:outputText value="&nbsp;DIA DA SEMANA" styleClass="Fonte_12" />
 						</f:facet>
 						<h:outputText value="#{cel.celDiaReuniao}" styleClass="Fonte_13"/>
 					</p:column>
-					<p:column id="dtHora"
-						filterStyleClass="formularios" resizable="true"
-						sortBy="#{cel.celHorarioReuniao}">
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{cel.celHorarioReuniao}">
 						<f:facet name="header">
 							<h:outputText value="&nbsp;HORA" styleClass="Fonte_12" />
 						</f:facet>
 						<h:outputText value="#{cel.celHorarioReuniao}" styleClass="Fonte_13"/>
 					</p:column>
-					<p:column style="width:10px 0px">
+					<p:column filterStyleClass="formularios" resizable="true">
 						<f:facet name="header">
 						<center>
 							<h:outputText value="&nbsp;FAZER REPASSE" styleClass="Fonte_12" />
@@ -102,7 +95,7 @@
                         <f:setPropertyActionListener value="#{cel}" target="#{movimentacaoBean.celulaSelecionada}" />
                         </p:commandLink>
 					</p:column>
-					<p:column style="width:10px 0px">
+					<p:column filterStyleClass="formularios" resizable="true">
 					    <f:facet name="header">
 					    <center>
 							<h:outputText value="&nbsp;DETALHES" styleClass="Fonte_12" />
@@ -191,49 +184,42 @@
 						dynamic="true" emptyMessage="Nenhuma base encontrada"
 						paginatorPosition="bottom">
 
-
-						<p:column id="dtDiaBase" filterStyleClass="formularios"
-							resizable="true" sortBy="#{bases.basDiaReuniao}">
+						<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bases.basDiaReuniao}">
 							<f:facet name="header">
 								<h:outputText value="&nbsp;DIA DA SEMANA" styleClass="Fonte_12" />
 							</f:facet>
 							<h:outputText value="#{bases.basDiaReuniao}"
 								styleClass="Fonte_13" />
 						</p:column>
-						<p:column id="dtHoraBase" filterStyleClass="formularios"
-							resizable="true" sortBy="#{bases.basHorReuniao}">
+						<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bases.basHorReuniao}">
 							<f:facet name="header">
 								<h:outputText value="&nbsp;HORA" styleClass="Fonte_12" />
 							</f:facet>
 							<h:outputText value="#{bases.basHorReuniao}"
 								styleClass="Fonte_13" />
 						</p:column>
-						<p:column id="dtTipoBase" filterStyleClass="formularios"
-							resizable="true" sortBy="#{bases.tipobases.tpbDescricao}">
+						<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bases.tipobases.tpbDescricao}">
 							<f:facet name="header">
 								<h:outputText value="&nbsp;TIPO BASE" styleClass="Fonte_12" />
 							</f:facet>
 							<h:outputText value="#{bases.tipobases.tpbDescricao}"
 								styleClass="Fonte_13" />
 						</p:column>
-						<p:column id="dtLiderBase" filterStyleClass="formularios"
-							resizable="true" sortBy="#{bases.liderBase.disnome}">
+						<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bases.liderBase.disnome}">
 							<f:facet name="header">
 								<h:outputText value="&nbsp;LÍDER DE BASE" styleClass="Fonte_12" />
 							</f:facet>
 							<h:outputText value="#{bases.liderBase.disnome}"
 								styleClass="Fonte_13" />
 						</p:column>
-
-						<p:column id="dtHora" filterStyleClass="formularios"
-							resizable="true" sortBy="#{bases.zona.descricao}">
+						<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bases.zona.descricao}">
 							<f:facet name="header">
 								<h:outputText value="&nbsp;ZONA" styleClass="Fonte_12" />
 							</f:facet>
 							<h:outputText value="#{bases.zona.descricao}"
 								styleClass="Fonte_13" />
 						</p:column>
-						<p:column style="width:10px 0px">
+						<p:column filterStyleClass="formularios" resizable="true">
 						<f:facet name="header">
 						<center>
 							<h:outputText value="&nbsp;FAZER REPASSE" styleClass="Fonte_12" />
@@ -246,7 +232,7 @@
                         <f:setPropertyActionListener value="#{bases}" target="#{movimentacaoBean.bases}" />
                         </p:commandLink>
 					    </p:column>
-						<p:column style="width:10px 0px">
+						<p:column filterStyleClass="formularios" resizable="true">
 							<f:facet name="header">
 								<center><h:outputText value="&nbsp;DETALHES"
 									styleClass="Fonte_12" /></center>
