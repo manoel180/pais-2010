@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+    
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="BATISMO"/> 
+         <p:menuitem value="LISTAR" action="#{batismoBean.prepararListarBatismo}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+	<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/> 
+	<p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."   
+	draggable="false" closable="false" resizable="false">
+	<center> <p:graphicImage value="/img/ajax-loader.gif" /></center>  
+	</p:dialog>
+	<br/>
+		<h:form id="form1" prependId="false">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:tabView orientation="top">
+			   <p:tab title="BATISMO">
+			   <h:outputLabel value="Listar batismo" styleClass="Texto_cpf_login"/>
+				<h:selectOneMenu id="filtro" value="#{batismoBean.filtroBatismo}" styleClass="formularios">
+						<f:selectItem itemValue="0" itemLabel="Selecione..."/>
+						<f:selectItems value="#{encontrosBean.comboEncontrosStatus}"/>
+						<p:ajax update="outPanelDiscipulos" listener="#{batismoBean.filtrarDiscipulosBatismoListar}" />
+				</h:selectOneMenu>
+				<br/><br/>
+				
+			   <p:outputPanel id="outPanelDiscipulos">
+			   <p:dataTable
+					id="dtBatismo"
+					var="bat" 
+					value="#{batismoBean.listaBatismo}" 
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					rendered="#{batismoBean.mostrarDtBatismo}"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum batismo encontrado"
+					paginatorPosition="bottom">
+
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bat.batcod}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="NUM" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{bat.batcod}"/>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bat.batdatarealizacao}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DATA DE REALIZAÇÃO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{bat.batdatarealizacao}">
+						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{bat.bathorario}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="HORÁRIO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{bat.bathorario}">
+						 <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<p:graphicImage value="#{bat.discipulos.disfoto}" width="41" height="40"/>  
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="RESPONSÁVEL" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{bat.discipulos.disnome}"/>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{batismoBean.filtroBatismo == 1}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="EDITAR" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                        <p:commandLink title="Editar batismo" action="#{batismoBean.prepararEditarBatismo}"
+                        ajax="false">  
+                           <p:graphicImage value="/img/editar.png"/>
+                           <f:setPropertyActionListener value="#{bat}" target="#{batismoBean.batismo}"/>      
+                        </p:commandLink>
+                        </center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{batismoBean.filtroBatismo == 1}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="FINALIZAR" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                        <p:commandLink title="Finalizar Batismo" action="#{batismoBean.prepararFinalizarBatismo}" ajax="false">  
+                           <p:graphicImage value="/img/finalizar_batismo.png"/>
+                           <f:setPropertyActionListener value="#{bat}" target="#{batismoBean.batismo}"/>     
+                        </p:commandLink>
+                        </center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{batismoBean.filtroBatismo == 2}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DETALHE" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                        <p:commandLink title="Detalhe Batismo" action="#{batismoBean.prepararDetalheBatismo}" ajax="false">  
+                           <p:graphicImage value="/img/detalhe.png"/>
+                           <f:setPropertyActionListener value="#{bat}" target="#{batismoBean.batismo}"/>     
+                        </p:commandLink>
+                        </center>
+					</p:column>
+				</p:dataTable>
+				</p:outputPanel>
+			</p:tab>
+			</p:tabView>
+			<br/>	
+			<p:commandButton value="Novo Batismo" action="#{batismoBean.prepararCadastrarBatismo}" ajax="false"/>
+		</h:form>
+	</ui:define>
+</ui:composition>

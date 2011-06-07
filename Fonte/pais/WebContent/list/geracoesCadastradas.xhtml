@@ -6,18 +6,18 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
+	template="/layout/template.xhtml">
 	
 	<ui:define name="menu-vc-esta">
-	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
 	 <tr>
-	   <td align="right" scope="col" width="65">  
+	   <td align="right" scope="col" width="85">  
 		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
 	   </td>
        <td>
-	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	    <p:breadCrumb>    
 	     <p:menuitem value="home" url="/principal.mir" />
-	     <p:menuitem value="RELATÓRIOS"/>  
+		 <p:menuitem value="RELATÓRIOS"/>  
          <p:menuitem value="GERAÇÕES CADASTRADAS" action="#{relatoriosBean.prepararRelatorioGeracoesCadastradas}" ajax="false" />
 	    </p:breadCrumb> 
 	   </td>
@@ -30,7 +30,6 @@
 		<h:form prependId="false">
 			<p:dialog id="dlgDiscipulador" header="Selecione Discipulador" modal="true"
 				widgetVar="dlgDiscipulador" resizable="false" width="600" height="400">
-				
 				
 				<p:treeTable value="#{relatoriosBean.root}" var="lider" style="overflow:auto;">
 					<p:column>
@@ -64,10 +63,10 @@
 		  <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
 				    <h:outputText id="discipulador" value="Discipulador: #{relatoriosBean.selectedLider.disnome}" styleClass="formulariosObrigatorio"/>
 					<p:commandButton value="Selecionar Discípulo" onclick="dlgDiscipulador.show();"></p:commandButton>
-			<h:commandLink  value="Imprimir" onclick="window.print();"/>&nbsp;
-			<h:commandLink action="#{relatoriosBean.gerarRelatorioGeracoesCadastradas}" value="Gerar PDF" target="_blank"/>		
+					
 			</h:panelGrid>			
-			
+			<h:commandLink  value="Imprimir" onclick="window.print();"/>&nbsp;
+			<h:commandLink action="#{relatoriosBean.gerarRelatorioGeracoesCadastradas}" value="Gerar PDF" target="_blank"/>
 			<h:outputFormat />
 			<p:dataTable id="dtDiscipulos" var="discipulos"
 						selection="#{relatoriosBean.selectedDiscipulos}" value="#{relatoriosBean.listaDiscipulos}"
@@ -76,7 +75,7 @@
 						previousPageLinkLabel="&lt; Voltar"
 						nextPageLinkLabel="Avançar &gt;" width="100%"
 						sortAscMessage="Ordena em ordem crescente"
-						sortDescMessage="Ordena em ordem descrecente" rows="12"
+						sortDescMessage="Ordena em ordem descrecente" rows="10"
 						dynamic="true" emptyMessage="Nenhum discipulo(a) encontrado(a)"
 						paginatorPosition="bottom">
 			
@@ -86,16 +85,15 @@
 			<p:column headerText="FUNÇÃO ECLESIÁSTICA" style="width:60px 0px">
 				<h:outputText value="#{discipulos.funcaoeclesiasticas.funDescricao}" />
 			</p:column>
-			
-			<p:column style="width:15px 0px">
-				<f:facet name="header">
-					<h:outputText value="TOTAL&lt;br/> BASES" styleClass="Fonte_12" escape="false"/>
-				</f:facet><center>
-				<h:outputText value="#{discipulos.totalBases}" />
-				</center>
+			<p:column headerText="TELEFONES" style="width:60px 0px">
+				<h:outputText value="#{discipulos.disTelFixo}" /><br/>
+				<h:outputText value="#{discipulos.disTelCelular}" /><br/>
+				<h:outputText value="#{discipulos.disTelComercial}" />
 			</p:column>
-			
-			<p:column style="width:10px 0px">
+			<p:column headerText="FORMAÇÃO ACADÊMICA" style="width:60px 0px">
+				<h:outputText value="#{discipulos.formacaoacademica.forAcDescricao}" />
+			</p:column>
+			<p:column style="width:10px">
 				<f:facet name="header">
 					<h:outputText value="TOTAL&lt;br/> GERAÇÕES" styleClass="Fonte_12" escape="false"/>
 				</f:facet><center>
@@ -116,18 +114,6 @@
 				<h:outputText value="#{discipulos.totalDiscipulos}" />
 				</center>
 			</p:column>
-	
-		 <p:columnGroup type="footer">  
-            <p:row>  
-                <p:column colspan="2" footerText="Totais:"  
-                                style="text-align:right"  />  
-				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
-				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
-				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
-  				<p:column footerText="#{relatoriosBean.totalDiscipulos}" />
-          
-            </p:row>  
-        </p:columnGroup>
 			</p:dataTable>	
 		</h:form>
 		

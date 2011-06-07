@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+    
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="65">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="ENCONTROS DIVERSOS"/> 
+	     <p:menuitem value="ENCONTRO COM DEUS"/> 
+	     <p:menuitem value="ENCONTRO"/> 
+         <p:menuitem value="LISTAR" action="#{encontrosBean.prepararListarEncontrosComDeus}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+	<br/>
+		<h:form id="form1" prependId="false">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:tabView orientation="top">
+			   <p:tab title="ENCONTRO COM DEUS">
+			   <h:outputLabel value="Listar encontro com deus" styleClass="Texto_cpf_login"/>
+				<h:selectOneMenu id="filtro" value="#{encontrosBean.filtroEncontroComDeus}" styleClass="formularios">
+						<f:selectItem itemValue="0" itemLabel="Selecione..."/>
+						<f:selectItems value="#{encontrosBean.comboEncontrosStatus}"/>
+						<f:ajax event="change" listener="#{encontrosBean.filtrarEncontroComDeus}" execute="filtro"  
+				        render="outPanelDiscipulos"/>
+				</h:selectOneMenu>
+				<br/><br/>
+				
+			   <p:outputPanel id="outPanelDiscipulos">
+			   <p:dataTable
+					id="dtEncontroComDeus" 
+					var="enc" 
+					value="#{encontrosBean.listaEncontroComDeus}" 
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					rendered="#{encontrosBean.mostrarDtEncontroComDeus}"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum encontro com deus encontrado"
+					paginatorPosition="bottom">
+
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{enc.dadenccod}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="NUM" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{enc.dadenccod}"/>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{enc.dadencdatainicio}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DATA DE INICIO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{enc.dadencdatainicio}">
+						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{enc.dadencdatafim}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DATA DE TÉRMINO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{enc.dadencdatafim}">
+						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<p:graphicImage value="#{enc.discipulos.disfoto}" width="41" height="40"/>  
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="RESPONSÁVEL" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{enc.discipulos.disnome}"/>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{encontrosBean.filtroEncontroComDeus == 1}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="EDITAR" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                        <p:commandLink title="Editar esse encontro" action="#{encontrosBean.prepararEditarEncontroComDeus}"
+                        ajax="false">  
+                           <p:graphicImage value="/img/editar.png"/>
+                           <f:setPropertyActionListener value="#{enc}" target="#{encontrosBean.dadosEncontros}"/>     
+                        </p:commandLink>
+                        </center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{encontrosBean.filtroEncontroComDeus == 1}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="FINALIZAR" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                        <p:commandLink title="Finalizar encontro com deus" action="#{encontrosBean.prepararFinalizarEncontroComDeus}"
+                        ajax="false">  
+                           <p:graphicImage value="/img/finalizar_encontro.png"/>
+                           <f:setPropertyActionListener value="#{enc}" target="#{encontrosBean.dadosEncontros}"/>     
+                        </p:commandLink>
+                        </center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="STATUS" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                           <p:graphicImage value="/img/em_andamento.png" rendered="#{enc.encontrostatus.encstacod == 1}"/> 
+                           <p:graphicImage value="/img/finalizado.png" rendered="#{enc.encontrostatus.encstacod == 2}"/>   
+                        </center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{encontrosBean.filtroEncontroComDeus == 2}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DETALHE" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                        <p:commandLink title="Ver o detalhe desse encontro com deus" action="#{encontrosBean.prepararDetalheEncontroComDeus}"
+                        ajax="false">  
+                           <p:graphicImage value="/img/detalhe.png"/>
+                           <f:setPropertyActionListener value="#{enc}" target="#{encontrosBean.dadosEncontros}"/>     
+                           <f:setPropertyActionListener value="true" target="#{encontrosBean.mostrarBtnVoltarEncontro}" />  
+                        </p:commandLink>
+                        </center>
+					</p:column>
+				</p:dataTable>
+				</p:outputPanel>
+			</p:tab>
+			</p:tabView>
+			<br/>	
+		</h:form>
+	</ui:define>
+</ui:composition>

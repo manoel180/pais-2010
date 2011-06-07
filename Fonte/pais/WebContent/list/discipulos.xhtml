@@ -6,19 +6,20 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
+	template="/layout/template.xhtml">
 	
 	<ui:define name="menu-vc-esta">
-	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
 	 <tr>
-	   <td align="right" scope="col" width="65">  
+	   <td align="right" scope="col" width="85">  
 		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
 	   </td>
        <td>
-	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	    <p:breadCrumb>    
 	     <p:menuitem value="home" url="/principal.mir" />
-	     <p:menuitem value="CADASTRO"/>  
-         <p:menuitem value="LISTAR DISCÍPULOS" action="#{discipuloBean.prepararListarDiscipulos}" ajax="false" />
+		 <p:menuitem value="CADASTRAR" />
+		 <p:menuitem value="DISCÍPULO" /> 
+         <p:menuitem value="LISTAR" action="#{discipuloBean.prepararListarDiscipulos}" ajax="false" />
 	    </p:breadCrumb> 
 	   </td>
 	 </tr>
@@ -26,10 +27,9 @@
 	</ui:define>
 
 	<ui:define name="conteudo">
-		<br />
 		<h:form prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-
+			<br />
 			<p:tabView orientation="top">
 				<p:tab id="tabListarDiscipulos" title="Discípulos Cadastradas">
 				
@@ -66,11 +66,12 @@
 			            <f:facet name="header">  
 			            <center>EDITAR</center>  
 			            </f:facet>  
-			            <center>
-			            <h:commandButton image="/img/editar.png"  action="#{discipuloBean.prepararEdicao}"
-			            rendered="#{node.mostrarBotoes}">
+			            <center> 
+						<p:commandLink title="Editar Discípulo" action="#{discipuloBean.prepararEdicao}" 
+						ajax="false" rendered="#{node.mostrarBotoes}">
+							<p:graphicImage value="/img/editar.png" />
 							<f:setPropertyActionListener value="#{node.discipulo}" target="#{discipuloBean.discipulos}" />
-						</h:commandButton> 
+						</p:commandLink>
 			            </center> 
 			        </p:column>
 			        <p:column>  
@@ -438,26 +439,20 @@
 					<center><h:panelGrid columns="2"
 						columnClasses="coluna1, coluna2">
 						<center>
-						<h:selectManyListbox readonly="true" disabled="true" styleClass="formularios2" disabledClass="formularios2">
-							<f:selectItems value="#{discipuloBean.discipulos.encontroses}" var="encontros"
-							itemLabel="#{encontros.encDescricao}"/>
+						<h:selectManyListbox readonly="true" disabled="true" styleClass="formularios2" disabledClass="formularios2"
+						rendered="false">
+							<f:selectItems value="#{discipuloBean.discipulos.encontroses}" var="encontros" itemLabel="#{encontros.encDescricao}"/>
 						</h:selectManyListbox>
-			
 						</center>
 					</h:panelGrid></center>
-					
 				</p:tab>
 			</p:tabView>
 			</p:outputPanel>
-			</p:dialog>			    
-			    
-			
-			
-					<br />
-					<h:commandButton value="Novo Discípulo" styleClass="formularios"
-						action="#{discipuloBean.prepararDiscipulo}" />
+			</p:dialog>		
 				</p:tab>
 			</p:tabView>
+			<br />
+			<p:commandButton value="Novo Discípulo" ajax="false" action="#{discipuloBean.prepararDiscipulo}"/>
 		</h:form>
 		
 	</ui:define>
