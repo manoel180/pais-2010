@@ -47,6 +47,10 @@ public class LoginBean {
 	private boolean menuListarRecebidos = false;
 	private boolean menuListarEnviados = false;
 	private boolean menuArvoreRepasse = false;
+	//Eventos
+	private boolean menuEncontros = false;
+	//Batismo
+	private boolean menuBatismo = false;
 
 	//List
 	private List<Celulas> listaCelulas = new ArrayList<Celulas>();
@@ -69,6 +73,8 @@ public class LoginBean {
 				    
 					//Controle Acesso no Menu Financeiro
 					menuFinanceiro();
+					menuEventos();
+					menuBatismo();
 					menuBases = discipuloSessao.getDiscipulos().getFuncaoeclesiasticas().getFunCod() >= 3;
 					return "/principal.mir";
 				} else {
@@ -186,6 +192,26 @@ public class LoginBean {
 			menuListarRecebidos = funEclesiasticaMaiorDiscipulo;
 		}
 	}
+	
+	public void menuEventos(){
+		if(discipuloSessao.getDiscipulos().getFuncaoeclesiasticas().getFunCod() >= 7){
+			menuEncontros = true;
+		}
+		else{
+			menuEncontros = false;
+		}
+	}
+	
+	public void menuBatismo(){
+		if(discipuloSessao.getDiscipulos().getFuncaoeclesiasticas().getFunCod() >= 7){
+			menuBatismo = true;
+			menuBatismo = true;
+		}
+		else{
+			menuBatismo = false;
+			menuBatismo = false;
+		}
+	}
 
 	public String getCpf() {
 		return cpf;
@@ -286,5 +312,21 @@ public class LoginBean {
 	 */
 	public void setMenuBases(boolean menuBases) {
 		this.menuBases = menuBases;
+	}
+
+	public boolean isMenuEncontros() {
+		return menuEncontros;
+	}
+
+	public void setMenuEncontros(boolean menuEncontros) {
+		this.menuEncontros = menuEncontros;
+	}
+
+	public boolean isMenuBatismo() {
+		return menuBatismo;
+	}
+
+	public void setMenuBatismo(boolean menuBatismo) {
+		this.menuBatismo = menuBatismo;
 	}
 }

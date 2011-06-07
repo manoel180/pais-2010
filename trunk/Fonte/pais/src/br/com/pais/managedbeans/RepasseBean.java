@@ -474,7 +474,7 @@ public class RepasseBean {
 	    		arvoreLista.setMostrarGeracao2(false);
 	        	treeNode = new DefaultTreeNode(arvoreLista, nodes.get(0));
 	        	nodes.add(treeNode);
-	        	index = nodes.indexOf(treeNode);
+	        	index = nodes.indexOf(treeNode);  
 	        	
 		        for (Discipulos dis : listaDiscipulos) {
 		        	//SETA O DISCIPULO NO NODO
