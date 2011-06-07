@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view contentType="text/html">
+	<h:head>
+		<ui:insert name="javascript" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/pais/skin.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/wijmo.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/css_forms.css" />
+	</h:head>
+	<body>
+		<div class="header">
+<div class="topo">
+<br />
+<table width="290" border="0" align="right" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="33" height="20" align="center" valign="top" class="Fonte_14_Branca" scope="col">
+      <p:graphicImage value="#{loginBean.discipuloSessao.discipulos.disfoto}" width="41" height="40" />
+  </td>
+  <td width="249" align="left" valign="top" class="Fonte_13_Logado" scope="col">
+  <strong>Bem Vindo,</strong><br/>
+  SR(A): <h:outputLabel value="#{loginBean.discipuloSessao.discipulos.disnome}" styleClass="Fonte_13_Logado" />
+  <br />
+  <h:form>
+  <h:commandLink value="Editar meus dados" action="#{discipuloBean.prepararEdicaoMeusDados}" />
+  </h:form>
+  </td>
+</tr>
+<tr>
+  <td height="20" align="right" valign="top" class="Fonte_14_Branca" scope="col">
+  <img src="/pais/img/calendar_empty.png" width="25" height="25" />
+  </td>
+  <td align="left" class="Fonte_13_Logado" scope="col">
+  <strong>Dia da Semana: </strong><h:outputLabel value="#{data_Hora.dia}" />
+  </td>
+</tr>
+<tr>
+  <td height="20" align="right" valign="top" class="Fonte_14_Branca" scope="col">
+  <img src="/pais/img/old_clock.png" width="25" height="25" />
+  </td>
+  <td align="left" class="Fonte_13_Logado" scope="col">
+      <strong>Hora Certa: </strong> <span id="hora"></span>
+      <script language="javascript">
+		function mueveReloj(){
+			var horadiv = document.getElementById("hora");
+		    momentoActual = new Date()
+		    hora = momentoActual.getHours()
+			if (hora&lt;10) hora = "0" + hora
+		    minuto = momentoActual.getMinutes()
+			if (minuto&lt;10) minuto = "0" + minuto
+		    segundo = momentoActual.getSeconds()
+			if (segundo&lt;10) segundo = "0" + segundo
+		 
+		    horadiv.innerHTML = hora + " : " + minuto + " : " + segundo;	
+			setTimeout("mueveReloj()",1000) 
+		} 
+		mueveReloj(); 
+		</script>
+  </td>
+</tr>
+</table>
+<!-- end .topo --></div>
+<!-- end .header --></div>
+
+<div class="content_menu">
+  <ui:include src="/layout/menu.xhtml" />
+  <img src="/pais/img/cadeado.png" width="17" height="22" style="position:absolute; float:left; top: 187px; right:372px;"/>
+  <div id="cronometro_div" style="position:absolute; float:left; width: 300px; height: 30px; text-align: left; top: 190px; right:65px;"> 
+     <strong class="Fonte_13_Logado">Sua Sessão Expira em :</strong> <span id="cronometro" class="Fonte_13_Logado"></span>
+  </div>
+  <script language="javascript">
+            var minutos=20
+			var seconds=00 
+			var campo = document.getElementById("cronometro");
+			var campo_div = document.getElementById("cronometro_div");
+	
+			function startCountdown()
+			{
+			     	if (seconds &lt;= 0){  
+			            seconds=60;
+					    minutos-=1;
+					 } 
+					 if (minutos &lt;=-1){ 
+					    seconds=0;
+					    seconds+=1;
+					    campo.innerHTML="";
+					    campo_div.innerHTML="Sessão expirada!";
+					 } else{ 
+						seconds-=1
+						if(seconds &lt; 10) {
+							seconds = "0" + seconds;
+						} 
+					    campo.innerHTML = " " + minutos+"min"+seconds;
+					    setTimeout("startCountdown()",1000); 
+					}  
+			}		 
+			startCountdown();
+		</script>
+</div>
+
+<div class="content">
+<div class="vc_esta">
+<h:form>
+   <ui:insert name="menu-vc-esta" >
+   </ui:insert>
+</h:form>
+<!-- end .vc_esta--></div>
+<div class="conteudo">
+<ui:insert name="conteudo" />
+<!-- end .conteudo --></div>
+<!-- end .content --></div>
+
+<div class="footer"><!-- end .footer --></div>
+<div class="rodape">
+<span class="Texto_cpf_login">Copyrigth 2010 | <strong>
+Ministério Internacional da Restauração</strong>. Todos os direitos reservados</span>
+<!-- end .rodape --></div>
+	</body>
+</f:view>
+</html>
