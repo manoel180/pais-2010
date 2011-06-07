@@ -199,14 +199,14 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Discipulos> listarDiscipulosSemPreEncontro(int discipulador) {
+	public List<Discipulos> discipuloSemPreEncontro(int discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
 					"select d from Discipulos d " +
-					"left outer join d.dadosencontroses_2 de " +
+					"left outer join d.participa p " +
+					"left outer join p.dadosencontros de " +
 					"left outer join de.encontros e " +
-					"where d.discipulos.disCod = "+ discipulador + " and (d.dism12 = 's') " +
-					"and e.encCod is null");
+					"where d.disCod = "+ discipulo +" and e.encCod is null");
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
@@ -215,16 +215,17 @@ public class DiscipuloDaoImp extends DaoGenericoImp<Discipulos, Integer> impleme
 			getEntityManager().close();
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Discipulos> discipuloTemPreEncontro(int discipulador) {
+	public List<Discipulos> discipuloComPreEncontro(int discipulo) {
 		try {
 			Query query = getEntityManager().createQuery(
 					"select d from Discipulos d " +
-					"left outer join d.dadosencontroses_2 de " +
+					"left outer join d.participa p " +
+					"left outer join p.dadosencontros de " +
 					"left outer join de.encontros e " +
-					"where d.disCod = "+ discipulador +" and e.encCod is not null");
+					"where d.disCod = "+ discipulo +" and e.encCod is not null");
 			return query.getResultList();
 		} catch (NoResultException nre) {
 			// TODO: handle exception
