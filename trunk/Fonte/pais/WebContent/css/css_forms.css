@@ -1,0 +1,561 @@
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background: #D1DEE4;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+/* ~~o cabeçalho não tem uma largura. Ele pode ocupar toda a largura do layout. Possui um alocador de espaço de imagem que deve ser substituído pelo seu logotipo com link~~ */
+.header {
+	background-image:url(/pais/img/fundo_topo.png);
+	height:186px;
+	width: 100%;
+}
+
+.topo {
+	width: 80%;
+	max-width: 1260px;/* uma largura máxima pode ser desejável para evitar que esse layout fique muito largo num monitor grande. Isso torna o comprimento da linha mais legível. O IE6 não concorda com essa declaração. */
+	min-width: 768px;/* uma largura mínima pode ser desejável para evitar que esse layout fique muito estreito. Isso torna o comprimento da linha mais legível nas colunas laterais. O IE6 não concorda com essa declaração. */
+	background: #6F7D94;
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	background:url("/pais/img/topo_novo.png") no-repeat;
+	height:186px;
+}
+
+/* ~~o cabeçalho não tem uma largura. Ele pode ocupar toda a largura do layout. Possui um alocador de espaço de imagem que deve ser substituído pelo seu logotipo com link~~ */
+.content_menu {
+	width: 100%;
+	background: #CDDCE2;
+	min-height:30px;
+	border-bottom: 3px solid #82A6B9;
+}
+
+.menu {
+	width: 80%;
+	max-width: 1260px;/* uma largura máxima pode ser desejável para evitar que esse layout fique muito largo num monitor grande. Isso torna o comprimento da linha mais legível. O IE6 não concorda com essa declaração. */
+	min-width: 768px;/* uma largura mínima pode ser desejável para evitar que esse layout fique muito estreito. Isso torna o comprimento da linha mais legível nas colunas laterais. O IE6 não concorda com essa declaração. */
+	/*
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	background-color:transparent !important;
+	background: #E8EFF3;
+	*/
+	background-color:transparent !important;
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	height:30px;
+	border: none !important;
+}
+
+/* ~~o cabeçalho não tem uma largura. Ele pode ocupar toda a largura do layout. Possui um alocador de espaço de imagem que deve ser substituído pelo seu logotipo com link~~ */
+.content {
+	width: 100%;
+	background: #E8EFF3;
+	min-height:350px;
+	padding-top:10px;
+	padding-bottom: 10px;
+}
+
+.vc_esta {
+	width: 80%;
+	max-width: 1260px;/* uma largura máxima pode ser desejável para evitar que esse layout fique muito largo num monitor grande. Isso torna o comprimento da linha mais legível. O IE6 não concorda com essa declaração. */
+	min-width: 768px;/* uma largura mínima pode ser desejável para evitar que esse layout fique muito estreito. Isso torna o comprimento da linha mais legível nas colunas laterais. O IE6 não concorda com essa declaração. */
+	background-image:url(/pais/img/bg_vcesta.png);
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	height:33px;
+}
+
+.conteudo {
+	width: 80%;
+	max-width: 1260px;/* uma largura máxima pode ser desejável para evitar que esse layout fique muito largo num monitor grande. Isso torna o comprimento da linha mais legível. O IE6 não concorda com essa declaração. */
+	min-width: 768px;/* uma largura mínima pode ser desejável para evitar que esse layout fique muito estreito. Isso torna o comprimento da linha mais legível nas colunas laterais. O IE6 não concorda com essa declaração. */
+	/*background:#090; */
+	background:#E8EFF3;
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	min-height:300px;
+}
+
+/* ~~o cabeçalho não tem uma largura. Ele pode ocupar toda a largura do layout. Possui um alocador de espaço de imagem que deve ser substituído pelo seu logotipo com link~~ */
+.footer {
+	width: 100%;
+	background-color:#82A6B9;
+	height:3px;
+}
+
+.rodape {
+	width: 80%;
+	max-width: 1260px;/* uma largura máxima pode ser desejável para evitar que esse layout fique muito largo num monitor grande. Isso torna o comprimento da linha mais legível. O IE6 não concorda com essa declaração. */
+	min-width: 768px;/* uma largura mínima pode ser desejável para evitar que esse layout fique muito estreito. Isso torna o comprimento da linha mais legível nas colunas laterais. O IE6 não concorda com essa declaração. */
+	background: #D1DEE4;
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	padding-top:5px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal;
+	color: #466273;
+	text-align:center;
+	min-height:30px;
+}
+
+#pgCentralizado {
+	height: 500px;
+	left: 50%;
+	margin: -200px 0 0 -300px;
+	position: absolute;
+	top: 50%;
+	width: 40%;
+}
+
+img{
+    border: none;
+}
+
+.panelGridEditor{
+	height:500px; 
+	background-color: #D1DEE4;
+	text-align: center;
+}
+
+.coluna1 {
+	text-align: right;
+}
+
+.coluna2 {
+	text-align: left;
+}
+
+.valorTotalDinheiro {
+	position: relative;
+	right: 80px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.valorTotalCheque {
+	position: relative;
+	right: 210px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+.valorTotalDinheiroCheque {
+	position: relative;
+	right: 150px;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #ffffff;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+.Fonte_11 {
+	font-family: Trebuchet MS;
+	font-size: 11px;
+	font-weight: normal;
+	color: #393939;
+}
+
+.Fonte_12_Logado {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #07335F;
+}
+
+.Fonte_13_Logado {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #07335F;
+}
+
+.Fonte_13 {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal;
+	color: #393939;
+}
+
+.Fonte_13_Branco {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal;
+	color: #ECECEC;
+}
+
+.Fonte_13_verde {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal;
+	color: #6A8D21;
+}
+
+.Texto_cpf_login {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal;
+	color: #466273;
+}
+
+.formularios {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	color: #56778B;
+	background-color: #DBE4E9;
+	border: 1px solid #CEDBE1;
+}
+
+.formularios2 {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	color: #56778B;
+	background-color: #E4ECEF;
+	border: 1px solid #CEDBE1;
+}
+
+.formulariosObrigatorio {
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: bold;
+	color: #466273;
+}
+
+.formulariosFonteNormal {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	color: #56778B;
+	background-color: #DBE4E9;
+}
+
+.borda_meio {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-style: 1;
+	font-weight: 1;
+	background-color: #E6EDF0;
+	border: 1px solid #B3C9D5;
+}
+
+.TEXTO_12 {
+	font-family: Trebuchet MS;
+	font-size: 12px;
+	font-weight: normal;
+	color: #07335F;
+}
+
+.TEXTO_11 {
+	font-family: Trebuchet MS;
+	font-size: 11px;
+	font-weight: normal;
+	color: #07335F;
+}
+
+#cheque {
+	width:800px;
+	height:327px;
+	position: absolute;
+	background-image:url(/pais/img/template_cheque.jpg);
+	}
+#cheque_comp {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 20px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_banco {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 70px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_agencia {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 120px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_c1 {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 195px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_conta {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 230px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_c2 {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 374px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_logo_banco {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 163px;
+	left: 25px;
+	}
+#cheque_numCheque {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 430px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_c3 {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 540px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 10px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_valNum {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 24px;
+	left: 570px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_valExtenso {
+	width: 636px;
+	height: auto;
+	position:absolute;
+	top: 61px;
+	left: 139px;
+	text-align:left;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_pagoA {
+	width: 636px;
+	height: auto;
+	position:absolute;
+	top: 116px;
+	left: 35px;
+	text-align:left;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataCidade {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 354px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataDia {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 489px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataMes {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 580px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_DataAno {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 154px;
+	left: 750px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_NomePagante {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 198px;
+	left: 354px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_CpfPagante {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 242px;
+	left: 379px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_ClienteDesde {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 257px;
+	left: 492px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 13px;
+	font-weight: normal bold;
+	font: bold bolder;
+	color: #000;
+	}
+#cheque_PreDatado {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 243px;
+	left: 25px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 20px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
+#cheque_NumAutenticacao {
+	width: auto;
+	height: auto;
+	position:absolute;
+	top: 291px;
+	left: 25px;
+	text-align:center;
+	font-family: Trebuchet MS;
+	font-size: 20px;
+	font-weight: normal bold;
+	font: bold bolder;
+	font-style:italic;
+	color: #000;
+	}
