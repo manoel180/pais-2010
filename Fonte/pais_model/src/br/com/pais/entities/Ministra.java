@@ -21,13 +21,15 @@ public class Ministra implements java.io.Serializable {
 
 	private MinistraId id;
 	private Discipulos discipulos;
+	private Dadosencontros dadosencontros;
 
 	public Ministra() {
 	}
 
-	public Ministra(MinistraId id, Discipulos discipulos) {
+	public Ministra(MinistraId id, Dadosencontros dadosencontros, Discipulos discipulos) {
 		this.id = id;
 		this.discipulos = discipulos;
+		this.dadosencontros = dadosencontros;
 	}
 
 	@EmbeddedId
@@ -42,6 +44,16 @@ public class Ministra implements java.io.Serializable {
 		this.id = id;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dadosencontros_dadenccod", nullable = false, insertable = false, updatable = false)
+	public Dadosencontros getDadosencontros() {
+		return this.dadosencontros;
+	}
+
+	public void setDadosencontros(Dadosencontros dadosencontros) {
+		this.dadosencontros = dadosencontros;
+	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "discipulos_disCod", nullable = false, insertable = false, updatable = false)
 	public Discipulos getDiscipulos() {

@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 11/05/2011 14:16:49 by Hibernate Tools 3.4.0.CR1
+// Generated 24/05/2011 10:42:25 by Hibernate Tools 3.4.0.Beta1
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -35,9 +35,8 @@ public class Frequencia implements java.io.Serializable {
 
 	@EmbeddedId
 	@AttributeOverrides({
-			@AttributeOverride(name = "discipulosDisCod", column = @Column(name = "discipulos_disCod", nullable = false)),
-			@AttributeOverride(name = "palestrasHasEncontrosPalestrasPalCod", column = @Column(name = "Palestras_has_encontros_Palestras_PalCod", nullable = false)),
-			@AttributeOverride(name = "palestrasHasEncontrosEncontrosEncCod", column = @Column(name = "Palestras_has_encontros_encontros_EncCod", nullable = false)) })
+			@AttributeOverride(name = "discipulos", column = @Column(name = "discipulos", nullable = false)),
+			@AttributeOverride(name = "encontrospalestras", column = @Column(name = "encontrospalestras", nullable = false)) })
 	public FrequenciaId getId() {
 		return this.id;
 	}
@@ -47,7 +46,7 @@ public class Frequencia implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "Palestras_has_encontros_Palestras_PalCod", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "encontrospalestras", nullable = false, insertable = false, updatable = false)
 	public Encontrospalestras getEncontrospalestras() {
 		return this.encontrospalestras;
 	}
@@ -57,7 +56,7 @@ public class Frequencia implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "discipulos_disCod", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "discipulos", nullable = false, insertable = false, updatable = false)
 	public Discipulos getDiscipulos() {
 		return this.discipulos;
 	}
@@ -65,5 +64,4 @@ public class Frequencia implements java.io.Serializable {
 	public void setDiscipulos(Discipulos discipulos) {
 		this.discipulos = discipulos;
 	}
-
 }
