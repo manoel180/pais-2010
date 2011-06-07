@@ -2,7 +2,9 @@ package br.com.pais.entities;
 
 // Generated 11/05/2011 14:16:49 by Hibernate Tools 3.4.0.CR1
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +25,7 @@ public class Formacaoeclesiasticas implements java.io.Serializable {
 
 	private Integer forEcCod;
 	private String forEcDescricao;
-	private Set<Discipulos> discipuloses = new HashSet<Discipulos>(0);
+	private List<Discipulos> discipuloses = new ArrayList<Discipulos>(0);
 
 	public Formacaoeclesiasticas() {
 	}
@@ -33,7 +35,7 @@ public class Formacaoeclesiasticas implements java.io.Serializable {
 	}
 
 	public Formacaoeclesiasticas(String forEcDescricao,
-			Set<Discipulos> discipuloses) {
+			List<Discipulos> discipuloses) {
 		this.forEcDescricao = forEcDescricao;
 		this.discipuloses = discipuloses;
 	}
@@ -59,11 +61,11 @@ public class Formacaoeclesiasticas implements java.io.Serializable {
 	}
 
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "formacaoeclesiasticases")
-	public Set<Discipulos> getDiscipuloses() {
+	public List<Discipulos> getDiscipuloses() {
 		return this.discipuloses;
 	}
 
-	public void setDiscipuloses(Set<Discipulos> discipuloses) {
+	public void setDiscipuloses(List<Discipulos> discipuloses) {
 		this.discipuloses = discipuloses;
 	}
 
