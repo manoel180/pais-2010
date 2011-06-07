@@ -489,7 +489,7 @@ public class MovimentacaoBean {
 				if(movimento.getMovEspecie().equals("Cheque"))salvarMovimentoCheque();
 				if(movimento.getMovEspecie().equals("Dinheiro e Cheque"))salvarMovimentoDinheiroCheque();
 				
-				return "/cad/movimentoGerado";
+				return "/cad/movimentoGerado.mir";
 			}
 		}
 		else{
