@@ -1,0 +1,667 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+	
+	<ui:define name="javascript">
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskMoney.0.2.js"></script>
+	
+	<script>
+	jQuery(function($){
+			$("#valLocalEncontro").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+			$("#valTransporte").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+			$("#dataInicio").mask("99/99/9999");
+			$("#dataFim").mask("99/99/9999");
+	});
+
+	function eventAbrirDlgPalestra(){
+		jQuery(function($){
+			jQuery("#palestraHorario").mask("99:99");
+		});
+	}
+	</script>
+	</ui:define>
+	
+	<ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="85">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="ENCONTROS DIVERSOS"/> 
+	     <p:menuitem value="ENCONTRO COM DEUS"/> 
+	     <p:menuitem value="ENCONTRO"/> 
+         <p:menuitem value="EDITAR" action="#{encontrosBean.prepararEditarEncontroComDeus}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/> 
+			<p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."   
+			draggable="false" closable="false" resizable="false">
+			<center> <p:graphicImage value="/img/ajax-loader.gif" /></center>  
+			</p:dialog>  
+		<h:form id="form1" prependId="false">
+			<p:tabView orientation="top" activeIndex="0">
+				<p:tab title="Dados do Encontro Com Deus">
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+							<h:outputLabel value="Responsável:" styleClass="formulariosObrigatorio"/>
+							<h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
+							<h:outputLabel value="Local:" styleClass="formulariosObrigatorio"/>
+						    <h:inputTextarea rows="3" cols="40" value="#{encontrosBean.dadosEncontros.dadenclocal}" 
+						    styleClass="formularios2"/>
+					        <h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
+							<p:calendar id="dataInicio" value="#{encontrosBean.dadosEncontros.dadencdatainicio}" size="12"
+				                    inputStyleClass="formularios2" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    maxlength="10" pattern="dd/MM/yyyy"/>
+						    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
+							<p:calendar id="dataFim" value="#{encontrosBean.dadosEncontros.dadencdatafim}" size="12"
+				                    inputStyleClass="formularios2" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    maxlength="10" pattern="dd/MM/yyyy"/>
+						    <h:outputLabel value="Valor do Local do Encontro:" styleClass="formulariosObrigatorio"/>
+							<h:inputText id="valLocalEncontro" size="8" styleClass="formularios2" value="#{encontrosBean.valorLocalEncontro}">
+							   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+							</h:inputText>
+							<h:outputLabel value="Valor do Transporte:" styleClass="formulariosObrigatorio"/>
+							<h:inputText id="valTransporte" size="8" styleClass="formularios2" value="#{encontrosBean.valorTransporte}">
+							   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+							</h:inputText>
+							<h:outputLabel value="Valor por pessoa:" styleClass="formulariosObrigatorio"/>
+							<h:outputLabel value="#{encontrosBean.valorPorPessoa}" styleClass="formulariosObrigatorio">
+							    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+							</h:outputLabel>
+				    </h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Espirituais">
+				<h:panelGrid columns="3" columnClasses="coluna1, coluna2, coluna2">
+				        <!-- ESPIRITUAL -->
+						<h:outputLabel value="Lider Espiritual:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderEspiritual" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderEspiritual.disnome}" readonly="true"/>
+						<p:commandButton image="ui-icon ui-icon-search" oncomplete="dlgLiderEspiritual.show();" global="true"/>
+						<!-- INTERCESSÃO -->
+						<h:outputLabel value="Lider Intercessão:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderIntercessao" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderIntercessao.disnome}" readonly="true"/>
+						<p:commandButton image="ui-icon ui-icon-search" oncomplete="dlgLiderIntercessao.show();" global="true"/>
+						<!-- CORREIO -->
+						<h:outputLabel value="Lider do Correio:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderCorreio" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderCorreio.disnome}" readonly="true"/>
+						<p:commandButton image="ui-icon ui-icon-search" oncomplete="dlgLiderCorreio.show();" global="true"/>
+						<!-- APOIO E RECEPÇÃO  -->
+						<h:outputLabel value="Lider do Apoio e Recepção:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderApoio" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderApoioRecepcao.disnome}" readonly="true"/>
+						<p:commandButton image="ui-icon ui-icon-search" oncomplete="dlgLiderApoio.show();" global="true"/>
+				</h:panelGrid>
+				</p:tab>
+				<p:tab title="Encontristas">
+				<p:outputPanel id="outPanelDiscipulos">
+				<br />
+				<p:dataTable
+					id="dtAdicionar" 
+					var="disAdc" 
+					selection="#{encontrosBean.dtDisEncontroDeusSelecionadosAdicionar}"
+					selectionMode="multiple"
+					value="#{encontrosBean.dtDisEncontroDeus}" 
+                    paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo encontrado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+					        <center>
+							<h:outputText value="&nbsp;DISCÍPULOS FORA DO ENCONTRO COM DEUS" styleClass="Fonte_12"/>
+							</center>
+					</f:facet>
+					
+					<p:column id="dtAdcNomLider" filterStyleClass="formularios" resizable="true" sortBy="#{disAdc.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disAdc.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disAdc.discipulo.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column id="dtAdcNomDiscipulo" filterStyleClass="formularios" resizable="true" sortBy="#{disAdc.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disAdc.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disAdc.discipulo.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{disAdc.discipulo.geracoes.gerDescricao}"/>
+						</center>
+					</p:column>
+					
+					<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="APROVEITAMENTO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<p:graphicImage rendered="#{disAdc.aulas == 0}" value="/img/1.png"/> 
+					<p:graphicImage rendered="#{disAdc.aulas == 1}" value="/img/2.png"/> 
+					<p:graphicImage rendered="#{disAdc.aulas == 2}" value="/img/3.png"/> 
+					<p:graphicImage rendered="#{disAdc.aulas == 3}" value="/img/4.png"/> 
+					<p:graphicImage rendered="#{disAdc.aulas == 4}" value="/img/5.png"/> 
+				    </p:column>
+				</p:dataTable>
+				<br />
+				<center>
+				<p:commandButton value="Adicionar" action="#{encontrosBean.adicionarDiscipulosEncontroComDeus}" 
+                image="ui-icon ui-icon-circle-plus" update="outPanelDiscipulos"/>
+				</center>
+				<br/>
+				
+				<p:dataTable
+					id="dtRemover" 
+					var="disRem" 
+					selectionMode="multiple"
+					selection="#{encontrosBean.dtDisEncontroDeusSelecionadosRemover}"
+					value="#{encontrosBean.dtDisEncontroDeusEscolhidos}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo adicionado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS DENTRO DO ENCONTRO COM DEUS" styleClass="Fonte_12"/>
+					</f:facet>
+					
+					<p:column id="dtRemLider" filterStyleClass="formularios" resizable="true" sortBy="#{disRem.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disRem.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column id="dtRemDis" filterStyleClass="formularios" resizable="true" sortBy="#{disRem.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disRem.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.geracoes.gerDescricao}"/>
+					</p:column>
+					
+					<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="APROVEITAMENTO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<p:graphicImage rendered="#{disRem.aulas == 0}" value="/img/1.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 1}" value="/img/2.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 2}" value="/img/3.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 3}" value="/img/4.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 4}" value="/img/5.png"/> 
+				    </p:column>
+				    
+				    <p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="PAGO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<p:graphicImage rendered="#{disRem.pago == true}"  value="/img/sim_pagamento.png"/>
+					<p:graphicImage rendered="#{disRem.pago == false}" value="/img/nao_pagamento.png"/>
+					</center>
+				    </p:column>
+					  
+				</p:dataTable>
+				<br />
+				<center>
+				<p:commandButton value="Pagar Encontro" onclick="dlgPagarEncontro.show()"
+                                 image="ui-icon ui-icon-cart"/>
+                <p:commandButton value="Desfazer Pagamento do Encontro" onclick="dlgDesfazerEncontro.show()"
+                                 image="ui-icon ui-icon-cart"/>
+                <p:commandButton value="Remover" action="#{encontrosBean.removerDiscipulosEncontroComDeus}" 
+                                 image="ui-icon ui-icon-circle-minus" update="outPanelDiscipulos"/>
+                </center>
+                <br />
+				</p:outputPanel>
+				</p:tab>
+				<p:tab title="Ministrações e Encontreiros">
+				<br />
+				<p:outputPanel id="outPnldtPalestras">
+				<p:dataTable
+				id="dtPalestra" 
+				var="pal" 
+				value="#{encontrosBean.listaPalestraEncontroComDeus}" 
+				width="100%"
+				sortAscMessage="Ordena em ordem crescente"
+				sortDescMessage="Ordena em ordem descrecente" 
+				dynamic="true" emptyMessage="Nenhum Palestra Adicionada">
+				
+				<f:facet name="header">
+				        <center>
+						<h:outputText value="PALESTRAS DO ENCONTRO COM DEUS" styleClass="Fonte_12"/>
+						</center>
+				</f:facet>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="PALESTRA" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palestra.palestras.palDescricao}"/>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="FOTO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<p:graphicImage rendered="#{pal.palestra.discipulos.disfoto != null}" 
+					value="#{pal.palestra.discipulos.disfoto}" width="41" height="40"/>
+					</center>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="MINISTRADOR" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palestra.discipulos.disnome}"/>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="HORÁRIO DA MINISTRAÇÃO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palestra.horarioRealizacao}">
+					   <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+					</h:outputText>
+					</center>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="CONFIRMADO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<p:graphicImage rendered="#{pal.atualizada == 'true'}" value="/img/sim.png"/> 
+					<p:graphicImage rendered="#{pal.atualizada == 'false'}" value="/img/nao.png"/> 
+					</center>
+				</p:column>
+				
+				<p:column>
+				    <f:facet name="header">
+				    <center>
+						<h:outputText value="SALVAR/EDITAR" styleClass="Fonte_12" />
+					</center>
+					</f:facet>
+					<p:commandLink title="Detalhe Palestra" update="pnlDetalhePalestra" 
+					action="#{encontrosBean.dlgDetalhePalestra}"
+					oncomplete="dlgPalestra.show()">  
+                        <center>
+                        <p:graphicImage value="/img/salvar_editar.png"/>
+                        </center> 
+                        <f:setPropertyActionListener value="#{pal}" target="#{encontrosBean.palestraEncontroComDeusSelecionada}" />    
+                    </p:commandLink> 
+		        </p:column>
+			</p:dataTable>
+			</p:outputPanel>
+			</p:tab>
+			<p:tab title="Papelaria">
+			</p:tab>
+			</p:tabView>
+			<br/>
+			<p:commandButton value="Editar"
+			action="#{encontrosBean.editarEncontroComDeus}" ajax="false"/>
+			<p:commandButton value="Cancelar"
+			action="#{encontrosBean.prepararListarEncontrosComDeus}" ajax="false"/>
+			<br/>
+			
+			<!-- DIALOG LIDER ESPIRITUAL  -->
+			<p:dialog header="Selecionar Lider Espiritual" modal="true"
+				widgetVar="dlgLiderEspiritual" resizable="false" width="800" height="400">
+				<p:treeTable value="#{encontrosBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column filterBy="#{node.discipulo.disnome}">
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>SELECIONAR</center> 
+						</f:facet>
+						<center>
+						<p:commandButton update="liderEspiritual" type="image" image="/img/ver.png" 
+						oncomplete="dlgLiderEspiritual.hide();" rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{encontrosBean.liderEspiritual}" />
+						</p:commandButton>
+						</center>
+					</p:column>
+                </p:treeTable>
+			</p:dialog>
+			
+			<!-- DIALOG LIDER INTERCESSÃO -->
+			<p:dialog header="Selecionar Lider Intercessão" modal="true"
+				widgetVar="dlgLiderIntercessao" resizable="false" width="800" height="400">
+				<p:treeTable value="#{encontrosBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column filterBy="#{node.discipulo.disnome}">
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>SELECIONAR</center> 
+						</f:facet>
+						<center>
+						<p:commandButton update="liderIntercessao" type="image" image="/img/ver.png" 
+						oncomplete="dlgLiderIntercessao.hide();" rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{encontrosBean.liderIntercessao}" />
+						</p:commandButton>
+						</center>
+					</p:column>
+                </p:treeTable>
+			</p:dialog>
+			
+			<!-- DIALOG LIDER CORREIO -->
+			<p:dialog header="Selecionar Lider dos Correios" modal="true"
+				widgetVar="dlgLiderCorreio" resizable="false" width="800" height="400">
+				<p:treeTable value="#{encontrosBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column filterBy="#{node.discipulo.disnome}">
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>SELECIONAR</center> 
+						</f:facet>
+						<center>
+						<p:commandButton update="liderCorreio" type="image" image="/img/ver.png" 
+						oncomplete="dlgLiderCorreio.hide();" rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{encontrosBean.liderCorreio}" />
+						</p:commandButton>
+						</center>
+					</p:column>
+                </p:treeTable>
+			</p:dialog>
+			
+			<!-- DIALOG LIDER APOIO -->
+			<p:dialog header="Selecionar Lider Apoio e Recepção" modal="true"
+				widgetVar="dlgLiderApoio" resizable="false" width="800" height="400">
+				<p:treeTable value="#{encontrosBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column filterBy="#{node.discipulo.disnome}">
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>SELECIONAR</center> 
+						</f:facet>
+						<center>
+						<p:commandButton update="liderApoio" type="image" image="/img/ver.png" 
+						oncomplete="dlgLiderApoio.hide();" rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{encontrosBean.liderApoioRecepcao}" />
+						</p:commandButton>
+						</center>
+					</p:column>
+                </p:treeTable>
+			</p:dialog>
+			
+			<p:dialog header="DETALHE DA PALESTRA" widgetVar="dlgPalestra" resizable="false" modal="true" 
+			onShow="eventAbrirDlgPalestra()" width="800" height="400">
+                <p:outputPanel id="pnlDetalhePalestra"> 
+                <p:messages id="mgsHora" showDetail="true"/> 
+                <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+                        <h:outputLabel value="Palestra:" styleClass="formulariosObrigatorio"/>
+                        <h:outputLabel value="#{encontrosBean.palestraEncontroComDeusSelecionada.palestra.palestras.palDescricao}" 
+                        styleClass="Texto_cpf_login"/>
+						<h:outputLabel value="Ministrador:" styleClass="formulariosObrigatorio"/>
+						<h:inputText size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderPalestra.disnome}" readonly="true"/>
+						<h:outputLabel value="Horário:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="palestraHorario" size="6" styleClass="formularios2" 
+						value="#{encontrosBean.horarioPalestra2}">
+				           <p:ajax event="blur" update="mgsHora" listener="#{encontrosBean.validarHoraPalestra}"/>
+					    </h:inputText>
+				</h:panelGrid>
+                </p:outputPanel>
+                
+                <br/>
+				<p:commandButton value="Salvar" action="#{encontrosBean.dlgDetalhePalestraSalvar}"
+				oncomplete="dlgPalestra.hide();" update="outPnldtPalestras"/>
+				<p:commandButton value="Cancelar" onclick="dlgPalestra.hide();"/>
+				<br/><br/>
+                
+                <p:treeTable value="#{encontrosBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column filterBy="#{node.discipulo.disnome}">
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>SELECIONAR</center> 
+						</f:facet>
+						<center>
+						<p:commandButton update="pnlDetalhePalestra" type="image" oncomplete="eventAbrirDlgPalestra()"
+						image="/img/ver.png" action="#{encontrosBean.validarHoraPalestra}" rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{encontrosBean.liderPalestra}" />
+						</p:commandButton>
+						</center>
+					</p:column>
+                </p:treeTable>
+            </p:dialog>
+            
+            <p:dialog header="PAGAR ENCONTRO DÍSCIPULO" widgetVar="dlgPagarEncontro" 
+            resizable="false" modal="true" width="600">
+	            <h:panelGrid columns="1">
+		        <h:outputText value="Deseja confirmar pagamento?" 
+		        styleClass="formulariosObrigatorio"/>
+		        </h:panelGrid>
+	            <br />
+	            <p:commandButton value="Sim" action="#{encontrosBean.pagarEncontroComDeusInscritos}" 
+	            update="outPanelDiscipulos" oncomplete="dlgPagarEncontro.hide()" />
+	            <p:commandButton value="Não" onclick="dlgPagarEncontro.hide()" /> 
+	            <br />
+			 </p:dialog>
+			 
+			 <p:dialog header="DESFAZER PAGAMENTO ENCONTRO DÍSCIPULO" widgetVar="dlgDesfazerEncontro" 
+             resizable="false" modal="true" width="600">
+	            <h:panelGrid columns="1">
+		        <h:outputText value="Deseja desfazer pagamento?" 
+		        styleClass="formulariosObrigatorio"/>
+		        </h:panelGrid>
+	            <br />
+	            <p:commandButton value="Sim" action="#{encontrosBean.defazerPagamentoEncontroComDeusInscritos}" 
+	            update="outPanelDiscipulos" oncomplete="dlgDesfazerEncontro.hide()" />
+	            <p:commandButton value="Não" onclick="dlgDesfazerEncontro.hide()" /> 
+	            <br />
+			 </p:dialog>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

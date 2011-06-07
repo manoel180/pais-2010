@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+    
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="85">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="ENCONTROS DIVERSOS"/> 
+	     <p:menuitem value="ENCONTRO COM DEUS"/> 
+	     <p:menuitem value="PÓS-ENCONTRO"/>   
+         <p:menuitem value="DETALHE DESTA AULA" action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false" />
+	    </p:breadCrumb>  
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/> 
+			<p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."   
+			draggable="false" closable="false" resizable="false">
+			<center> <p:graphicImage value="/img/ajax-loader.gif" /></center>  
+			</p:dialog>  
+			<!--  
+			<p:ajaxStatus style="width:31px;height:31px;">  
+			    <f:facet name="start">  
+			        <h:graphicImage value="/img/ajax-loader.gif" />  
+			    </f:facet>  
+			      
+			    <f:facet name="complete">  
+			        <h:outputText value="" />  
+			    </f:facet>  
+			</p:ajaxStatus>
+		    -->
+		<h:form id="form1" prependId="false">
+			<p:tabView orientation="top">
+				<p:tab title="Dados do Pós-Encontro">
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+						<h:outputLabel value="Responsável:" styleClass="formulariosObrigatorio"/>
+						<h:inputText size="50" styleClass="formularios2" value="#{encontrosBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
+						<h:outputLabel value="Ministrador:" styleClass="formulariosObrigatorio"/>
+						<h:inputText size="50" styleClass="formularios2" value="#{encontrosBean.ministrador.disnome}" readonly="true"/>
+						<h:outputLabel value="Horário:" styleClass="formulariosObrigatorio"/>
+						<h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.dadosEncontros.dadenchorario}"  readonly="true">
+						   <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-3"/>
+						</h:inputText>
+					    <h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
+					    <h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.dadosEncontros.dadencdatainicio}"  readonly="true">
+					       <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+					    </h:inputText>
+					    <h:outputText value="Data Término:" styleClass="formulariosObrigatorio"/>
+					    <h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.dadosEncontros.dadencdatafim}"  readonly="true">
+					       <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+					    </h:inputText>
+						<h:outputLabel value="Local:" styleClass="formulariosObrigatorio"/>
+						<h:inputTextarea rows="3" cols="40" value="#{encontrosBean.dadosEncontros.dadenclocal}" 
+						styleClass="formularios2" readonly="true"/>
+						<h:outputText value="Aula Ministrada:" styleClass="formulariosObrigatorio"/>
+					    <h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.encontroPalestra.palestras.palDescricao}"  readonly="true"/>
+					    <h:outputText value="Data Aula Ministrada:" styleClass="formulariosObrigatorio"/>
+					    <h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.encontroPalestra.dataRealizacao}"  readonly="true">
+					       <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+					    </h:inputText>
+				    </h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			<br/>
+			
+			<p:tabView effect="opacity" contentTransition="true">
+				<p:tab title="Discípulos">
+				<p:outputPanel id="outPanelDiscipulos">
+				<p:dataTable
+					id="dtDiscipulos" 
+					var="dis" 
+					value="#{encontrosBean.listaDiscipuloPreEncontro}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo encontrado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS DENTRO DO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+					</f:facet>
+					
+					<p:column id="dtDisLider" filterStyleClass="formularios" resizable="true" sortBy="#{dis.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{dis.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{dis.discipulo.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column id="dtDis" filterStyleClass="formularios" resizable="true" sortBy="#{dis.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{dis.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{dis.discipulo.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{dis.discipulo.geracoes.gerDescricao}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;PRESENTE NA AULA" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<center>
+						<p:graphicImage rendered="#{dis.presenteAulaPreEncontro == 'true'}" value="/img/sim.png"/> 
+						<p:graphicImage rendered="#{dis.presenteAulaPreEncontro == 'false'}" value="/img/nao.png"/> 
+						</center>
+					</p:column>
+					  
+				</p:dataTable>
+                </p:outputPanel>
+				</p:tab>
+			</p:tabView>
+			
+			<br/>
+			<p:commandButton value="Voltar" action="#{encontrosBean.prepararListarPosEncontros}" ajax="false"/>
+			<br/>
+		</h:form>
+	</ui:define>
+</ui:composition>

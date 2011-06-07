@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+	
+	<ui:define name="javascript">
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskMoney.0.2.js"></script>
+	
+	<script>
+	jQuery(function($){
+			$("#ofertaTirada").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+			$("#ofertaVoluntaria").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+			$("#valorMaterialHigienico").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+			$("#valorRefeicao").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+			$("#valorCorreio").maskMoney({symbol:"R$", decimal:",", thousands:".", showSymbol:false});
+	});
+	</script>
+	</ui:define>
+	
+	<ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="85">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="ENCONTROS DIVERSOS"/> 
+	     <p:menuitem value="ENCONTRO COM DEUS"/> 
+	     <p:menuitem value="ENCONTRO"/>
+         <p:menuitem value="FINALIZAR" action="#{encontrosBean.prepararFinalizarEncontroComDeus}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<br />
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/> 
+			<p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."   
+			draggable="false" closable="false" resizable="false">
+			<center> <p:graphicImage value="/img/ajax-loader.gif" /></center>  
+			</p:dialog>  
+		<h:form id="form1" prependId="false">
+			<p:tabView orientation="top" activeIndex="0">
+				<p:tab title="Dados do Encontro Com Deus">
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+							<h:outputLabel value="Responsável:" styleClass="formulariosObrigatorio"/>
+							<h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
+							<h:outputLabel value="Local:" styleClass="formulariosObrigatorio"/>
+						    <h:inputTextarea rows="3" cols="40" value="#{encontrosBean.dadosEncontros.dadenclocal}" readonly="true"
+						    styleClass="formularios2"/>
+					        <h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
+					        <h:inputText size="10" styleClass="formularios2" value="#{encontrosBean.dadosEncontros.dadencdatainicio}" 
+					        readonly="true">
+					           <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+					        </h:inputText>
+						    <h:outputText value="Data Fim:" styleClass="formulariosObrigatorio"/>
+							<h:inputText size="10" styleClass="formularios2" value="#{encontrosBean.dadosEncontros.dadencdatafim}" 
+					        readonly="true">
+					           <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+					        </h:inputText>
+						    <h:outputLabel value="Valor do Local do Encontro:" styleClass="formulariosObrigatorio"/>
+							<h:outputLabel value="#{encontrosBean.valorLocalEncontro}" styleClass="formulariosObrigatorio">
+							   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+							</h:outputLabel>
+							<h:outputLabel value="Valor do Transporte:" styleClass="formulariosObrigatorio"/>
+							<h:outputLabel value="#{encontrosBean.valorTransporte}" styleClass="formulariosObrigatorio">
+							   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+							</h:outputLabel>
+							<h:outputLabel value="Valor por pessoa:" styleClass="formulariosObrigatorio"/>
+							<h:outputLabel value="#{encontrosBean.valorPorPessoa}" styleClass="formulariosObrigatorio">
+							    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+							</h:outputLabel>
+				    </h:panelGrid>
+				</p:tab>
+				<p:tab title="Dados Espirituais">
+				<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+				        <!-- ESPIRITUAL -->
+						<h:outputLabel value="Lider Espiritual:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderEspiritual" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderEspiritual.disnome}" readonly="true"/>
+						<!-- INTERCESSÃO -->
+						<h:outputLabel value="Lider Intercessão:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderIntercessao" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderIntercessao.disnome}" readonly="true"/>
+						<!-- CORREIO -->
+						<h:outputLabel value="Lider do Correio:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderCorreio" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderCorreio.disnome}" readonly="true"/>
+						<!-- APOIO E RECEPÇÃO  -->
+						<h:outputLabel value="Lider do Apoio e Recepção:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="liderApoio" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.liderApoioRecepcao.disnome}" readonly="true"/>
+				</h:panelGrid>
+				</p:tab>
+				<p:tab title="Encontristas">
+				<p:outputPanel id="outPanelDiscipulos">
+				<br />
+				<p:dataTable
+					id="dtRemover" 
+					var="disRem" 
+					value="#{encontrosBean.dtDisEncontroDeusEscolhidos}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo adicionado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS DENTRO DO ENCONTRO COM DEUS" styleClass="Fonte_12"/>
+					</f:facet>
+					
+					<p:column id="dtRemLider" filterStyleClass="formularios" resizable="true" sortBy="#{disRem.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disRem.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column id="dtRemDis" filterStyleClass="formularios" resizable="true" sortBy="#{disRem.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disRem.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.geracoes.gerDescricao}"/>
+					</p:column>
+					
+					<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="APROVEITAMENTO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<p:graphicImage rendered="#{disRem.aulas == 0}" value="/img/1.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 1}" value="/img/2.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 2}" value="/img/3.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 3}" value="/img/4.png"/> 
+					<p:graphicImage rendered="#{disRem.aulas == 4}" value="/img/5.png"/> 
+				    </p:column>
+				    
+				    <p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="PAGO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<p:graphicImage rendered="#{disRem.pago == true}"  value="/img/sim_pagamento.png"/>
+					<p:graphicImage rendered="#{disRem.pago == false}" value="/img/nao_pagamento.png"/>
+					</center>
+				    </p:column>
+					  
+				</p:dataTable>
+				</p:outputPanel>
+				<br />
+				</p:tab>
+				<p:tab title="Ministrações e Encontreiros">
+				<br />
+				<p:outputPanel id="outPnldtPalestras">
+				<p:dataTable
+				id="dtPalestra" 
+				var="pal" 
+				value="#{encontrosBean.listaPalestraEncontroComDeus}" 
+				width="100%"
+				sortAscMessage="Ordena em ordem crescente"
+				sortDescMessage="Ordena em ordem descrecente" 
+				dynamic="true" emptyMessage="Nenhum Palestra Adicionada">
+				
+				<f:facet name="header">
+				        <center>
+						<h:outputText value="PALESTRAS DO ENCONTRO COM DEUS" styleClass="Fonte_12"/>
+						</center>
+				</f:facet>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="PALESTRA" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palestra.palestras.palDescricao}"/>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="FOTO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<p:graphicImage rendered="#{pal.palestra.discipulos.disfoto != null}" 
+					value="#{pal.palestra.discipulos.disfoto}" width="41" height="40"/>
+					</center>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="MINISTRADOR" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palestra.discipulos.disnome}"/>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="HORÁRIO DA MINISTRAÇÃO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palestra.horarioRealizacao}">
+					   <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+					</h:outputText>
+					</center>
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="CONFIRMADO" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<p:graphicImage rendered="#{pal.atualizada == 'true'}" value="/img/sim.png"/> 
+					<p:graphicImage rendered="#{pal.atualizada == 'false'}" value="/img/nao.png"/> 
+					</center>
+				</p:column>
+			</p:dataTable>
+			</p:outputPanel>
+			</p:tab>
+			<p:tab title="Financeiro"> 
+			<center>
+			<h:panelGrid columns="3">
+			
+			<p:panel header="Entradas" style="width:250px; height: 250px;">
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+			<h:outputLabel value="Quantidade inscrições:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.dadosEncontros.dadencqtdinscritos}" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="inscrições pagas:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.inscricoesPagasEncontroComDeus}" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="inscrições em debito:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.dadosEncontros.dadencqtdinscritos - encontrosBean.inscricoesPagasEncontroComDeus}" 
+			styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="Valor por pessoa:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorPorPessoa}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			<h:outputLabel value="Total inscrições pagas:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorInscricoesPagasEncontroComDeus}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			<h:outputLabel value="Oferta Tirada:" styleClass="formulariosObrigatorio"/>
+			<h:inputText id="ofertaTirada" size="8" styleClass="formularios2" value="#{encontrosBean.valorOfertaTirada}">
+			   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			   <p:ajax event="blur" update="valorTotalEntrada outPnlTotalLiquido" listener="#{encontrosBean.calcularValorTotalEntrada}"/>
+			</h:inputText>
+			<h:outputLabel value="Oferta Voluntária:" styleClass="formulariosObrigatorio"/>
+			<h:inputText id="ofertaVoluntaria" size="8" styleClass="formularios2" value="#{encontrosBean.valorOfertaVoluntaria}">
+			   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			   <p:ajax event="blur" update="valorTotalEntrada outPnlTotalLiquido" listener="#{encontrosBean.calcularValorTotalEntrada}"/>
+			</h:inputText>
+			</h:panelGrid>
+			<hr />
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left:22px;">
+			<h:outputLabel value="Valor total entrada:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel id="valorTotalEntrada" value="#{encontrosBean.valorTotalEntrada}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			</h:panelGrid>
+			</p:panel>
+			
+			<p:panel header="Saídas" style="width:250px; height: 250px;">
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="padding-top:35px;">
+			<h:outputLabel value="Local do encontro:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorLocalEncontro}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			<h:outputLabel value="Transporte:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorTransporte}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			<h:outputLabel value="Material higiênico:" styleClass="formulariosObrigatorio"/>
+			<h:inputText id="valorMaterialHigienico" size="8" styleClass="formularios2" value="#{encontrosBean.valorMaterialHigienico}">
+			   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			   <p:ajax event="blur" update="valorTotalSaida outPnlTotalLiquido" listener="#{encontrosBean.calcularValorTotalSaida}"/>
+			</h:inputText>
+			<h:outputLabel value="Refeição:" styleClass="formulariosObrigatorio"/>
+			<h:inputText id="valorRefeicao" size="8" styleClass="formularios2" value="#{encontrosBean.valorRefeicao}">
+			   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			   <p:ajax event="blur" update="valorTotalSaida outPnlTotalLiquido" listener="#{encontrosBean.calcularValorTotalSaida}"/>
+			</h:inputText>
+			<h:outputLabel value="Correio:" styleClass="formulariosObrigatorio"/>
+			<h:inputText id="valorCorreio" size="8" styleClass="formularios2" value="#{encontrosBean.valorCorreio}">
+			   <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			   <p:ajax event="blur" update="valorTotalSaida outPnlTotalLiquido" listener="#{encontrosBean.calcularValorTotalSaida}"/>
+			</h:inputText>
+			</h:panelGrid>
+			<hr />
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left:22px;">
+			<h:outputLabel value="Valor total saída:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel id="valorTotalSaida" value="#{encontrosBean.valorTotalSaida}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			</h:panelGrid>
+			</p:panel>
+			
+			<p:panel header="Total Financeiro Encontro com Deus" style="width:250px; height: 250px;">
+			<p:outputPanel id="outPnlTotalLiquido">
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="padding-top:125px;">
+			<h:outputLabel value="Total bruto entrada:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorTotalEntrada}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			<h:outputLabel value="Total bruto saída:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorTotalSaida}" styleClass="formulariosObrigatorio">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			</h:panelGrid>
+			<hr />
+			<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left:40px;">
+			<h:outputLabel value="Valor Líquido:" styleClass="formulariosObrigatorio"/>
+			<h:outputLabel value="#{encontrosBean.valorTotalBruto}" 
+			rendered="#{encontrosBean.valorBrutoPositivo == true}"
+			style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #009900;">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			<h:outputLabel value="#{encontrosBean.valorTotalBruto}" 
+			rendered="#{encontrosBean.valorBrutoPositivo == false}"
+			style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #FF0000;">
+			    <f:convertNumber type="currency" locale="pt_BR" pattern="#,###,##0.00"/>
+			</h:outputLabel>
+			</h:panelGrid>
+			</p:outputPanel>
+			</p:panel>
+			
+			</h:panelGrid>
+			</center>
+			</p:tab>
+			<p:tab title="Papelaria">
+			</p:tab>
+			</p:tabView>
+			<br/>
+			<p:commandButton value="Finalizar"
+			action="#{encontrosBean.finalizarEncontroComDeus}" ajax="false"/>
+			<p:commandButton value="Cancelar"
+			action="#{encontrosBean.prepararListarEncontrosComDeus}" ajax="false"/>
+			<br/>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>
