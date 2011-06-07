@@ -6,39 +6,32 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
-
+	template="/layout/template.xhtml">
+	
 	<ui:define name="menu-vc-esta">
-		<table width="100%" border="0" align="left" cellpadding="0"
-			style="height: 29px; background-image: url(/pais/img/barra_linha.png)"
-			cellspacing="0">
-			<tr>
-				<td align="right" scope="col" width="65"><h:outputLabel
-						value="VOCÊ ESTA: " styleClass="TEXTO_11" />
-				</td>
-				<td><p:breadCrumb
-						style="height: 19px; background: transparent; border: hidden">
-						<p:menuitem value="home" url="/principal.mir" />
-						<p:menuitem value="CADASTRO" />
-						<p:menuitem value="CADASTRO DE DISCÍPULO"
-							action="#{discipuloBean.prepararDiscipulo}" ajax="false" />
-					</p:breadCrumb>
-				</td>
-			</tr>
-		</table>
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="85">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+		 <p:menuitem value="CADASTRAR" />
+		 <p:menuitem value="DISCÍPULO" />
+		 <p:menuitem value="CADASTRO" action="#{discipuloBean.prepararDiscipulo}" ajax="false" /> 
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
 	</ui:define>
 
 	<ui:define name="conteudo">
-		<br />
-		<br />
 		<h:form id="form1" prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-
-			<p:focus />
+			<br />
 			<p:tabView orientation="top">
 				<p:tab id="tabDadosPessoais" title="Dados Pessoais">
-
-									
 						<table width="100%">
 							<tbody>
 								<tr>
@@ -89,7 +82,7 @@
 													<td  class="coluna2"><p:inputMask
 															mask="99/99/9999" id="dtnasc"
 															value="#{discipuloBean.discipulos.disdatanascimento}"
-															size="15" styleClass="formularios2" required="true"
+															size="15" required="true"
 															tabindex="4"
 															requiredMessage="Data de Nascimento é obrigatório">
 															<f:convertDateTime type="date" locale="pt_BR" />
@@ -445,7 +438,7 @@
 
 			<br />
 
-			<h:commandButton value="Salvar..." styleClass="formularios"
+			<h:commandButton value="Cadastrar..." styleClass="formularios"
 				tabindex="25" actionListener="#{discipuloBean.salvar}"></h:commandButton>
 
 			<p:dialog closeOnEscape="true" position="center" resizable="false"

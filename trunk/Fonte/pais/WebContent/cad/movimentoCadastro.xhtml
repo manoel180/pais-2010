@@ -6,7 +6,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
+	template="/layout/template.xhtml">
 	
 	<ui:define name="javascript">
 	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
@@ -38,19 +38,19 @@
 	}
 	</script>
 	</ui:define>
-    
-    <ui:define name="menu-vc-esta">
-	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	
+	<ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
 	 <tr>
-	   <td align="right" scope="col" width="65">  
+	   <td align="right" scope="col" width="85">  
 		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
 	   </td>
        <td>
-	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	    <p:breadCrumb>    
 	     <p:menuitem value="home" url="/principal.mir" />
-	     <p:menuitem value="FINANCEIRO"/>  
-	     <p:menuitem value="FAZER REPASSE" action="#{movimentacaoBean.prepararMovimento}" ajax="false" />
-         <p:menuitem value="CADASTRO DE MOVIMENTO" action="#{movimentacaoBean.prepararCadastro}" ajax="false" />
+		 <p:menuitem value="FINANCEIRO"/>  
+          <p:menuitem value="FAZER REPASSE" action="#{movimentacaoBean.prepararMovimento}" ajax="false" />
+         <p:menuitem value="CADASTRAR MOVIMENTO" action="#{movimentacaoBean.prepararCadastro}" ajax="false" />
 	    </p:breadCrumb> 
 	   </td>
 	 </tr>
@@ -58,11 +58,9 @@
 	</ui:define>
 
 	<ui:define name="conteudo">
-		<br />
-		<br />
 		<h:form prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-			
+			<br />
 			<p:tabView orientation="top">
 				<p:tab title="Dados da Célula">
 					    <p:panel> 
@@ -210,11 +208,10 @@
 			</p:tabView>
 			<br/>
 			<p:outputPanel id="outBtnCadastrar">
-			<p:commandButton value="#{movimentacaoBean.valueButtonAbrirDialogRepasse}" styleClass="formularios"
+			<p:commandButton value="#{movimentacaoBean.valueButtonAbrirDialogRepasse}" 
 			update="outPnlRepasse" oncomplete="repasseDialog.show()"
 			rendered="#{movimentacaoBean.mostraCadastrar}" action="#{movimentacaoBean.repasseDialog}"/> 
-			<p:commandButton value="Cancelar" styleClass="formularios" action="#{movimentacaoBean.prepararMovimento}" 
-			ajax="false"/>
+			<p:commandButton value="Cancelar" action="#{movimentacaoBean.prepararMovimento}" ajax="false"/>
 			</p:outputPanel>
 			
 			<p:dialog header="VALOR R$" widgetVar="valorDinheiroDialog" resizable="false"

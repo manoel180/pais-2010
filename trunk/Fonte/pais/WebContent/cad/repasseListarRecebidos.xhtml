@@ -6,19 +6,20 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
-    
-    <ui:define name="menu-vc-esta">
-	<table width="100%" border="0" align="left"  cellpadding="0" style="height:29px; background-image:url(/pais/img/barra_linha.png)" cellspacing="0">
+	template="/layout/template.xhtml">
+	
+	<ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
 	 <tr>
-	   <td align="right" scope="col" width="65">  
+	   <td align="right" scope="col" width="85">  
 		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
 	   </td>
        <td>
-	    <p:breadCrumb style="height: 19px; background: transparent; border: hidden">    
+	    <p:breadCrumb>    
 	     <p:menuitem value="home" url="/principal.mir" />
-	     <p:menuitem value="FINANCEIRO"/>  
-         <p:menuitem value="LISTAR REPASSE RECEBIDOS" action="#{repasseBean.prepararListarRepasseRecebidos}" ajax="false" />
+		 <p:menuitem value="FINANCEIRO"/>  
+		 <p:menuitem value="LISTAR REPASSE"/> 
+		 <p:menuitem value="RECEBIDOS" action="#{repasseBean.prepararListarRepasseRecebidos}" ajax="false" />
 	    </p:breadCrumb> 
 	   </td>
 	 </tr>
@@ -28,8 +29,8 @@
 	<ui:define name="conteudo">
 		<h:form prependId="false">
 		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-		
-			<p:tabView orientation="" style="margin-top:18px;">
+		<br />
+			<p:tabView>
 				<p:tab id="tabListarDiscipulos" title="Listar Repasses Recebidos">	
 	                <h:panelGrid columns="10" columnClasses="coluna1,coluna2,coluna1,coluna1,coluna1,coluna2,coluna1,coluna1,coluna1,coluna2" style="margin-left:16px;">
 				    <h:outputText value="Tipo:" styleClass="formulariosObrigatorio"/>
