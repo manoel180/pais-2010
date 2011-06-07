@@ -93,14 +93,26 @@
   <managed-bean-class>br.com.pais.managedbeans.BasesBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ <!--
  <managed-bean>
   <managed-bean-name>treeBean</managed-bean-name>
   <managed-bean-class>br.com.pais.managedbeans.TreeBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
+ -->
  <managed-bean>
   <managed-bean-name>relatoriosBean</managed-bean-name>
   <managed-bean-class>br.com.pais.managedbeans.RelatoriosBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>encontrosBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.EncontrosBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>batismoBean</managed-bean-name>
+  <managed-bean-class>br.com.pais.managedbeans.BatismoBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
  <!--
