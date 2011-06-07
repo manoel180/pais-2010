@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+    
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="85">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="ENCONTROS DIVERSOS"/> 
+	     <p:menuitem value="ENCONTRO COM DEUS"/> 
+	     <p:menuitem value="PÓS-ENCONTRO"/>  
+         <p:menuitem value="LISTAR" action="#{encontrosBean.prepararListarPosEncontros}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+	<br/>
+		<h:form id="form1" prependId="false">
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+			
+			<p:tabView orientation="top">
+			   <p:tab title="PÓS-ENCONTRO">
+			   <h:outputLabel value="Listar Pós-Encontro" styleClass="Texto_cpf_login"/>
+				<h:selectOneMenu id="filtro" value="#{encontrosBean.filtroPosEncontro}" styleClass="formularios">
+						<f:selectItem itemValue="0" itemLabel="Selecione..."/>
+						<f:selectItems value="#{encontrosBean.comboEncontrosStatus}"/>
+						<f:ajax event="change" listener="#{encontrosBean.filtrarPosEncontro}" execute="filtro"  
+				        render="outPanelDiscipulos"/>
+				</h:selectOneMenu>
+				<br/><br/>
+				
+			   <p:outputPanel id="outPanelDiscipulos">
+			   <p:dataTable
+					id="dtPreEncontros" 
+					var="pre" 
+					value="#{encontrosBean.listaEncontrosNoPersistence}" 
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					rendered="#{encontrosBean.mostrarDtPreEncontros}"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum pós-encontro encontrado"
+					paginatorPosition="bottom">
+
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{pre.dadosEncontros.dadenccod}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="NUM" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{pre.dadosEncontros.dadenccod}"/>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{pre.dadosEncontros.dadencdatainicio}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DATA DE INICIO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{pre.dadosEncontros.dadencdatainicio}">
+						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{pre.dadosEncontros.dadencdatafim}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="DATA DE TÉRMINO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{pre.dadosEncontros.dadencdatafim}">
+						 <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+						</h:outputText>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="FOTO" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<p:graphicImage value="#{pre.ministrador.disfoto}" width="41" height="40"/>  
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{pre.ministrador.disnome}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="MESTRE" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{pre.ministrador.disnome}"/>
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="AULAS" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						<!-- AULA 1   -->
+						<p:commandLink value="#{pre.aula1.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #009900;"
+						rendered="#{pre.aula1.liberada == true}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula1}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						    <f:setPropertyActionListener value="false" target="#{encontrosBean.mostrarBtnCancelarEncontro}" />
+						</p:commandLink>
+						&nbsp;
+						<p:commandLink value="#{pre.aula1.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #FF0000;"
+						rendered="#{pre.aula1.liberada == false}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula1}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						</p:commandLink>
+						&nbsp;
+						<!-- AULA 2   -->
+						<p:commandLink value="#{pre.aula2.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #009900;"
+						rendered="#{pre.aula2.liberada == true}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula2}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						    <f:setPropertyActionListener value="false" target="#{encontrosBean.mostrarBtnCancelarEncontro}" />
+						</p:commandLink>
+						&nbsp;
+						<p:commandLink value="#{pre.aula2.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #FF0000;"
+						rendered="#{pre.aula2.liberada == false}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula2}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						</p:commandLink>
+						&nbsp;
+						<!-- AULA 3   -->
+						<p:commandLink value="#{pre.aula3.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #009900;"
+						rendered="#{pre.aula3.liberada == true}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula3}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						    <f:setPropertyActionListener value="false" target="#{encontrosBean.mostrarBtnCancelarEncontro}" />
+						</p:commandLink>
+						&nbsp;
+						<p:commandLink value="#{pre.aula3.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #FF0000;"
+						rendered="#{pre.aula3.liberada == false}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula3}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						</p:commandLink>
+						&nbsp;
+						<!-- AULA 4   -->
+						<p:commandLink value="#{pre.aula4.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #009900;"
+						rendered="#{pre.aula4.liberada == true}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula4}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						    <f:setPropertyActionListener value="false" target="#{encontrosBean.mostrarBtnCancelarEncontro}" />
+						</p:commandLink>
+						&nbsp;
+						<p:commandLink value="#{pre.aula4.palestras.palestras.palDescricao}" 
+						style="font-family: Trebuchet MS; font-size: 13px; font-weight: bold; color: #FF0000;"
+						rendered="#{pre.aula4.liberada == false}"
+						action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						    <f:setPropertyActionListener value="#{pre.aula4}" target="#{encontrosBean.encontrosNoPersistenceAula}" />
+						</p:commandLink>
+						&nbsp;
+						</center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="STATUS" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+                           <p:graphicImage value="/img/em_andamento.png" rendered="#{pre.aula4.liberada == false}"/>    
+                           <p:graphicImage value="/img/finalizado.png" rendered="#{pre.aula4.liberada == true}"/> 
+                        </center>
+					</p:column>
+				</p:dataTable>
+				</p:outputPanel>
+			</p:tab>
+			</p:tabView>
+			<br/>	
+		</h:form>
+	</ui:define>
+</ui:composition>

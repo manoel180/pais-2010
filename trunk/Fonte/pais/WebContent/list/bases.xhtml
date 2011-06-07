@@ -6,31 +6,30 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
-	template="/index.xhtml">
-
+	template="/layout/template.xhtml">
+	
 	<ui:define name="menu-vc-esta">
-
-		<table width="620" border="0" align="left" cellpadding="0"
-			background="/pais/img/barra_linha.png" cellspacing="0">
-			<tr>
-				<td align="left" scope="col"><span class="Fonte_12_Logado"></span>
-				<h:outputLabel value="&nbsp; VOCÊ ESTA: " styleClass="TEXTO_11" /></td>
-				<td><p:breadCrumb
-					style="width: 520px; height: 19px; background: transparent; border: hidden">
-					<p:menuitem value="home" url="/index.mir" />
-					<p:menuitem value="CADASTRO" />
-					<p:menuitem value="LISTAR BASES"
-						action="#{basesBean.prepararListarBases}" ajax="false" />
-				</p:breadCrumb></td>
-			</tr>
-		</table>
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="85">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+		 <p:menuitem value="CADASTRAR" />
+		 <p:menuitem value="BASES" />
+		 <p:menuitem value="LISTAR" action="#{basesBean.prepararListarBases}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
 	</ui:define>
 
 	<ui:define name="conteudo">
-		<br />
 		<h:form prependId="false">
 			<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
-
+			<br />
 			<p:tabView orientation="top">
 				<p:tab id="tabListarBases" title="Bases Cadastradas">
 
