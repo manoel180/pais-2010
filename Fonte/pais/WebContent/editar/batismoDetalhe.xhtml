@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+	
+	<ui:define name="javascript">
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
+	
+	<script>
+	jQuery(function($){
+		    $("#Horario").mask("99:99");
+			$("#dataRealizacao").mask("99/99/9999");
+	});
+	</script>
+	</ui:define>
+
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="80">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="BATISMOS NAS ÁGUAS"/>
+         <p:menuitem value="DETALHE" action="#{batismoBean.prepararDetalheBatismo}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+	<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/> 
+	<p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."   
+	draggable="false" closable="false" resizable="false">
+	<center> <p:graphicImage value="/img/ajax-loader.gif" /></center>  
+	</p:dialog> 
+			 
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		<h:form id="form1" prependId="false">
+		<br />
+			<p:tabView orientation="top">
+				<p:tab title="Dados do Batismo nas Águas">
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+							<h:outputLabel value="Responsável:" styleClass="formulariosObrigatorio"/>
+							<h:inputText size="40" styleClass="formularios2" value="#{batismoBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
+						    <h:outputLabel value="Horário:" styleClass="formulariosObrigatorio"/>
+							<h:inputText id="Horario" size="6" styleClass="formularios2" value="#{batismoBean.batismo.bathorario}"
+							readonly="true">
+							    <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+					        </h:inputText>
+					        <h:outputText value="Data Realização:" styleClass="formulariosObrigatorio"/>
+					        <h:inputText id="dataRealizacao" size="12" styleClass="formularios2" value="#{batismoBean.batismo.batdatarealizacao}"
+							readonly="true">
+							    <f:convertDateTime type="date" pattern="dd/MM/yyyy" dateStyle="short" locale="pt,BR"/>
+					        </h:inputText>
+						   <h:outputLabel value="Local:" styleClass="formulariosObrigatorio"/>
+						   <h:inputTextarea rows="3" cols="40" value="#{batismoBean.batismo.batlocal}" readonly="true"
+						   styleClass="formularios2"/>
+				    </h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			<br/>
+			
+			<p:tabView effect="opacity" contentTransition="true">
+				<p:tab title="Discípulos">
+				<p:outputPanel id="outPanelDiscipulos">
+				<br/>
+				
+				<p:dataTable
+					id="dtEscolhidos" 
+					var="disEsc" 
+					value="#{batismoBean.dtDisEscolhidos}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo adicionado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS DENTRO DO BATISMOS NAS ÁGUAS" styleClass="Fonte_12"/>
+					</f:facet>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{disEsc.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disEsc.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disEsc.discipulo.discipulos.disnome}"/>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{disEsc.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disEsc.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disEsc.discipulo.disnome}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{disEsc.discipulo.geracoes.gerDescricao}"/>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;POSSUI BATISMO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<center>
+						<p:graphicImage rendered="#{disEsc.possuiBatismoNasAguas == 'true'}" value="/img/sim.png"/> 
+						<p:graphicImage rendered="#{disEsc.possuiBatismoNasAguas == 'false'}" value="/img/nao.png"/> 
+						</center>
+					</p:column>
+				</p:dataTable>
+				
+                </p:outputPanel>
+				</p:tab>
+			</p:tabView>
+			
+			<br/>
+			<p:commandButton value="Cancelar"
+			action="#{batismoBean.prepararListarBatismo}" ajax="false"/>
+			<br/>
+		</h:form>
+	</ui:define>
+</ui:composition>
