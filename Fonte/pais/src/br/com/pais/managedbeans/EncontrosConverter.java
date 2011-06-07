@@ -52,12 +52,10 @@ public class EncontrosConverter implements Converter {
                         return e;
                     }
                 }
-                
             } catch(NumberFormatException exception) {
                 throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Encontro não é válido"));
             }
         }
-
         return null;
     }
 
