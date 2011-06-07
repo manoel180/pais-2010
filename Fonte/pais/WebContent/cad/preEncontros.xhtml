@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext"
+	template="/layout/template.xhtml">
+	
+	<ui:define name="javascript">
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskedinput-1.2.2.js"></script>
+	<script type="text/javascript" src="#{request.contextPath}/js/jquery.maskMoney.0.2.js"></script>
+	
+	<script>
+	jQuery(function($){
+		    $("#Horario").mask("99:99");
+			$("#dataInicio").mask("99/99/9999");
+			$("#dataFim").mask("99/99/9999");
+	});
+	</script>
+	</ui:define>
+
+    <ui:define name="menu-vc-esta">
+	<table width="100%" border="0" align="left"  cellpadding="0" cellspacing="0" style="height:33px;">
+	 <tr>
+	   <td align="right" scope="col" width="80">  
+		<h:outputLabel  value="VOCÊ ESTA: " styleClass="TEXTO_11"/>
+	   </td>
+       <td>
+	    <p:breadCrumb>    
+	     <p:menuitem value="home" url="/principal.mir" />
+	     <p:menuitem value="EVENTOS"/>  
+	     <p:menuitem value="ENCONTROS DIVERSOS"/> 
+	     <p:menuitem value="ENCONTRO COM DEUS"/> 
+	     <p:menuitem value="PRÉ-ENCONTRO"/>
+         <p:menuitem value="CADASTRO" action="#{encontrosBean.prepararCadastrarPreEncontros}" ajax="false" />
+	    </p:breadCrumb> 
+	   </td>
+	 </tr>
+	</table> 
+	</ui:define>
+
+	<ui:define name="conteudo">
+	<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/> 
+	<p:dialog modal="true" widgetVar="statusDialog" header="Carregando..."   
+	draggable="false" closable="false" resizable="false">
+	<center> <p:graphicImage value="/img/ajax-loader.gif" /></center>  
+	</p:dialog> 
+			 
+		<p:growl id="msg" showDetail="true" showSummary="false" life="5000" />
+		<h:form id="form1" prependId="false">
+		<br />
+			<p:tabView orientation="top">
+				<p:tab title="Dados do Pré-Encontro">
+				    <h:panelGrid columns="2" columnClasses="coluna1, coluna2">
+							<h:outputLabel value="Responsável:" styleClass="formulariosObrigatorio"/>
+							<h:inputText size="40" styleClass="formularios2" value="#{encontrosBean.discipuloSessao.discipulos.disnome}" readonly="true"/>
+					</h:panelGrid>		
+					<h:panelGrid columns="3" columnClasses="coluna1, coluna2, coluna2"
+					style="margin-left: 7px;">
+						<h:outputLabel value="Ministrador:" styleClass="formulariosObrigatorio"/>
+						<h:inputText id="idMinistrador" size="40" styleClass="formularios2" 
+						value="#{encontrosBean.ministrador.disnome}"
+						readonly="true"/>
+						<p:commandButton image="ui-icon ui-icon-search" 
+						oncomplete="dlgMinistrador.show();" global="true"/>
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="coluna1, coluna2" style="margin-left: 10px;">
+						    <h:outputLabel value="Horário:" styleClass="formulariosObrigatorio"/>
+							<h:inputText id="Horario" size="6" styleClass="formularios2" value="#{encontrosBean.dadosEncontros.dadenchorario}">
+							    <f:convertDateTime type="time" pattern="HH:mm" dateStyle="short" locale="pt,BR" timeZone="GMT-4"/>
+					        </h:inputText>
+					        <h:outputText value="Data Inicio:" styleClass="formulariosObrigatorio"/>
+							<p:calendar id="dataInicio" value="#{encontrosBean.dadosEncontros.dadencdatainicio}" size="12"
+				                    inputStyleClass="formularios2" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    maxlength="10" pattern="dd/MM/yyyy"/>
+						    <h:outputText value="Data Fim:" styleClass="Texto_cpf_login"/>
+							<p:calendar id="dataFim" value="#{encontrosBean.dadosEncontros.dadencdatafim}" size="12"
+				                    inputStyleClass="formularios2" navigator="true" showOn="button" 
+				                    yearRange="100" locale="pt_BR" showButtonPanel="true" selectOtherMonths="true" 
+								    maxlength="10" pattern="dd/MM/yyyy"/>
+						   <h:outputLabel value="Local:" styleClass="formulariosObrigatorio"/>
+						   <h:inputTextarea rows="3" cols="40" value="#{encontrosBean.dadosEncontros.dadenclocal}" 
+						   styleClass="formularios2"/>
+				    </h:panelGrid>
+				</p:tab>
+			</p:tabView>
+			
+			<p:dialog header="Selecionar Ministrador do Pré-Encontro" modal="true"
+				widgetVar="dlgMinistrador" resizable="false" width="800" height="400">
+				<p:treeTable value="#{encontrosBean.root}" var="node">
+				    <p:column>
+						<f:facet name="header">
+						<center>FOTO</center>  
+						</f:facet>
+						<p:graphicImage value="#{node.discipulo.disfoto}" width="40" height="40" 
+						rendered="#{node.mostrarDiscipulo}"/>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao}"/>
+					</p:column>  
+                    <p:column filterBy="#{node.discipulo.disnome}">
+						<f:facet name="header">
+						<center>NOME</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.disnome}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column>
+					 <p:column>
+						<f:facet name="header">
+						<center>FUNÇÃO ECLESÍASTICA</center>  
+						</f:facet>
+						<h:outputText value=" #{node.discipulo.funcaoeclesiasticas.funDescricao}" rendered="#{node.mostrarDiscipulo}"/>
+					</p:column> 
+					<p:column>
+						<f:facet name="header">
+						<center>GERAÇÃO</center> 
+						</f:facet>
+						<center>
+						<h:outputText value=" #{node.geracao.gerDescricao}" rendered="#{node.mostrarGeracao2}"/>
+						</center>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+						<center>SELECIONAR</center> 
+						</f:facet>
+						<center>
+						<p:commandButton update="idMinistrador" process="@this" type="image"
+							image="/img/ver.png" oncomplete="dlgMinistrador.hide();" ajax="true"
+							rendered="#{node.mostrarBotoes}">
+							<f:setPropertyActionListener value="#{node.discipulo}" target="#{encontrosBean.ministrador}" />
+						</p:commandButton>
+						</center>
+					</p:column>
+                </p:treeTable>
+			</p:dialog>
+			
+			<br/>
+			<p:dataTable
+				id="dtPalestra" 
+				var="pal" 
+				value="#{encontrosBean.listaPalestras}" 
+                paginator="true"
+				firstPageLinkLabel="&lt;&lt; Primeiro"
+				lastPageLinkLabel="Ultimo &gt;&gt;"
+				previousPageLinkLabel="&lt; Voltar"
+				nextPageLinkLabel="Avançar &gt;" 
+				width="100%"
+				rendered="false"
+				sortAscMessage="Ordena em ordem crescente"
+				sortDescMessage="Ordena em ordem descrecente" 
+				rows="10"
+				dynamic="true" emptyMessage="Nenhum Palestra Adicionada"
+				paginatorPosition="bottom">
+				
+				<f:facet name="header">
+				        <center>
+						<h:outputText value="&nbsp;PALESTRAS DO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+						</center>
+				</f:facet>
+				
+				<p:column>
+					<f:facet name="header">
+					    <center>
+						<h:outputText value="&nbsp;PALESTRA" styleClass="Fonte_12"/>
+						</center>
+					</f:facet>
+					<center>
+					<h:outputText styleClass="Fonte_13" value="#{pal.palDescricao}"/>
+					</center>
+				</p:column>
+			</p:dataTable>
+			
+			<br/>
+			<p:tabView effect="opacity" contentTransition="true">
+				<p:tab title="Discípulos">
+				<p:outputPanel id="outPanelDiscipulos">
+				
+				<h:outputLabel value="Filtro" styleClass="Texto_cpf_login"/>
+				<h:selectOneMenu id="filtro" value="#{encontrosBean.filtroPreEncontro}" styleClass="formularios">
+						<f:selectItem itemValue="0" itemLabel="Selecione..."/>
+						<f:selectItem itemValue="1" itemLabel="Díscipulos possuem pré-encontro"/>
+						<f:selectItem itemValue="2" itemLabel="Díscipulos sem pré-encontro"/>
+						<f:ajax event="change" listener="#{encontrosBean.filtrarDiscipulosPreEncontro}" execute="filtro"  
+				        render="outPanelDiscipulos"/>
+				</h:selectOneMenu>
+				<br/><br/>
+					
+					<p:dataTable
+					id="dtAdicionar" 
+					var="disAdc" 
+					selection="#{encontrosBean.dtDisSelecionadosAdicionar}"
+					selectionMode="multiple"
+					value="#{encontrosBean.dtDisGeracoes}" 
+                    paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo encontrado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+					        <center>
+							<h:outputText value="&nbsp;DISCÍPULOS FORA DO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+							</center>
+					</f:facet>
+					
+					<p:column id="dtAdcNomLider" filterStyleClass="formularios" resizable="true" sortBy="#{disAdc.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disAdc.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disAdc.discipulo.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column id="dtAdcNomDiscipulo" filterStyleClass="formularios" resizable="true" sortBy="#{disAdc.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disAdc.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disAdc.discipulo.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<center>
+						<h:outputText styleClass="Fonte_13" value="#{disAdc.discipulo.geracoes.gerDescricao}"/>
+						</center>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;POSSUI PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<center>
+						<p:graphicImage rendered="#{disAdc.possuiPreEncontro == 'true'}" value="/img/sim.png"/> 
+						<p:graphicImage rendered="#{disAdc.possuiPreEncontro == 'false'}" value="/img/nao.png"/> 
+						</center>
+					</p:column>
+					
+				</p:dataTable>
+				<center>
+				<p:commandButton value="Adicionar" action="#{encontrosBean.adicionarDiscipulosPreEncontro}" 
+                image="ui-icon ui-icon-circle-plus" update="outPanelDiscipulos"/>
+				</center>
+				<br/>
+				
+				<p:dataTable
+					id="dtRemover" 
+					var="disRem" 
+					selectionMode="multiple"
+					selection="#{encontrosBean.dtDisSelecionadosRemover}"
+					value="#{encontrosBean.dtDisEscolhidos}"
+					paginator="true"
+					firstPageLinkLabel="&lt;&lt; Primeiro"
+					lastPageLinkLabel="Ultimo &gt;&gt;"
+					previousPageLinkLabel="&lt; Voltar"
+					nextPageLinkLabel="Avançar &gt;" 
+					width="100%"
+					sortAscMessage="Ordena em ordem crescente"
+					sortDescMessage="Ordena em ordem descrecente" 
+					rows="10"
+					dynamic="true" emptyMessage="Nenhum Discípulo adicionado"
+					paginatorPosition="bottom">
+					
+					<f:facet name="header">
+							<h:outputText value="&nbsp;DISCÍPULOS DENTRO DO PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+					</f:facet>
+					
+					<p:column id="dtRemLider" filterStyleClass="formularios" resizable="true" sortBy="#{disRem.discipulo.discipulos.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULADOR" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disRem.discipulo.discipulos.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.discipulos.disnome}"/>
+					</p:column>
+					
+					<p:column id="dtRemDis" filterStyleClass="formularios" resizable="true" sortBy="#{disRem.discipulo.disnome}">
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;DISCÍPULO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<p:graphicImage value="#{disRem.discipulo.disfoto}" width="41" height="40"/>
+						&nbsp;
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.disnome}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="&nbsp;GERAÇÃO" styleClass="Fonte_12"/>
+						</f:facet>
+						<h:outputText styleClass="Fonte_13" value="#{disRem.discipulo.geracoes.gerDescricao}"/>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+						    <center>
+							<h:outputText value="&nbsp;POSSUI PRÉ-ENCONTRO" styleClass="Fonte_12"/>
+							</center>
+						</f:facet>
+						<center>
+						<p:graphicImage rendered="#{disRem.possuiPreEncontro == 'true'}" value="/img/sim.png"/> 
+						<p:graphicImage rendered="#{disRem.possuiPreEncontro == 'false'}" value="/img/nao.png"/> 
+						</center>
+					</p:column>
+					  
+				</p:dataTable>
+				<center>
+				<p:commandButton value="Remover" action="#{encontrosBean.removerDiscipulosPreEncontro}" 
+                                 image="ui-icon ui-icon-circle-minus" update="outPanelDiscipulos"/>
+                </center>
+                </p:outputPanel>
+				</p:tab>
+			</p:tabView>
+			
+			<br/>
+			<p:commandButton value="Salvar"
+			action="#{encontrosBean.SalvarPreEncontro}" ajax="false"/>
+			<p:commandButton value="Cancelar"
+			action="#{encontrosBean.prepararListarPreEncontros}" ajax="false"/>
+			<br/>
+		</h:form>
+	</ui:define>
+</ui:composition>
