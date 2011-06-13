@@ -1,17 +1,11 @@
 package br.com.pais.exception;
 
-
-
 public class ValidarTEException extends Exception {
 
-	/**
-	 * 
-	 */
-//	private static final long serialVersionUID = 8275122096296509180L;
+	private static final long serialVersionUID = 1L;
 
 	public ValidarTEException(String msg) {
 		super(msg);
-	
 	}
 
 	public ValidarTEException(String msg, Throwable throwable) {
