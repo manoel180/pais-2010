@@ -20,9 +20,9 @@
                 <p:menuitem value="Listar Discípulos" action="#{discipuloBean.prepararListarDiscipulos}" ajax="false"/>
             </p:submenu>
 			
-			<p:submenu label="&nbsp;Célula &nbsp;">  
-                <p:menuitem value="&nbsp;Nova Célula &nbsp;" action="#{celulaBean.prepararCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
-                <p:menuitem value="&nbsp;Listar Célula &nbsp;" action="#{celulaBean.prepararListarCelula}" rendered="#{loginBean.cadCelulas}" ajax="false"/>
+			<p:submenu label="&nbsp;Célula &nbsp;" rendered="#{loginBean.menuCelulas}">  
+                <p:menuitem value="&nbsp;Nova Célula &nbsp;" action="#{celulaBean.prepararCelula}" ajax="false"/>
+                <p:menuitem value="&nbsp;Listar Célula &nbsp;" action="#{celulaBean.prepararListarCelula}" ajax="false"/>
             </p:submenu>
             
             <p:submenu label="&nbsp;Bases &nbsp;" rendered="#{loginBean.menuBases}">  
