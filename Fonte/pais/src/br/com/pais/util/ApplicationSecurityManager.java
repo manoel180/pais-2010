@@ -13,11 +13,13 @@ import javax.faces.context.FacesContext;
 import br.com.pais.entities.Discipulos;
 import br.com.pais.entities.Usuarios;
 
-public class ApplicationSecurityManager {
-	public static final String DISCIPULOS = "discipulo";
-	public static final String USUARIOS = "usuario";
 
-	public Discipulos getDiscipulos() {
+public class ApplicationSecurityManager
+{
+    public static final String DISCIPULOS = "discipulo";
+    public static final String USUARIOS = "usuario";
+    
+    public Discipulos getDiscipulos() {
 		return (Discipulos) FacesContext.getCurrentInstance()
 				.getExternalContext().getSessionMap().get(DISCIPULOS);
 	}
@@ -31,20 +33,13 @@ public class ApplicationSecurityManager {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.remove(DISCIPULOS);
 	}
-
-	/**
-	 * @return the usuarios
-	 */
+	
 	public Usuarios getUsuarios() {
 
 		return (Usuarios) FacesContext.getCurrentInstance()
 				.getExternalContext().getSessionMap().get(USUARIOS);
 	}
 
-	/**
-	 * @param usuarios
-	 *            the usuarios to set
-	 */
 	public void setUsuarios(Object usuarios) {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.put(USUARIOS, usuarios);
@@ -54,5 +49,5 @@ public class ApplicationSecurityManager {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.remove(USUARIOS);
 	}
-
+    
 }
