@@ -62,16 +62,6 @@
 					dynamic="true" emptyMessage="Nenhum pós-encontro encontrado"
 					paginatorPosition="bottom">
 
-					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{pre.dadosEncontros.dadenccod}">
-						<f:facet name="header">
-						<center>
-							<h:outputText value="NUM" styleClass="Fonte_12"/>
-					    </center>
-						</f:facet>
-						<center>
-						<h:outputText styleClass="Fonte_13" value="#{pre.dadosEncontros.dadenccod}"/>
-						</center>
-					</p:column>
 					<p:column filterStyleClass="formularios" resizable="true" sortBy="#{pre.dadosEncontros.dadencdatainicio}">
 						<f:facet name="header">
 						<center>
@@ -206,6 +196,20 @@
 						<center>
                            <p:graphicImage value="/img/em_andamento.png" rendered="#{pre.aula4.liberada == false}"/>    
                            <p:graphicImage value="/img/finalizado.png" rendered="#{pre.aula4.liberada == true}"/> 
+                        </center>
+					</p:column>
+					<p:column filterStyleClass="formularios" resizable="true"
+					rendered="#{encontrosBean.filtroPosEncontro == 2}">
+						<f:facet name="header">
+						<center>
+							<h:outputText value="SOLICITAR" styleClass="Fonte_12"/>
+					    </center>
+						</f:facet>
+						<center>
+						   <p:commandLink action="#{encontrosBean.prepararPresencaPosEncontro}" ajax="false">
+						   <p:graphicImage value="/img/solicitar_escola_lideres.png"/> 
+						    <f:setPropertyActionListener value="#{pre}" target="#{encontrosBean.encontrosNoPersistence}" />
+						   </p:commandLink>
                         </center>
 					</p:column>
 				</p:dataTable>
