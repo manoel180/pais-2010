@@ -97,13 +97,18 @@ body {
 	min-height:30px;
 }
 
-#pgCentralizado {
-	height: 500px;
-	left: 50%;
-	margin: -200px 0 0 -300px;
-	position: absolute;
-	top: 50%;
-	width: 40%;
+.logo_login {
+	background-image:url(/pais/img/logo.png);
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	width:380px;
+	height:145px;
+	margin-top:10%;
+}
+.barra_senha {
+	background-image:url(/pais/img/barra_cpf_senha.png);
+	margin: 0 auto; /* o valor automático nos lados, combinado com a largura, centraliza o layout. Não é necessário definir a largura do contêiner para 100%. */
+	width:471px;
+	height:57px;
 }
 
 img{
