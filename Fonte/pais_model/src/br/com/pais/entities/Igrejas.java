@@ -4,6 +4,7 @@ package br.com.pais.entities;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,6 +36,7 @@ public class Igrejas implements java.io.Serializable {
 	private String igrtelcelular;
 	private String igremail;
 	private Byte igrdiavencimento;
+	private String igrendereco;
 	private Character igrstatus;
 	private Set<Financeiroigrejas> financeiroigrejases = new HashSet<Financeiroigrejas>(
 			0);
@@ -260,6 +262,21 @@ public class Igrejas implements java.io.Serializable {
 	 */
 	public void setIgrcomplemento(String igrcomplemento) {
 		this.igrcomplemento = igrcomplemento;
+	}
+
+	/**
+	 * @return the igrendereco
+	 */
+	@Column(name = "igrendereco", length = 100 )
+	public String getIgrendereco() {
+		return igrendereco;
+	}
+
+	/**
+	 * @param igrendereco the igrendereco to set
+	 */
+	public void setIgrendereco(String igrendereco) {
+		this.igrendereco = igrendereco;
 	}
 
 }

@@ -2,12 +2,15 @@ package br.com.pais.entities;
 
 // Generated 11/05/2011 14:16:49 by Hibernate Tools 3.4.0.CR1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -44,6 +47,7 @@ public class Pacotes implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idpacotes", unique = true, nullable = false)
 	public int getIdpacotes() {
 		return this.idpacotes;
