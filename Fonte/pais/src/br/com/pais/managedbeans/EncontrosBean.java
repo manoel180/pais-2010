@@ -640,7 +640,7 @@ public class EncontrosBean {
 		if(encontrosNoPersistenceAula.getAula() == 4){
 			encontroStatus = new Encontrostatus();
 			encontroStatus.setEncstacod(2);//1 = Em Andamento 2 = Finalizado
-			dadosEncontros.setEncontrostatus(encontroStatus);
+			dadosEncontros.setEncontrostatusByDadencstatus(encontroStatus);
 			dadosEncontrosDao.atualizar(dadosEncontros);
 		}
 		//Atualiza a data da palestra
@@ -843,7 +843,8 @@ public class EncontrosBean {
 		encontroStatus.setEncstacod(1);//1 = Em Andamento 2 = Finalizado
 		dadosEncontros.setEncontros(encontros);
 		dadosEncontros.setDadosencontros(null);//encontroPai
-		dadosEncontros.setEncontrostatus(encontroStatus);//status
+		dadosEncontros.setEncontrostatusByDadencstatus(encontroStatus);//status
+		dadosEncontros.setEncontrostatusBySolicitaescolalideres(encontroStatus);
 		dadosEncontros.setDiscipulos(discipuloSessao.getDiscipulos());//responsavel
 		dadosEncontros.setDadencqtdinscritos(dtDisEscolhidos.size());
 		dadosEncontrosDao.salvar(dadosEncontros);
@@ -1288,7 +1289,8 @@ public class EncontrosBean {
 			encontroStatus.setEncstacod(1);//1 = Em Andamento 2 = Finalizado
 			dadosEncontros.setEncontros(encontros);
 			dadosEncontros.setDadosencontros(encontrosNoPersistence.getDadosEncontros());//encontroPai
-			dadosEncontros.setEncontrostatus(encontroStatus);//status
+			dadosEncontros.setEncontrostatusByDadencstatus(encontroStatus);//status
+			dadosEncontros.setEncontrostatusBySolicitaescolalideres(encontroStatus);//status
 			dadosEncontros.setDiscipulos(discipuloSessao.getDiscipulos());//responsavel
 			dadosEncontros.setDadencqtdinscritos(dtDisEncontroDeusEscolhidos.size());
 			dadosEncontrosDao.salvar(dadosEncontros);
@@ -1910,7 +1912,7 @@ public class EncontrosBean {
 		//finaliza o encontro
 		encontroStatus = new Encontrostatus();
 		encontroStatus.setEncstacod(2);//1 = Em Andamento 2 = Finalizado
-		dadosEncontros.setEncontrostatus(encontroStatus);//status
+		dadosEncontros.setEncontrostatusByDadencstatus(encontroStatus);//status
 		dadosEncontrosDao.atualizar(dadosEncontros);
 		
 		context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "SUCESSO!","Encontro com Deus Finalizado com Sucesso!"));
@@ -2129,7 +2131,8 @@ public class EncontrosBean {
 		encontroStatus.setEncstacod(1);//1 = Em Andamento 2 = Finalizado
 		dadosEncontros.setEncontros(encontros);
 		dadosEncontros.setDadosencontros(dadosEncontrosSelecionado);//encontroPai
-		dadosEncontros.setEncontrostatus(encontroStatus);//status
+		dadosEncontros.setEncontrostatusByDadencstatus(encontroStatus);//status
+		dadosEncontros.setEncontrostatusBySolicitaescolalideres(encontroStatus);//status
 		dadosEncontros.setDiscipulos(discipuloSessao.getDiscipulos());//responsavel
 		dadosEncontros.setDadencqtdinscritos(dtDisEscolhidos.size());
 		dadosEncontrosDao.salvar(dadosEncontros);
@@ -2389,7 +2392,7 @@ public class EncontrosBean {
 		if(encontrosNoPersistenceAula.getAula() == 4){
 			encontroStatus = new Encontrostatus();
 			encontroStatus.setEncstacod(2);//1 = Em Andamento 2 = Finalizado
-			dadosEncontros.setEncontrostatus(encontroStatus);
+			dadosEncontros.setEncontrostatusByDadencstatus(encontroStatus);
 			dadosEncontrosDao.atualizar(dadosEncontros);
 		}
 		//Atualiza a data da palestra
