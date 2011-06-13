@@ -11,38 +11,48 @@ package br.com.pais.util;
 import javax.faces.context.FacesContext;
 
 import br.com.pais.entities.Discipulos;
+import br.com.pais.entities.Usuarios;
 
+public class ApplicationSecurityManager {
+	public static final String DISCIPULOS = "discipulo";
+	public static final String USUARIOS = "usuario";
 
-public class ApplicationSecurityManager
-{
-    public static final String DISCIPULOS = "discipulo";
-    
-    /*private FacesContext context = FacesContext.getCurrentInstance();
-    private HttpSession session = (HttpSession) context.getExternalContext().getSession(false);*/
+	public Discipulos getDiscipulos() {
+		return (Discipulos) FacesContext.getCurrentInstance()
+				.getExternalContext().getSessionMap().get(DISCIPULOS);
+	}
 
-    public  Discipulos getDiscipulos(){
-    	
-        // HttpSession session = (HttpSession) context.getExternalContext().getSession(false);    							
-        //return (Usuario) session.getAttribute(USER);
-    	
-    	return (Discipulos) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(DISCIPULOS);
-    }
+	public void setDiscipulos(Object discipulos) {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.put(DISCIPULOS, discipulos);
+	}
 
-    public void setDiscipulos(Object discipulos)
-    {
-    	/*FacesContext context = FacesContext.getCurrentInstance();
-        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-    	session.setAttribute(USER, usuario);*/    	
-    	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(DISCIPULOS,discipulos);  
-    }
+	public void removeDiscipulo() {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.remove(DISCIPULOS);
+	}
 
-    
-    public void removeUsuario()
-    {
-//    	FacesContext context = FacesContext.getCurrentInstance();
-//        HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-    	FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove(DISCIPULOS);
-    	    	//session.removeAttribute(USER);
-    }
-    
+	/**
+	 * @return the usuarios
+	 */
+	public Usuarios getUsuarios() {
+
+		return (Usuarios) FacesContext.getCurrentInstance()
+				.getExternalContext().getSessionMap().get(USUARIOS);
+	}
+
+	/**
+	 * @param usuarios
+	 *            the usuarios to set
+	 */
+	public void setUsuarios(Object usuarios) {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.put(USUARIOS, usuarios);
+	}
+
+	public void removeUsuario() {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.remove(USUARIOS);
+	}
+
 }
