@@ -1,6 +1,6 @@
 package br.com.pais.entities;
 
-// Generated 11/05/2011 14:16:49 by Hibernate Tools 3.4.0.CR1
+// Generated 24/05/2011 10:42:25 by Hibernate Tools 3.4.0.Beta1
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,36 +11,33 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class FrequenciaId implements java.io.Serializable {
 
-	private int discipulosDisCod;
-	private int palestrasHasEncontrosPalestrasPalCod;
+	private int discipulos;
+	private int encontrospalestras;
 
 	public FrequenciaId() {
 	}
 
-	public FrequenciaId(int discipulosDisCod,
-			int palestrasHasEncontrosPalestrasPalCod,
-			int palestrasHasEncontrosEncontrosEncCod) {
-		this.discipulosDisCod = discipulosDisCod;
-		this.palestrasHasEncontrosPalestrasPalCod = palestrasHasEncontrosPalestrasPalCod;
+	public FrequenciaId(int discipulos, int encontrospalestras) {
+		this.discipulos = discipulos;
+		this.encontrospalestras = encontrospalestras;
 	}
 
-	@Column(name = "discipulos_disCod", nullable = false)
-	public int getDiscipulosDisCod() {
-		return this.discipulosDisCod;
+	@Column(name = "discipulos", nullable = false)
+	public int getDiscipulos() {
+		return this.discipulos;
 	}
 
-	public void setDiscipulosDisCod(int discipulosDisCod) {
-		this.discipulosDisCod = discipulosDisCod;
+	public void setDiscipulos(int discipulos) {
+		this.discipulos = discipulos;
 	}
 
-	@Column(name = "Palestras_has_encontros_Palestras_PalCod", nullable = false)
-	public int getPalestrasHasEncontrosPalestrasPalCod() {
-		return this.palestrasHasEncontrosPalestrasPalCod;
+	@Column(name = "encontrospalestras", nullable = false)
+	public int getEncontrospalestras() {
+		return this.encontrospalestras;
 	}
 
-	public void setPalestrasHasEncontrosPalestrasPalCod(
-			int palestrasHasEncontrosPalestrasPalCod) {
-		this.palestrasHasEncontrosPalestrasPalCod = palestrasHasEncontrosPalestrasPalCod;
+	public void setEncontrospalestras(int encontrospalestras) {
+		this.encontrospalestras = encontrospalestras;
 	}
 
 	public boolean equals(Object other) {
@@ -52,16 +49,16 @@ public class FrequenciaId implements java.io.Serializable {
 			return false;
 		FrequenciaId castOther = (FrequenciaId) other;
 
-		return (this.getDiscipulosDisCod() == castOther.getDiscipulosDisCod())
-				&& (this.getPalestrasHasEncontrosPalestrasPalCod() == castOther
-						.getPalestrasHasEncontrosPalestrasPalCod());
+		return (this.getDiscipulos() == castOther.getDiscipulos())
+				&& (this.getEncontrospalestras() == castOther
+						.getEncontrospalestras());
 	}
 
 	public int hashCode() {
 		int result = 17;
 
-		result = 37 * result + this.getDiscipulosDisCod();
-		result = 37 * result + this.getPalestrasHasEncontrosPalestrasPalCod();
+		result = 37 * result + this.getDiscipulos();
+		result = 37 * result + this.getEncontrospalestras();
 		return result;
 	}
 
