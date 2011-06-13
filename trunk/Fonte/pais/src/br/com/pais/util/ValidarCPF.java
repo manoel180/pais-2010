@@ -1,24 +1,12 @@
-/**
- * 
- */
 package br.com.pais.util;
-
-import javax.faces.application.FacesMessage;
 
 import br.com.caelum.stella.validation.CPFValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
 import br.com.pais.exception.ValidarCPFException;
-import br.com.pais.mensagens.MessageManagerImpl;
 
-/**
- * @author Manoel
- * 
- */
 public class ValidarCPF {
 
-	
-	public static boolean validarCPF(String cpf) throws ValidarCPFException  {
-		
+	public static boolean validarCPF(String cpf) throws ValidarCPFException{
 		CPFValidator validator = new CPFValidator();
 		boolean valido = true;
 		try {
@@ -31,19 +19,15 @@ public class ValidarCPF {
 					|| cpf.equals("888.888.888-88")
 					|| cpf.equals("999.999.999-99")
 					|| cpf.equals("000.000.000-00")) {
-				valido=false;
-				MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR,	"erro", "erro.cpf.invalido");
-				
+				valido = false;
+				throw new ValidarCPFException("erro.cpf.invalido");
 			} else {
 				validator.assertValid(cpf);
-
 			}
-		}catch (InvalidStateException e) {
-			MessageManagerImpl.setMensagem(FacesMessage.SEVERITY_ERROR, "erro",
-					"erro.cpf.invalido");
+		} catch (InvalidStateException e) {
 			valido = false;
+			throw new ValidarCPFException("erro.cpf.invalido");
 		}
 		return valido;
 	}
-
 }
