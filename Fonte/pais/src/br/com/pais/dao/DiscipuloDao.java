@@ -28,7 +28,7 @@ public interface DiscipuloDao extends DaoGenerico<Discipulos, Integer> {
 
 	double listarTotalGeracoes(int lider);
 	
-	List<Discipulos> discipuloTemPreEncontro(int discipulador);
-	
-	List<Discipulos> listarDiscipulosSemPreEncontro(int discipulador);
+	List<Discipulos> discipuloSemPreEncontro(int discipulo);
+
+	List<Discipulos> discipuloComPreEncontro(int discipulo);
 }
