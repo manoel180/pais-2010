@@ -1,0 +1,1 @@
+Gerenciar informações no âmbito de Recursos Humanos(RH), Finanças e Base Celular no Modelo dos 12, a fim de centralizar e organizar a Visão no Brasil e Nações
